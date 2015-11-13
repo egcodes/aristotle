@@ -11,6 +11,8 @@ Temel olarak şu şekilde çalışmaktadır.
 Yaklaşık tekil olarak 50 kaynak sourcelist'de tanımlıdır.
 ![Kaynak Listesi](/screenshots/sourcelist.png)
 
+![Günlük Toplama sonucu örnek istatisikler](/screenshots/statistics.png)
+
 ![Parser Çıktısı](/screenshots/parser.png)
 
 ## Kurulum İçin Gerekenler
