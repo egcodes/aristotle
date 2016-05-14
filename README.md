@@ -17,7 +17,7 @@ Yaklaşık tekil olarak 50 kaynak sourcelist'de tanımlıdır.
 
 ## Kurulum İçin Gerekenler
 
-- Python 2.6 ve üstü
+- Python 2.x (2.6 ve üstü)
 	- MySQLdb
 	- BeautifulSoup
 	- simplejson
