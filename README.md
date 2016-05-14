@@ -1,5 +1,6 @@
 # haberbus
 Haberbüs, Türk haber sitelerinden sosyal medyada en çok paylaşılan haberleri toplamak için kullanılan bir parser sistemidir.
+Site: [www.haberbus.com](http://www.haberbus.com)
 
 Temel olarak şu şekilde çalışmaktadır.
 - Kaynak listesinde (sourceList.py) tanımlı olan 5 kategori altındaki 50 link'i mainParseSources.py script'ine hiç bir parametre verilmez ise teker teker gezer.
