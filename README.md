@@ -31,4 +31,4 @@ her şey hazır.
 Test için: `python mainParseSources.py teknoloji webrazzi.com` sadece bu kategori bu link taranır.
 
 Tüm kaynakları taramak için: `python mainParseSources.py` komutu ile ekran görüntüsündeki gibi haber sitelerinden
-dataları toplayama başlayabiliriz. Gerekli tüm tablar bu script'ler içinde üretilmektedir.
+dataları toplayama başlayabiliriz. Gerekli tüm tablolar bu script'ler içinde üretilmektedir.
