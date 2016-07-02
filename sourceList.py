@@ -79,7 +79,7 @@ def createNewsSourceByPresent(present):
 		newsSources = {
 				'gundem':	[
 								 #('zaman.com.tr', 'http://www.zaman.com.tr', ('haber_', 'gundem_', 'ekonomi_', 'dunya_', 'aile-saglik_', 'egitim_',), ('wetransfer.','ihsan-dagi', 'abdulhamit-bilici', 'mumtazer-turkone'), ({'detayTarihNew':todayTrNonZeroFormat},)),
-								 ('sozcu.com.tr', 'http://www.sozcu.com.tr', ('/gundem/', '/gunun-icinden/', '/dunya/', '/ekonomi/', '/egitim/', '/saglik/',), ('spor_', 'video.', ), ({'date':todayTrFormat},)),
+								 ('sozcu.com.tr', 'http://www.sozcu.com.tr', ('/gundem/', '/gunun-icinden/', '/dunya/', '/ekonomi/', '/egitim/', '/saglik/',), ('spor_', 'video.', ), ({'date':todayTrNonZeroFormat},)),
 								 ('milliyet.com.tr','http://www.milliyet.com.tr', ('/detay/',), ('secure.milliyet.com.tr','/ydetay/', 'skorer.'),({'date':todayPointFormat},{'detSpan':todayTrFormat}, {'detSpan2':todayTrFormat}), {'-':1}),
 								 ('hurriyet.com.tr', 'http://www.hurriyet.com.tr/', ('-',), (), ({'col-md-4 text-right':todayTrFormat},)),
 								 ('haber7.com', 'http://www.haber7.com', ('/haber/',), ('/teknoloji/', 'spor.','/yazarlar/'), ({'info':todayPointFormat}, )),
@@ -87,7 +87,7 @@ def createNewsSourceByPresent(present):
 								 ('t24.com.tr', 'http://t24.com.tr', ('/haber/', '/gundem/','/politika/', '/egitim/', '/yasam/', '/ekonomi/', '/dunya/', ), (), ({'story-date':todayTrFormat},)),
 								 #('radikal.com.tr', 'http://www.radikal.com.tr', ('/turkiye/', '/ekonomi/', '/politika/', '/dunya/', '/hayat/', '/radikalist/', ), (), ({'date':todaySlashFormat},), {'-':1}),
 								 ('ntv.com.tr', 'http://www.ntv.com.tr', ('/turkiye/','/dunya/', '/ekonomi/', '/saglik/','/yasam/', '/egitim/',), (), ({'time':todayTrNonZeroFormat},), ),
-								 ('cnnturk.com', 'http://www.cnnturk.com', ('/ekonomi/', '/turkiye/', '/dunya/', '/yasam/',  ), (), ({'date':todayPointFormat}, {'sm':todayPointFormat},), {'-':1}),
+								 ('cnnturk.com', 'http://www.cnnturk.com', ('/ekonomi/', '/turkiye/', '/dunya/', '/yasam/',  ), (), ({'detail-metadata':todayPointFormat},), {'-':1}),
 								 ('gazetevatan.com', 'http://www.gazetevatan.com', ('-gundem', '-dunya', '-siyaset', '-ekonomi', '-finas', '-yasam', '-egitim',), (), ({'cdate':todayTrFormat},{'datesrc':todayTrFormat}), {'|':1}),
 								 ('ensonhaber.com', 'http://www.ensonhaber.com', (todayLineFormatReverse,), ('kralspor.',), (1)),
 								 ('haber.sol.org.tr', 'http://haber.sol.org.tr/anasayfa', ('/turkiye/','/emek-sermaye/', '/dunya/', '/toplum/', '/medya/',), (), ({'date-display-single':todayTrFormat},), {'|':2},),
@@ -106,7 +106,7 @@ def createNewsSourceByPresent(present):
 								 ('odatv.com', 'http://www.odatv.com', ('-',), (), ({'yaziboyut':todayPointFormat},)),
 								 #('bugun.com.tr', 'http://www.bugun.com.tr', ('/gundem/', '/dunya/', '/yasam/', '/ekonomi/', '/politika/', '/egitim/', '/saglik/',), (), ({'pubdate':todayPointFormat},)),
 								 ('taraf.com.tr', 'http://www.taraf.com.tr', ('-', ), ('/kategori/',), ({'post-meta':todayTrNonZeroFormat},), {'|':1}),
-								 ('aljazeera.com.tr', 'http://www.aljazeera.com.tr', ('/haber/','/al-jazeera-ozel/', '/gorus/', '/izle/',), (), ({'meta':todayTrNonZeroFormat},)),
+								 ('aljazeera.com.tr', 'http://www.aljazeera.com.tr', ('/haber/','/al-jazeera-ozel/', '/gorus/', '/izle/',), (), ({'datetime': todayTrNonZeroShortFormat},)),
 								 #('bbc.co.uk/turkce', 'http://www.bbc.co.uk/turkce', (todayBbcFormat,), ('/konular/','/sport/' '/spor/',), (1),{'-':1}),
 								 ('haberler.com', 'http://www.haberler.com', ('-haberi',), ('fotogaleri.',), ({'nav1':todayTrFormat},)),
 								 ('diken.com.tr', 'http://www.diken.com.tr', ('-',), ('/kategori/', 'bu-gazete/', '-ekim-', '-kasim-', '-aralik-', '-ocak-', '-subat-', '-mart-', '-nisan-', '-mayis-', '-haziran-', '-temmuz-', '-agustos-', '-eylul-',), ({'entry-time':todaySlashFormat},), {'-':1}),
@@ -116,7 +116,7 @@ def createNewsSourceByPresent(present):
 			
 				'videohaber': [
 								('hurriyet.com.tr', 'http://webtv.hurriyet.com.tr', ('webtv.',), (), ({'upload-date':todayPointFormat}, )),
-								('cnnturk.com', 'http://www.cnnturk.com/video', ('/video/',), (), ({'date':todayPointFormat},), {'-':1}),
+								('cnnturk.com', 'http://www.cnnturk.com/video', ('/video/',), (), ({'detail-metadata hidden-xs hidden-sm':todayPointFormat},), {'-':1}),
 								('ensonhaber.com', 'http://videonuz.ensonhaber.com', ('/izle/',), (), ({'timeInfo':todayFirstYear},)),
 								('haber7.com', 'http://video.haber7.com/', ('/video-galeri/',), (), ({'description':todayPointFormat},)),
 								('trthaber.com', 'http://www.trthaber.com/video-galerileri.html', ('/videolar/',), ('/videolar/ekonomi','/videolar/kultur-sanat', '/videolar/yasam', '/videolar/spor', '/videolar/gundem', '/videolar/magazin', '/videolar/cevre', '/videolar/dunya', '/videolar/medya', '/videolar/saglik', '/videolar/egitim', '/videolar/turkiye', '/videolar/bilim-teknik' ), ({'balonIc_bilgi':todayPointFormat},)),
@@ -160,7 +160,7 @@ def createNewsSourceByPresent(present):
 								 #('zaman.com.tr', 'http://www.zaman.com.tr/kultur', ('kultur_',), ('/roportaj',), ({'detayTarihNew':todayTrNonZeroFormat},)),
 								 #('zaman.com.tr', 'http://www.zaman.com.tr/muzik', ('cumaertesi_', 'pazar_', 'kultur_', 'cumartesi_'), ('/roportaj',), ({'detayTarihNew':todayTrNonZeroFormat},)),
 								 #('zaman.com.tr', 'http://www.zaman.com.tr/tv-rehberi', ('tv-rehberi_',), ('/roportaj',), ({'detayTarihNew':todayTrNonZeroFormat},)),
-								 ('cnnturk.com', 'http://www.cnnturk.com/kultur-sanat', ('/kultur-sanat/', ), (), ({'date':todayPointFormat},{'sm':todayPointFormat},), {'-':1}),
+								 ('cnnturk.com', 'http://www.cnnturk.com/kultur-sanat', ('/kultur-sanat/', ), (), ({'detail-metadata':todayPointFormat},),  {'-':1}),
 								 ('t24.com.tr', 'http://t24.com.tr/kultur-sanat', ('/haber/',), (), ({'story-date':todayTrFormat},)),
 								 ('ntv.com.tr', 'http://www.ntv.com.tr/sanat', ('/sanat/',), (),({'time':todayTrNonZeroFormat},),),
 								 ('haber7.com', 'http://www.haber7.com/kultur', ('/kultur/', '/kulturel-etkinlikler/', '/mimari/', '/muzik/', '/arkeoloji/', '/sinema/', '/tarih-ve-fikir/', '/edebiyat/', '/fotograf/', '/plastik-sanatlar/', 'tiyatro-ve-sahne-sanatlari',), (), ({'readInfo':todayPointFormat}, )),
@@ -176,7 +176,7 @@ def createNewsSourceByPresent(present):
 								('sporx.com', 'http://www.sporx.com/?giris=ok', ('-',), (), ({'haberdate':todayTrFormat},)),
 								('mackolik.com', 'http://www.mackolik.com/default.aspx', ('/Haber/',), (), ({'float:left;text-align:left;padding-left:20px;':todayPointFormat},)),
 								('ajansspor.com', 'http://www.ajansspor.com/index.html', ('/futbol/', '/basketbol/', '/voleybol/', '/motorsporlari/',), ('Motokros', 'amputefutbol', '/yazarlar/',), ({'tamGrey10':todayTrFormatSpace},)),
-								('cnnturk.com', 'http://www.cnnturk.com/spor', ('/spor/', ), (), ({'date':todayPointFormat},{'sm':todayPointFormat},),),
+								('cnnturk.com', 'http://www.cnnturk.com/spor', ('/spor/', ), (), ({'detail-metadata':todayPointFormat},),),
 								('fotomac.com.tr', 'http://www.fotomac.com.tr', (today,), ('/Yazarlar/',), (1), {'–':2}),
 								],
 				
@@ -187,7 +187,7 @@ def createNewsSourceByPresent(present):
 								 ('haber7.com', 'http://www.haber7.com', ('/yazarlar/',), (), ({'info readInfo':todayTrFormat},)),
 								 #('zaman.com.tr', 'http://www.zaman.com.tr/yazarlar', ('_',), ('yorum_', 'haber_', 'spor_', 'kultur_', 'gundem_', 'ekonomi_', 'dunya_', 'aile-saglik_', 'egitim_', 'wetransfer.'), ({'detayTarih':todayTrNonZeroFormat},)),										  
 								 ('gazetevatan.com', 'http://www.gazetevatan.com/yazarlar/', ('-yazar-yazisi-',), (), ({'cdate':todayTrFormat},), {'|':1}),
-								 ('sozcu.com.tr', 'http://www.sozcu.com.tr/kategori/yazarlar/', ('/yazarlar/',), (), ({'date':todayTrFormat},)),
+								 ('sozcu.com.tr', 'http://www.sozcu.com.tr/kategori/yazarlar/', ('/yazarlar/',), (), ({'date':todayTrNonZeroFormat},)),
 								 ('star.com.tr', 'http://www.star.com.tr/yazarlar/', ('/yazar/',), (), ({'date2':todayTrFormat},), {'-': 2}),
 								 ('sabah.com.tr', 'http://www.sabah.com.tr/Yazarlar', (today,), ('/gundem/','/ekonomi/', '/yasam/', '/dunya/', '/piyasa/', '/teknoloji/', '/egitim/', '/kultur_sanat/', '/sinema/', '/turizm/', '/fotohaber/', '/Turizm/', '/magazin/', '/multimedya/', '/spor/', '/webtv/', '/otomobil/'), (1), {'-':2}),
 								 ('cumhuriyet.com.tr', 'http://www.cumhuriyet.com.tr/yazarlar', ('/koseyazisi/',), (), ({'publish-date':todayTrFormat},)),
