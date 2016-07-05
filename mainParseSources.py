@@ -850,13 +850,6 @@ CREATE TABLE IF NOT EXISTS `tempLinks` (
                     countGoogle = 0
 					
 			
-            #===================================================================
-            # Ozel Durumlar
-            #===================================================================
-            if countFacebook > 2000 and countTwitter < 100:
-                countGoogle = 0
-                countFacebook = 0
-
             linkTitle = returnLinkDict[link][0]
             linkDesc = returnLinkDict[link][1]
             linkImage = returnLinkDict[link][2]
