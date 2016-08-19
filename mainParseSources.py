@@ -776,19 +776,9 @@ CREATE TABLE IF NOT EXISTS `tempLinks` (
             linkForCount = link.replace("'", "''")
 			
             try:
-                #ProxyHandler
-                #proxy = urllib2.ProxyHandler({'http': '89.185.235.15'})
-                #opener = urllib2.build_opener(proxy)
-                #html = opener.open('http://api.facebook.com/method/fql.query?query=select%%20total_count%%20from%%20link_stat%%20where%%20url="%s"'%linkForCount, timeout=5).read()
-                try:
-                    self.linkContentComma.index(sourceTitle)
-                    html = urllib2.urlopen('http://api.facebook.com/method/fql.query?query=select%%20total_count%%20from%%20link_stat%%20where%%20url="%s"' % linkForCount, timeout=5).read()
-                    indexCount = html.find('<total_count>') + len('<total_count>')
-                    countFacebook = int(html[indexCount: html[indexCount:].find('</') + indexCount])	
-                except:
-                    html = urllib2.urlopen('http://api.facebook.com/method/links.getStats?urls=%s&format=json' % linkForCount, timeout=5).read()
-                    countFacebook = json.loads(html)[0]['total_count']
-
+				html = urllib2.urlopen('http://graph.facebook.com/?id=%s"'%linkForCount, timeout=5).read()
+				indexCount = html.find('"share_count":') + len('"share_count":')
+				countFacebook = int(html[indexCount:].split("}")[0].strip())
             except Exception, error:
                 self.logHandler.printMsg("Link count-error(facebook)", 3)
                 try:
