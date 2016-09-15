@@ -81,7 +81,7 @@ def createNewsSourceByPresent(present):
 		newsSources = {
 				'gundem':	[
 								 ('sozcu.com.tr', 'http://www.sozcu.com.tr', ('/gundem/', '/gunun-icinden/', '/dunya/', '/ekonomi/', '/egitim/', '/saglik/',), ('spor_', 'video.', ), ({'date':todayTrNonZeroFormat},)),
-								 ('milliyet.com.tr','http://www.milliyet.com.tr', ('-gundem-', '-dunya-', '-ekonomi-', '-siyaset-',), ('secure.milliyet.com.tr','/ydetay/', 'skorer.'),({'date':todayPointFormat},{'detSpan':todayTrFormat}, {'detSpan2':todayTrFormat}), {'-':1}),
+								 #('milliyet.com.tr','http://www.milliyet.com.tr', ('-gundem-', '-dunya-', '-ekonomi-', '-siyaset-',), ('secure.milliyet.com.tr','/ydetay/', 'skorer.'),({'date':todayPointFormat},{'detSpan':todayTrFormat}, {'detSpan2':todayTrFormat}), {'-':1}),
 								 ('hurriyet.com.tr', 'http://www.hurriyet.com.tr/', ('-',), (), ({'col-md-4 text-right':todayTrFormat},)),
 								 ('haber7.com', 'http://www.haber7.com', ('/haber/',), ('/teknoloji/', 'spor.','/yazarlar/'), ({'info':todayPointFormat}, )),
 								 ('haberturk.com','http://www.haberturk.com', ('/haber/','/yasam/', '/gundem/', '/ekonomi/', '/dunya/', '/medya/', '/saglik/'), ('/yazarlar/', '/fiskos/', '/video/', '/teknoloji/', '/spor/', '/kultur-sanat/','spor.', 'magazin.',), ({'date':todayTrFormat}, {'HaberTarih':todayTrFormat}, {'videoDetayInfo':todayPointFormat}), {'|':1}),
@@ -137,7 +137,7 @@ def createNewsSourceByPresent(present):
 								('mynet.com', 'http://www.mynet.com/teknoloji', ('/teknoloji/',), (), ({'newsInfo':todayTrNonZeroFormat},)),
 								('bigumigu.com', 'http://www.bigumigu.com', ('/haber/',), (), ({'category':'%s'%todayTrNonZeroFormat},)),
 								('sosyalmedya.co', 'http://www.sosyalmedya.co', ("-",), ('/sosyal-medya', '/sosyal-marka', '/yeni-girisimler', '/e-ticaret',), ({'date':'%s'%todayTrNonZeroFormat},), {'Sosyal Medya':1}),
-								('silikonvadisi.tv', 'http://www.silikonvadisi.tv', ('.html',), (), ({'entry-date updated td-module-date':todayTrNonZeroFormat},), {'-':1}),
+								('silikonvadisi.tv', 'http://www.silikonvadisi.tv', ('.html',), ('sicak-haber',), ({'entry-date updated td-module-date':todayTrNonZeroFormat},), {'-':1}),
 								('webtekno.com', 'http://www.webtekno.com', ('.html',), (), ({'author show-for-large-up':"önce"},), ),
  								('fizikist.com', 'http://www.fizikist.com', ('-',), (), ({'content_time':todayTrFormat},), {'-':1}),
  								('log.com.tr', 'http://www.log.com.tr', ('-',), (), ({'date':todayTrFormat},), {'-':1}),
