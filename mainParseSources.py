@@ -5,15 +5,14 @@ import urllib, urllib2, requests, json
 import time
 import simplejson
 import signal
-from haberbusSources import createNewsSourceByPresent
+from sourceList import createNewsSourceByPresent
 from datetime import datetime
-from GetLinkHandle import GetLinkHandle
+from LinkHandler import LinkHandler
 from LogHandler import LogHandler
 from ServerDatabaseHandler import ServerDatabaseHandler
 from BeautifulSoup import BeautifulSoup
 
 import requests, urllib
-from requests_oauthlib import OAuth1
 
 class Main:
 	def __init__(self):
@@ -456,7 +455,7 @@ class Main:
 
 					
 				#===============================================================
-				# Link links_* database'de var ise tekrar GetLinkHandler cagrilmaz, eger ana sayfada ise meta etiketleri kontrol icin cagrilir
+				# Link links_* database'de var ise tekrar LinkHandlerr cagrilmaz, eger ana sayfada ise meta etiketleri kontrol icin cagrilir
 				#===============================================================
 				# Injection onleme
 				linkInj = link.replace("'", "''")
@@ -489,10 +488,21 @@ class Main:
 				#Eger link database'de var ise tarihine bakilir bugun ise alinir yoksa gecilir sonraki linke
 				#===========================================================================================
 				try:
-					linkDate = self.serverHandler.executeQuery("SELECT date FROM `justLinks` WHERE `link`='%s'"%linkInj)
+					linkDate = self.serverHandler.executeQuery("SELECT date FROM `tempLinks` WHERE `link`='%s'" % linkInj)
 				except:
-					self.logHandler.logger("getNewsLinkFromSource")
-					continue
+					self.serverHandler.executeQuery("""
+CREATE TABLE IF NOT EXISTS `tempLinks` (
+  `id` int(11) NOT NULL,
+  `date` date NOT NULL,
+  `link` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;""")
+
+					time.sleep(3)
+					self.serverHandler.executeQuery("ALTER TABLE `tempLinks` ADD PRIMARY KEY (`id`)")
+					time.sleep(3)
+					self.serverHandler.executeQuery("ALTER TABLE `tempLinks` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT")
+					linkDate = self.serverHandler.executeQuery("SELECT date FROM `tempLinks` WHERE `link`='%s'" % linkInj)
+
 					
 				if linkDate:
 					if str(linkDate[0][0]) != str(present.strftime('%Y-%m-%d')):
@@ -508,7 +518,7 @@ class Main:
 					getLinkHandler= ""
 					
 					#=======================================================
-					# Link'ler icin ozel GetLinkHandler argumanlari
+					# Link'ler icin ozel LinkHandlerr argumanlari
 					#=======================================================
 					imageClass = ""
 					requestType = ""
@@ -533,7 +543,7 @@ class Main:
 					except:
 						descMetaType = ""
 						
-					getLinkHandler = GetLinkHandle(link, requestType=requestType,  imageClass=imageClass, descMetaType=descMetaType, cleanBrokenCh=cleanBrokenCh)
+					getLinkHandler = LinkHandler(link, requestType=requestType,  imageClass=imageClass, descMetaType=descMetaType, cleanBrokenCh=cleanBrokenCh)
 					getLinkHandler.run()
 					soup = getLinkHandler.soup
 
@@ -703,7 +713,7 @@ class Main:
 										#Eger bugunun link'i ise asagida duzeltilir
 
 										if not linkDate:
-											self.serverHandler.executeQuery("INSERT INTO `justLinks` VALUES(NULL, CURRENT_DATE()-1, '%s')"%linkInj)
+											self.serverHandler.executeQuery("INSERT INTO `tempLinks` VALUES(NULL, CURRENT_DATE()-1, '%s')"%linkInj)
 
 										try:
 											dateText = findedDate
@@ -723,7 +733,7 @@ class Main:
 
 											if dateText.find(dateToday) != -1:
 												#Eger linkDate yoksa ekle
-												self.serverHandler.executeQuery("UPDATE `justLinks` SET date=CURRENT_DATE() WHERE link='%s'"%linkInj)
+												self.serverHandler.executeQuery("UPDATE `tempLinks` SET date=CURRENT_DATE() WHERE link='%s'"%linkInj)
 													
 												returnLinkDict[link] = (title, desc, img)
 											else:
@@ -950,9 +960,9 @@ class Main:
 			self.yearMonth = str(present.strftime('%Y%m'))
 		
 			
-			#justLinks truncate
+			#tempLinks truncate
 			if present.hour == 1:
-				self.serverHandler.executeQuery("TRUNCATE `justLinks`")
+				self.serverHandler.executeQuery("TRUNCATE `tempLinks`")
 			
 			
 			self.logHandler.printMsg("Starting [%s]"%str(present)[:19])
