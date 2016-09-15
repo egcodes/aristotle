@@ -1,15 +1,12 @@
 # haberbus
-Haberbüs, Türk haber sitelerinden sosyal medyada en çok paylaşılan haberleri toplamak için kullanılan bir parser sistemidir.
+Haberbüs, Türkçe haber sitelerinden haberleri toplamak için kullanılan bir parser sistemidir.
 Site: [www.haberbus.com](http://www.haberbus.com)
 
-ÖNEMLİ NOT: Twitter public api'sini kapattığı için RestApi'ye geçilmiştir ama tüm tweetleri çekip shareCount belirlemek her link için zor olduğundan kısmi çekiliyor. Facebook'da public api'sini kapatım graph üzerinden açmıştır. Fakat üst üste 50 sorguadn sonra forbidden yapmaktadır. Şu an bu parser sistemi shareCount'ları toplama aktif ise doğru çalışmaz. Bunlar kapatılarak haberler toplanabilir.
+ÖNEMLİ NOT: Twitter ve Facebook public paylaşım oranı api'lerini kapattığı için bu toplama sistemi koddan kaldırılmıştır.
 
 Temel olarak şu şekilde çalışmaktadır.
 - Kaynak listesinde (sourceList.py) tanımlı olan 5 kategori altındaki 50 link'i mainParseSources.py script'ine hiç bir parametre verilmez ise teker teker gezer.
 - Her haber sitesinin kendine özel keyword'ları yine sourceList.py içinde tanımlıdır. Ve bu keyword'lar ile link'leri toplayama başlar.
-- Topladığı her link için facebook, google ve twitter'ın api'lerini kullanarak paylaşım sayılarını alır.
-- Tüm linkleri paylaşım sırasına göre büyükten küçüğe sıralayarak ilk 100 link'i alıp tabloya kaydeder.
-- Bu şekilde sürekli çalışarak, hem önceden alınan linklerin paylaşım oranları güncellenir hem de yeni linkler sürekli alınmaya devam edilir.
 
 Yaklaşık tekil olarak 50 kaynak sourcelist'de tanımlıdır.
 ![Kaynak Listesi](/screenshots/sourcelist.png)
