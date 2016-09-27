@@ -138,7 +138,7 @@ def createNewsSourceByPresent(present):
 								('bigumigu.com', 'http://www.bigumigu.com', ('/haber/',), (), ({'category':'%s'%todayTrNonZeroFormat},)),
 								('sosyalmedya.co', 'http://www.sosyalmedya.co', ("-",), ('/sosyal-medya', '/sosyal-marka', '/yeni-girisimler', '/e-ticaret',), ({'date':'%s'%todayTrNonZeroFormat},), {'Sosyal Medya':1}),
 								('silikonvadisi.tv', 'http://www.silikonvadisi.tv', ('.html',), ('sicak-haber',), ({'entry-date updated td-module-date':todayTrNonZeroFormat},), {'-':1}),
-								('webtekno.com', 'http://www.webtekno.com', ('.html',), (), ({'author show-for-large-up':"önce"},), ),
+								('webtekno.com', 'http://www.webtekno.com', ('.html',), (), ({'content-info__date':"önce"},), ),
  								('fizikist.com', 'http://www.fizikist.com', ('-',), (), ({'content_time':todayTrFormat},), {'-':1}),
  								('log.com.tr', 'http://www.log.com.tr', ('-',), (), ({'date':todayTrFormat},), {'-':1}),
  								# Haber disinda sayfalar geliyor ayirt edici kelime yok
@@ -166,7 +166,7 @@ def createNewsSourceByPresent(present):
 			
 				'spor':		[
 								('fanatik.com.tr', 'http://www.fanatik.com.tr', (today,), ('KategoriSayfasi','AnketmerkeziTumYorumlar',"tum-yorumlar",), (1), {'-':1}),
-								('ntvspor.net', 'http://www.ntvspor.net', ('/haber/', '/video-galeri/', '/foto-galeri/'), (), ({'newsDate':todayTrNonZeroFormat},),),
+								('ntvspor.net', 'http://www.ntvspor.net', ('-',), (), ({'articles':todayTrNonZeroFormat},),),
 								('amkspor.sozcu.com.tr', 'http://amkspor.sozcu.com.tr', (today,), (), (1), {'-':1}),
 								('sporx.com', 'http://www.sporx.com/?giris=ok', ('-',), (), ({'haberdate':todayTrFormat},)),
 								('mackolik.com', 'http://www.mackolik.com/default.aspx', ('/Haber/',), (), ({'float:left;text-align:left;padding-left:20px;':todayPointFormat},)),
