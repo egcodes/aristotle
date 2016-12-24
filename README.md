@@ -20,6 +20,7 @@ Yaklaşık tekil olarak 50 kaynak sourcelist'de tanımlıdır.
 - Python 2.x (2.6 ve üstü)
 	- MySQLdb
 	- BeautifulSoup
+	- requests
 	- simplejson
 * Mysql Database
 
