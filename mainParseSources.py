@@ -140,12 +140,7 @@ class Main:
 		# Database baglantisi
 		self.serverHandler = ServerDatabaseHandler()
 		
-		# Local ve Server calisma ayrimi
-		if os.environ['LOGNAME'] == "erdigurbuz":
-			self.getLinkCountLimit = 50
-			self.showLink = True
-		else:
-			self.getLinkCountLimit = 1500
+		self.getLinkCountLimit = 1500
 
 		if len(sys.argv) == 2:
 			category = sys.argv[1]
@@ -1000,9 +995,8 @@ CREATE TABLE IF NOT EXISTS `tempLinks` (
 				sources = data[1]
 
 				#Kose yazilari 2 saaate bir kontrol edilsin	
-				if os.environ['LOGNAME'] != "erdigurbuz":
-					if present.hour % 2 != 0 and category == "koseyazilari":
-						continue
+				if present.hour % 2 != 0 and category == "koseyazilari":
+					continue
 				
 				if self.initCategory:
 					if self.initCategory.split('-')[0] != 'non' and self.initCategory != category:
