@@ -10,7 +10,10 @@ from datetime import datetime
 from LinkHandler import LinkHandler
 from LogHandler import LogHandler
 from ServerDatabaseHandler import ServerDatabaseHandler
-from BeautifulSoup import BeautifulSoup
+if os.name == "posix":
+	from BeautifulSoup import BeautifulSoup
+else:
+	from bs4 import BeautifulSoup
 
 import requests, urllib
 
