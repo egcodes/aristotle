@@ -114,7 +114,7 @@ class Main:
 		self.notGetLinkIfContainThisKeyword = ['javascript:', ]
 
 		#Hotlink korumasi olanlar bunlarin resimleri link vermek yerine indiriliyor
-		self.hotlinks = ['odatv.com']
+		self.hotlinks = []
 		
 		#Eger karakterler bozuk geliyor ise Request tpye
 		self.requestTypes = ['amkspor.sozcu.com.tr', 'yenisafak.com.tr', 'indir.com']
