@@ -103,9 +103,10 @@ def createNewsSourceByPresent(present):
 								 ('odatv.com', 'http://www.odatv.com', ('-',), (), ({'yaziboyut':todayPointFormat},)),
 								 ('haberler.com', 'http://www.haberler.com', ('-haberi',), ('fotogaleri.',), ({'nav1':todayTrFormat},)),
 								 ('diken.com.tr', 'http://www.diken.com.tr', ('-',), ('/kategori/', 'bu-gazete/', '-ekim-', '-kasim-', '-aralik-', '-ocak-', '-subat-', '-mart-', '-nisan-', '-mayis-', '-haziran-', '-temmuz-', '-agustos-', '-eylul-',), ({'entry-time':todaySlashFormat},), {'-':1}),
-								 ('aksam.com.tr', 'http://www.aksam.com.tr', ('/siyaset/', '/guncel/', '/yasam/', '/ekonomi/', '/dunya/',), ('/teknoloji/', '/spor/', '/magazin/', '/yazarlar/',), ({'newsDate':todayTrFormat},), {'-':1}),
-							    # Tarih yok sayfada
 								 ('aljazeera.com.tr', 'http://www.aljazeera.com.tr', ('/haber/','/al-jazeera-ozel/', '/gorus/', '/izle/',), (), ({'datetime': todayTrNonZeroShortFormat},)),
+								# Yanlis resim geliyor haber icin
+								 #('aksam.com.tr', 'http://www.aksam.com.tr', ('/siyaset/', '/guncel/', '/yasam/', '/ekonomi/', '/dunya/',), ('/teknoloji/', '/spor/', '/magazin/', '/yazarlar/',), ({'newsDate':todayTrFormat},), {'-':1}),
+							    # Tarih yok sayfada
 								 #('bbc.co.uk/turkce', 'http://www.bbc.co.uk/turkce', (todayBbcFormat,), ('/konular/','/sport/' '/spor/',), (1),{'-':1}),
 								 #('posta.com.tr', 'http://www.posta.com.tr', ('/HaberDetay/',), ('/video/','video.', '/YazarHaberDetay/', '/spor/', '/teknoloji/', ), ({'date':todayTrFormat},), {'-':1},),										
 								 #('turkiyegazetesi.com.tr', 'http://www.turkiyegazetesi.com.tr', ('/gundem/','/dunya/', '/egitim/', '/yasam/', '/saglik/', '/politika/', '/ekonomi/', ), ('/spor/','/teknoloji/', '/yazarlar/',), ({'story_date clearfix':todayPointFormat},),),										
@@ -114,7 +115,7 @@ def createNewsSourceByPresent(present):
 								],
 			
 				'videohaber': [
-								('hurriyet.com.tr', 'http://webtv.hurriyet.com.tr', ('webtv.',), (), ({'upload-date':todayPointFormat}, )),
+								('hurriyet.com.tr', 'http://www.hurriyet.com.tr/video/', ('/video/',), ('/playlist/',), ({'date':todayTrNonZeroFormat}, )),
 								('cnnturk.com', 'http://www.cnnturk.com/video', ('/video/',), (), ({'detail-metadata hidden-xs hidden-sm':todayPointFormat},), {'-':1}),
 								('ensonhaber.com', 'http://videonuz.ensonhaber.com', ('/izle/',), (), ({'timeInfo':todayFirstYear},)),
 								('haber7.com', 'http://video.haber7.com/', ('/video-galeri/',), (), ({'description':todayPointFormat},)),
@@ -166,7 +167,7 @@ def createNewsSourceByPresent(present):
 			
 				'spor':		[
 								('fanatik.com.tr', 'http://www.fanatik.com.tr', (today,), ('KategoriSayfasi','AnketmerkeziTumYorumlar',"tum-yorumlar",), (1), {'-':1}),
-								('ntvspor.net', 'http://www.ntvspor.net', ('-',), (), ({'articles':todayTrNonZeroFormat},),),
+								('ntvspor.net', 'http://www.ntvspor.net', ('-',), (), ({'time':todayTrNonZeroFormat},),),
 								('amkspor.sozcu.com.tr', 'http://amkspor.sozcu.com.tr', (today,), (), (1), {'-':1}),
 								('sporx.com', 'http://www.sporx.com/?giris=ok', ('-',), (), ({'haberdate':todayTrFormat},)),
 								('mackolik.com', 'http://www.mackolik.com/default.aspx', ('/Haber/',), (), ({'float:left;text-align:left;padding-left:20px;':todayPointFormat},)),
