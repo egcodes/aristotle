@@ -178,18 +178,17 @@ def createNewsSourceByPresent(present):
 								],
 				
 				'koseyazilari': [
-								 ('haberturk.com','http://www.haberturk.com/htyazarlar', ('/yazarlar/',), (), ({'date':todayTrFormatUpper}, {'HaberTarih':todayTrFormat}, {'videoDetayInfo':todayPointFormat}, {'group news-date-create mbottom10 ':todayTrFormat})),
-								 ('milliyet.com.tr','http://www.milliyet.com.tr/Yazar.aspx?aType=Yazarlar', ('/ydetay/',), ('secure.milliyet.com.tr',), ({'date':todayPointFormat},{'detSpan':todayTrFormat}, {'detSpan2':todayTrFormat}), {'|':2}),
-								 ('haber7.com', 'http://www.haber7.com', ('/yazarlar/',), (), ({'info readInfo':todayTrFormat},)),
+								 ('haberturk.com','http://www.haberturk.com/htyazarlar', ('/yazarlar/',), (), ({'author-detail-content':todayTrFormat},)),
+								 ('milliyet.com.tr','http://www.milliyet.com.tr/Yazar.aspx?aType=Yazarlar', ('/ydetay/',), ('secure.milliyet.com.tr',), ({'nn1':todayPointFormat},), {'|':2}),
+								 ('haber7.com', 'http://www.haber7.com', ('/yazarlar/',), (), ({'info':todayPointFormat},)),
 								 ('gazetevatan.com', 'http://www.gazetevatan.com/yazarlar/', ('-yazar-yazisi-',), (), ({'cdate':todayTrFormat},), {'|':1}),
 								 ('sozcu.com.tr', 'http://www.sozcu.com.tr/kategori/yazarlar/', ('/yazarlar/',), (), ({'date':todayTrNonZeroFormat},)),
-								 ('star.com.tr', 'http://www.star.com.tr/yazarlar/', ('/yazar/',), (), ({'date2':todayTrFormat},), {'-': 2}),
+								 ('star.com.tr', 'http://www.star.com.tr/yazarlar/', ('/yazar/',), (), ({'publisheddate':todayTrFormat},), {'-': 2}),
 								 ('sabah.com.tr', 'http://www.sabah.com.tr/Yazarlar', (today,), ('/gundem/','/ekonomi/', '/yasam/', '/dunya/', '/piyasa/', '/teknoloji/', '/egitim/', '/kultur_sanat/', '/sinema/', '/turizm/', '/fotohaber/', '/Turizm/', '/magazin/', '/multimedya/', '/spor/', '/webtv/', '/otomobil/'), (1), {'-':2}),
 								 ('cumhuriyet.com.tr', 'http://www.cumhuriyet.com.tr/yazarlar', ('/koseyazisi/',), (), ({'publish-date':todayTrFormat},)),
 								 ('t24.com.tr', 'http://t24.com.tr/yazarlar', ('/yazarlar/', ), (), ({'datePublished':todayTrFormat},)),
-								 ('yenisafak.com.tr', 'http://www.yenisafak.com.tr/yazarlar/', ('/yazarlar/',), (), ({'info':todayTrFormatSpecial3},), {'|':1}),										 
-								 ('yeniakit.com.tr', 'http://www.yeniakit.com.tr/yazarlar', ('/yazarlar/',), (), ({'datePublished':todayTrFormat},)),	
- 								 ('bugun.com.tr', 'http://www.bugun.com.tr/yazarlar', ('-yazisi-',), (), ({'yazarDateString':todayTrFormat},)),
+								 ('yenisafak.com.tr', 'http://www.yenisafak.com.tr/yazarlar/', ('/yazarlar/',), (), ({'author-share':todayTrFormat},), {'|':1}),										 
+								 ('yeniakit.com.tr', 'http://www.yeniakit.com.tr/yazarlar', ('/yazarlar/',), (), ({'inside':todayTrFormat},)),	
 								#Dinamik uretiliyor haber ondan alinamadi 
 								#('hurriyet.com.tr', 'http://www.hurriyet.com.tr/yazarlar/', ('/yazar/',), (), ({'hsaalih-date':todayPointFormat},)),
 								
