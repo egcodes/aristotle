@@ -246,8 +246,8 @@ class LinkHandler:
                         imgContent = imgContent[imgContent[5:].find('http://') + 5:]
                     if imgContent.find('https://') != -1:
                         imgContent = imgContent.replace('https://', 'http://')
-					if imgContent.startswith("//") == True:
-						imgContent = "http://" + imgContent[2:]
+		    if imgContent.startswith("//") == True:
+		        imgContent = "http://" + imgContent[2:]
 						
                     if imgContent.find('http://') == -1:
                         #Uzanti var ise hostname ekleme
