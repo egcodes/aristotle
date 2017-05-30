@@ -4,7 +4,7 @@ from BeautifulSoup import BeautifulSoup
 from LogHandler import LogHandler
 from ServerDatabaseHandler import ServerDatabaseHandler
 from datetime import datetime
-from haberbusSources import createNewsSourceByPresent
+from sourceList import createNewsSourceByPresent
 import sys
 
 class Main:

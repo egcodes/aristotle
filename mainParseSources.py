@@ -658,6 +658,8 @@ CREATE TABLE IF NOT EXISTS `tempLinks` (
 											if not soupDateDiv:
 												soupDateDiv = soup.findAll("div", { "itemprop" : "%s"%dateClass})
 											if not soupDateDiv:
+												soupDateDiv = soup.findAll("span", { "itemprop" : "%s"%dateClass})
+											if not soupDateDiv:
 												soupDateDiv = soup.findAll("li", { "class" : "%s"%dateClass})
 											if not soupDateDiv:
 												soupDateDiv = soup.findAll("p", { "itemprop" : "%s"%dateClass})
