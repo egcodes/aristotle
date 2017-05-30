@@ -189,7 +189,7 @@ def createNewsSourceByPresent(present):
 								 ('t24.com.tr', 'http://t24.com.tr/yazarlar', ('/yazarlar/', ), (), ({'datePublished':todayTrFormat},)),
 								 ('yenisafak.com.tr', 'http://www.yenisafak.com.tr/yazarlar/', ('/yazarlar/',), (), ({'author-share':todayTrFormat},), {'|':1}),										 
 								 ('yeniakit.com.tr', 'http://www.yeniakit.com.tr/yazarlar', ('/yazarlar/',), (), ({'inside':todayTrFormat},)),	
- 								('hurriyet.com.tr', 'http://www.hurriyet.com.tr/yazarlar/', ('/yazarlar/',), (), ({'article-date':todayTrFormat},)),
+       								('hurriyet.com.tr', 'http://www.hurriyet.com.tr/yazarlar/', ('/yazarlar/',), (), ({'article-date':todayTrFormat},)),
 								
 								],
 			}
