@@ -8,6 +8,7 @@ def createNewsSourceByPresent(present):
 		monthEng = {'Haziran':'June', 'Temmuz':'July', 'Ağustos':'August', 'Mart':'March', 'Nisan':'April', 'Mayıs':'May',  'Eylül':'September', 'Ekim':'October', 'Kasım':'November', 'Aralık':'December', 'Ocak':'January', 'Şubat':'February'}
 
 		today = str(present.strftime('%Y/%m/%d'))
+		todayCombine = str(present.strftime('%Y%m%d'))
 		todayFirstYear = str(present.strftime('%Y-%m-%d'))
 		todayNonZeroMounthNonYear = '/'.join(today.split('/')[1:])
 		todayNonZeroMounthNonZeroDayYear = todayNonZeroMounthNonYear
@@ -103,15 +104,12 @@ def createNewsSourceByPresent(present):
 								 ('odatv.com', 'http://www.odatv.com', ('-',), (), ({'yaziboyut':todayPointFormat},)),
 								 ('haberler.com', 'http://www.haberler.com', ('-haberi',), ('fotogaleri.',), ({'nav1':todayTrNonZeroFormat},)),
 								 ('diken.com.tr', 'http://www.diken.com.tr', ('-',), ('/kategori/', 'bu-gazete/', '-ekim-', '-kasim-', '-aralik-', '-ocak-', '-subat-', '-mart-', '-nisan-', '-mayis-', '-haziran-', '-temmuz-', '-agustos-', '-eylul-',), ({'entry-time':todaySlashFormat},), {'-':1}),
-								# Site kapandi
-								# ('aljazeera.com.tr', 'http://www.aljazeera.com.tr', ('/haber/','/al-jazeera-ozel/', '/gorus/', '/izle/',), (), ({'datetime': todayTrNonZeroShortFormat},)),
-								# Yanlis resim geliyor haber icin
-								 #('aksam.com.tr', 'http://www.aksam.com.tr', ('/siyaset/', '/guncel/', '/yasam/', '/ekonomi/', '/dunya/',), ('/teknoloji/', '/spor/', '/magazin/', '/yazarlar/',), ({'newsDate':todayTrFormat},), {'-':1}),
+								 ('tr.sputniknews.com', 'http://tr.sputniknews.com', (todayCombine,), (), (1),),
+								 ('aksam.com.tr', 'http://www.aksam.com.tr', ('/siyaset/', '/guncel/', '/yasam/', '/ekonomi/', '/dunya/',), ('/teknoloji/', '/spor/', '/magazin/', '/yazarlar/',), ({'newsDate':todayTrFormat},), {'-':1}),
+								 ('posta.com.tr', 'http://www.posta.com.tr', ('-haberi',), (), ({'news-specs':todayTrFormat},), {'-':1},),										
+								 ('turkiyegazetesi.com.tr', 'http://www.turkiyegazetesi.com.tr', ('/gundem/','/dunya/', '/egitim/', '/yasam/', '/saglik/', '/politika/', '/ekonomi/', ), ('/spor/','/teknoloji/', '/yazarlar/',), ({'story_date clearfix':todayPointFormat},),),										
 							    # Tarih yok sayfada
 								 #('bbc.co.uk/turkce', 'http://www.bbc.co.uk/turkce', (todayBbcFormat,), ('/konular/','/sport/' '/spor/',), (1),{'-':1}),
-								 #('posta.com.tr', 'http://www.posta.com.tr', ('/HaberDetay/',), ('/video/','video.', '/YazarHaberDetay/', '/spor/', '/teknoloji/', ), ({'date':todayTrFormat},), {'-':1},),										
-								 #('turkiyegazetesi.com.tr', 'http://www.turkiyegazetesi.com.tr', ('/gundem/','/dunya/', '/egitim/', '/yasam/', '/saglik/', '/politika/', '/ekonomi/', ), ('/spor/','/teknoloji/', '/yazarlar/',), ({'story_date clearfix':todayPointFormat},),),										
-								 #('bugun.com.tr', 'http://www.bugun.com.tr', ('/gundem/', '/dunya/', '/yasam/', '/ekonomi/', '/politika/', '/egitim/', '/saglik/',), (), ({'pubdate':todayPointFormat},)),
 							
 								],
 			
@@ -172,7 +170,7 @@ def createNewsSourceByPresent(present):
 								('amkspor.sozcu.com.tr', 'http://amkspor.sozcu.com.tr', (today,), (), (1), {'-':1}),
 								('sporx.com', 'http://www.sporx.com/?giris=ok', ('-',), (), ({'haberdate':todayTrFormat},)),
 								('mackolik.com', 'http://www.mackolik.com/default.aspx', ('/Haber/',), (), ({'datePublished':todayPointFormat},)),
-								('ajansspor.com', 'http://www.ajansspor.com/index.html', ('/futbol/', '/basketbol/', '/voleybol/', '/motorsporlari/',), ('Motokros', 'amputefutbol', '/yazarlar/',), ({'newsTime':todayPointFormat},)),
+								('ajansspor.com', 'http://www.ajansspor.com', ('/futbol/', '/basketbol/', '/voleybol/', '/motorsporlari/',), ('Motokros', 'amputefutbol', '/yazarlar/',), ({'newsTime':todayPointFormat},)),
 								('cnnturk.com', 'http://www.cnnturk.com/spor', ('/spor/', ), (), ({'detail-metadata':todayPointFormat},),),
 								('fotomac.com.tr', 'http://www.fotomac.com.tr', (today,), ('/Yazarlar/',), (1), {'–':2}),
 								],
