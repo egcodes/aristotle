@@ -50,8 +50,6 @@ class Main:
 									'http://www.webrazzi.com': 'post-content',
 									'http://www.taraf.com.tr/yazarlar/':'info',
 									'http://www.donanimhaber.com':'entry',
-									'http://www.bugun.com.tr':'image',
-									'http://www.milliyet.com.tr/Yazar.aspx?aType=Yazarlar':'image',
 									'http://www.gazetevatan.com/yazarlar/':'aimg',
 									'http://www.cumhuriyet.com.tr/yazarlar':'author',
 									'http://www.sabah.com.tr/Yazarlar':'iBox',
@@ -59,7 +57,6 @@ class Main:
 									'http://www.yenisafak.com.tr/yazarlar/':'picture',
 									'http://www.haberler.com':'image',
 									'http://www.internethaber.com':'item img active',
-									'http://haber.sol.org.tr':'singlenews-image',
 									'http://haber.sol.org.tr':'singlenews-image',
 									'http://www.yeniakit.com.tr/yazarlar':'au-top-right',
 									'http://www.takvim.com.tr':'haberImg',
@@ -69,15 +66,10 @@ class Main:
 									}
 		#Farkli meta etiketi icin tanim
 		self.descMetaTypes = {
-								'http://www.radikal.com.tr/yazarlar':{"name":"twitter:description"}, 
-								'http://www.radikal.com.tr/kultur':{"name":"twitter:description"}, 
-								'http://webtv.radikal.com.tr':{"name":"twitter:description"}, 
-								'http://www.radikal.com.tr':{"name":"twitter:description"}, 
 								'http://www.mynet.com/teknoloji':{"property":"og:description"}, 
 								'http://www.mynet.com':{"property":"og:description"}, 
 								'http://webtv.hurriyet.com.tr':{"property":"og:description"}, 
 								'http://www.haber7.com':{"name":"twitter:description"},
-								'http://www.samanyoluhaber.com':{"property":"og:description"},
 							}
 
 		#Desc'i alma title'i ata
@@ -116,8 +108,8 @@ class Main:
 		#Hotlink korumasi olanlar bunlarin resimleri link vermek yerine indiriliyor
 		self.hotlinks = []
 		
-		#Eger karakterler bozuk geliyor ise Request tpye
-		self.requestTypes = ['amkspor.sozcu.com.tr', 'yenisafak.com.tr', 'indir.com']
+		#Eger karakterler bozuk geliyor ise farkli bir Request tpye deneniyor bu kaynaklar icin
+		self.requestTypes = ['amkspor.sozcu.com.tr', 'yenisafak.com.tr']
 
 		#Eger source'u encoding geliyor ise baska bir request yapilir
 		self.encodePageSource = ['mynet.com', 'trthaber.com']
@@ -126,11 +118,8 @@ class Main:
 		self.getTweetCountFix = {'yenisafak.com.tr':0, 'bigumigu.com':1, 'webrazzi.com':2, 'odatv.com':2}
 		
 		#Eger title, desc karakterler bozuk geliyor temizlik icin
-		self.contentTitleDescReplace = ['zaman.com.tr', 'shiftdelete.net']
+		self.contentTitleDescReplace = ['shiftdelete.net']
 		
-		#Eger link'lerde , var ise facebook share count almak icin digeri kullanisin
-		self.linkContentComma = ['t24.com.tr', 'ntv.com.tr']
-
 		#Gormek istemedigin linkleri gec #imageLink'i icinde bulunanlar sadece
 		self.blackListLinkImage ={
 								}
@@ -143,7 +132,7 @@ class Main:
 		# Database baglantisi
 		self.serverHandler = ServerDatabaseHandler()
 		
-		self.getLinkCountLimit = 1500
+		self.getLinkCountLimit = 2000
 
 		if len(sys.argv) == 2:
 			category = sys.argv[1]
@@ -352,7 +341,6 @@ class Main:
   `category` varchar(32) NOT NULL,
   `source` varchar(255) NOT NULL,
   `link` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `order` int(11) NOT NULL,
   `tweetCount` int(11) NOT NULL,
   `facebookCount` int(11) NOT NULL,
   `googleCount` int(11) NOT NULL,
@@ -360,8 +348,7 @@ class Main:
   `description` varchar(1024) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `imgLink` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `clickedCount` int(11) NOT NULL DEFAULT '0',
-  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updateFlag` int(11) NOT NULL DEFAULT '1'
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;"""%(self.yearMonth))
 				time.sleep(3)
 				self.serverHandler.executeQuery("ALTER TABLE `links_%s` ADD PRIMARY KEY (`id`)"%self.yearMonth)
@@ -931,7 +918,7 @@ CREATE TABLE IF NOT EXISTS `tempLinks` (
 							imgSrc = imgSrc.replace("'", "''")
 							
 							if self.serverHandler.executeQuery("SELECT COUNT(*) FROM `links_%s` WHERE link='%s'"%(self.yearMonth, maxCountLinkInj))[0][0] == 0:
-								self.serverHandler.executeQuery("INSERT INTO `links_%s` VALUES(NULL, CURRENT_DATE(), '%s', '%s', '%s', %d, %d, %d, %d, '%s', '%s', '%s',0, NULL, 1)"%(self.yearMonth, newsLinkDict[maxCountLink][4], newsLinkDict[maxCountLink][5], maxCountLinkInj, index, newsLinkDict[maxCountLink][0], newsLinkDict[maxCountLink][2], newsLinkDict[maxCountLink][3], linkTitle, linkDesc, imgSrc))
+								self.serverHandler.executeQuery("INSERT INTO `links_%s` VALUES(NULL, CURRENT_DATE(), '%s', '%s', '%s', %d, %d, %d, '%s', '%s', '%s',0, NULL)"%(self.yearMonth, newsLinkDict[maxCountLink][4], newsLinkDict[maxCountLink][5], maxCountLinkInj, newsLinkDict[maxCountLink][0], newsLinkDict[maxCountLink][2], newsLinkDict[maxCountLink][3], linkTitle, linkDesc, imgSrc))
 							if self.showLink:
 								self.logHandler.printMsg(maxCountLink, 3)
 							
