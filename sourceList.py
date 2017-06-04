@@ -158,8 +158,8 @@ def createNewsSourceByPresent(present):
 								 ('cnnturk.com', 'http://www.cnnturk.com/kultur-sanat', ('/kultur-sanat/', ), (), ({'detail-metadata':todayPointFormat},),  {'-':1}),
 								 ('t24.com.tr', 'http://t24.com.tr/kultur-sanat', ('/haber/',), (), ({'story-date':todayTrFormat},)),
 								 ('ntv.com.tr', 'http://www.ntv.com.tr/sanat', ('/sanat/',), (),({'time':todayTrNonZeroFormat},),),
-								 ('haber7.com', 'http://www.haber7.com/kultur', ('/kultur/', '/kulturel-etkinlikler/', '/mimari/', '/muzik/', '/arkeoloji/', '/sinema/', '/tarih-ve-fikir/', '/edebiyat/', '/fotograf/', '/plastik-sanatlar/', 'tiyatro-ve-sahne-sanatlari',), (), ({'readInfo':todayPointFormat}, )),
-								 ('sabah.com.tr', 'http://www.sabah.com.tr/kultur_sanat', (today,), ('/gundem/','/ekonomi/', '/yasam/', '/dunya/', '/piyasa/', '/teknoloji/', '/egitim/', '/turizm/', '/fotohaber/', '/Turizm/', '/magazin/', '/multimedya/', '/spor/', '/webtv/', '/otomobil/'), (1), {'-':1}),
+								 ('haber7.com', 'http://www.haber7.com/kultur', ('/kultur/', '/kulturel-etkinlikler/', '/mimari/', '/muzik/', '/arkeoloji/', '/sinema/', '/tarih-ve-fikir/', '/edebiyat/', '/fotograf/', '/plastik-sanatlar/', 'tiyatro-ve-sahne-sanatlari',), (), ({'info':todayPointFormat}, )),
+								 ('sabah.com.tr', 'http://www.sabah.com.tr/kultur_sanat', (today,), ('/gundem/','/ekonomi/', '/yasam/', '/dunya/', '/piyasa/', '/teknoloji/', '/egitim/', '/turizm/', '/fotohaber/', '/Turizm/', '/magazin/', '/multimedya/', '/spor/', '/webtv/', '/yazarlar/', '/otomobil/'), (1), {'-':1}),
 								 ('trthaber.com', 'http://www.trthaber.com/haber/kultur-sanat/', ('/kultur-sanat/', ), (), ({'detTarih':todayTrFormat},)),
 
 								],
@@ -170,14 +170,13 @@ def createNewsSourceByPresent(present):
 								('amkspor.sozcu.com.tr', 'http://amkspor.sozcu.com.tr', (today,), (), (1), {'-':1}),
 								('sporx.com', 'http://www.sporx.com/?giris=ok', ('-',), (), ({'haberdate':todayTrFormat},)),
 								('mackolik.com', 'http://www.mackolik.com/default.aspx', ('/Haber/',), (), ({'datePublished':todayPointFormat},)),
-								('ajansspor.com', 'http://www.ajansspor.com', ('/futbol/', '/basketbol/', '/voleybol/', '/motorsporlari/',), ('Motokros', 'amputefutbol', '/yazarlar/',), ({'newsTime':todayPointFormat},)),
 								('cnnturk.com', 'http://www.cnnturk.com/spor', ('/spor/', ), (), ({'detail-metadata':todayPointFormat},),),
 								('fotomac.com.tr', 'http://www.fotomac.com.tr', (today,), ('/Yazarlar/',), (1), {'–':2}),
 								],
 				
 				'koseyazilari': [
 								 ('haberturk.com','http://www.haberturk.com/htyazarlar', ('/yazarlar/',), (), ({'author-detail-content':todayTrFormat},)),
-								 ('milliyet.com.tr','http://www.milliyet.com.tr/yazarlar/', ('/yazarlar/',), ('secure.milliyet.com.tr',), ({'nn1':todayPointFormat},), {'|':2}),
+								 ('milliyet.com.tr','http://www.milliyet.com.tr/yazarlar/', ('/yazarlar/',), (), ({'nn1':todayPointFormat},), {'|':2}),
 								 ('haber7.com', 'http://www.haber7.com', ('/yazarlar/',), (), ({'info':todayPointFormat},)),
 								 ('gazetevatan.com', 'http://www.gazetevatan.com/yazarlar/', ('-yazar-yazisi-',), (), ({'cdate':todayTrFormat},), {'|':1}),
 								 ('sozcu.com.tr', 'http://www.sozcu.com.tr/kategori/yazarlar/', ('/yazarlar/',), (), ({'date':todayTrNonZeroFormat},)),
@@ -187,7 +186,7 @@ def createNewsSourceByPresent(present):
 								 ('t24.com.tr', 'http://t24.com.tr/yazarlar', ('/yazarlar/', ), (), ({'datePublished':todayTrFormat},)),
 								 ('yenisafak.com.tr', 'http://www.yenisafak.com.tr/yazarlar/', ('/yazarlar/',), (), ({'author-share':todayTrFormat},), {'|':1}),										 
 								 ('yeniakit.com.tr', 'http://www.yeniakit.com.tr/yazarlar', ('/yazarlar/',), (), ({'inside':todayTrFormat},)),	
-       								('hurriyet.com.tr', 'http://www.hurriyet.com.tr/yazarlar/', ('/yazarlar/',), (), ({'article-date':todayTrFormat},)),
+       							('hurriyet.com.tr', 'http://www.hurriyet.com.tr/yazarlar/', ('/yazarlar/',), (), ({'article-date':todayTrNonZeroFormat},)),
 								
 								],
 			}
