@@ -19,9 +19,15 @@ import requests, urllib
 
 class Main:
 	def __init__(self):
-		
+
 		#=======================================================================
 		# Configuration values
+		#=======================================================================
+		# Bir kaynak icin DB'e kaydedilecek maximum link sayisi
+		self.maxLinkCount = 2
+		
+		#=======================================================================
+		# Configuration system values
 		#=======================================================================
 		self.wwwPath = '/var/www/html/'
 		#Resimler icin
@@ -784,7 +790,7 @@ CREATE TABLE IF NOT EXISTS `tempLinks` (
 		try:
 			index = 1
 			for i in newsLinkDict:
-				if index > 2:
+				if index > self.maxLinkCount:
 					break
 				try:
 					maxCountLink = random.choice(newsLinkDict.keys())
