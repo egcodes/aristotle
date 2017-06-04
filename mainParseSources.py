@@ -493,55 +493,41 @@ CREATE TABLE IF NOT EXISTS `tempLinks` (
 					if str(linkDate[0][0]) != str(present.strftime('%Y-%m-%d')):
 						continue
 
-				#===========================================================
-				# #Timeout olur diye 2 defa deneyecek
-				#===========================================================
-				count = 2
 				countHtmlSource += 1
-				flagContinue = False
-				while count:
-					getLinkHandler= ""
-					
-					#=======================================================
-					# Link'ler icin ozel LinkHandlerr argumanlari
-					#=======================================================
-					imageClass = ""
-					requestType = ""
-					cleanBrokenCh = ""
-					descMetaType = ""
-					try:
-						imageClass = self.imageClassForSources[newsSourceLink]
-					except:
-						pass
-					try:
-						self.requestTypes.index(sourceTitle)
-						requestType = 1
-					except:
-						requestType = 0
-					try:
-						self.contentTitleDescReplace.index(sourceTitle)
-						cleanBrokenCh = True
-					except:
-						cleanBrokenCh = False
-					try:
-						descMetaType = self.descMetaTypes[newsSourceLink]
-					except:
-						descMetaType = ""
-						
-					getLinkHandler = LinkHandler(link, requestType=requestType,  imageClass=imageClass, descMetaType=descMetaType, cleanBrokenCh=cleanBrokenCh)
-					getLinkHandler.run()
-					soup = getLinkHandler.soup
+				getLinkHandler= ""
 
-					#Source gelmez ise link'i gec
-					if soup == -1:
-						time.sleep(3)
-						count -= 1
-					else:
-						break
-					if count == 0:
-						flagContinue = True
-						break
-				if flagContinue:
+				#=======================================================
+				# Link'ler icin ozel LinkHandlerr argumanlari
+				#=======================================================
+				imageClass = ""
+				requestType = ""
+				cleanBrokenCh = ""
+				descMetaType = ""
+				try:
+					imageClass = self.imageClassForSources[newsSourceLink]
+				except:
+					pass
+				try:
+					self.requestTypes.index(sourceTitle)
+					requestType = 1
+				except:
+					requestType = 0
+				try:
+					self.contentTitleDescReplace.index(sourceTitle)
+					cleanBrokenCh = True
+				except:
+					cleanBrokenCh = False
+				try:
+					descMetaType = self.descMetaTypes[newsSourceLink]
+				except:
+					descMetaType = ""
+					
+				getLinkHandler = LinkHandler(link, requestType=requestType,  imageClass=imageClass, descMetaType=descMetaType, cleanBrokenCh=cleanBrokenCh)
+				getLinkHandler.run()
+				soup = getLinkHandler.soup
+
+				#Source gelmez ise link'i gec
+				if soup == -1:
 					continue
 				
 				#===========================================================
@@ -742,8 +728,8 @@ CREATE TABLE IF NOT EXISTS `tempLinks` (
 			#===================================================================
 			# Twitter ve Facebook count'lari alinip gerekli tum seyler donduruluyor
 			#===================================================================
-			self.logHandler.printMsg("Link parse locate (Database / Source) - ( %d / %d)"%(countDatabase, countHtmlSource), 2)
-			self.logHandler.printMsg("Got it links : %d"%len(returnLinkList), 2)
+			self.logHandler.printMsg("Locate for link info (Database / Source) - ( %d / %d)"%(countDatabase, countHtmlSource), 2)
+			self.logHandler.printMsg("Eliminated links : %d"%len(returnLinkList), 2)
 			
 			linkCountDict = self.getSocialCount(category, sourceTitle, returnLinkList, returnLinkDict)
 			
@@ -792,15 +778,13 @@ CREATE TABLE IF NOT EXISTS `tempLinks` (
 			Verilen link listesindeki haber linklerini table icin uygun formatta geri dondurur
 		"""
 		
-		self.logHandler.printMsg("Insert To Database (%d)"%len(newsLinkDict.keys()), 1)
-		self.logHandler.printMsg("---------------------", 1)
-		
-
+		insertedCount = 0
+		existsCount = 0
 		newsResult = ""
 		try:
 			index = 1
 			for i in newsLinkDict:
-				if index > 3:
+				if index > 2:
 					break
 				try:
 					maxCountLink = random.choice(newsLinkDict.keys())
@@ -919,13 +903,19 @@ CREATE TABLE IF NOT EXISTS `tempLinks` (
 							
 							if self.serverHandler.executeQuery("SELECT COUNT(*) FROM `links_%s` WHERE link='%s'"%(self.yearMonth, maxCountLinkInj))[0][0] == 0:
 								self.serverHandler.executeQuery("INSERT INTO `links_%s` VALUES(NULL, CURRENT_DATE(), '%s', '%s', '%s', %d, %d, %d, '%s', '%s', '%s',0, NULL)"%(self.yearMonth, newsLinkDict[maxCountLink][4], newsLinkDict[maxCountLink][5], maxCountLinkInj, newsLinkDict[maxCountLink][0], newsLinkDict[maxCountLink][2], newsLinkDict[maxCountLink][3], linkTitle, linkDesc, imgSrc))
+								insertedCount += 1
+								index += 1
+							else:
+								existsCount += 1
 							if self.showLink:
 								self.logHandler.printMsg(maxCountLink, 3)
 							
-					index += 1
 				except:
 					index -= 1
 					self.logHandler.logger("insertToDatabase1", "Link html format hatasi: %s")
+
+			self.logHandler.printMsg("DB (new/exists) -> %d / %d"%(insertedCount, existsCount), 1)
+			self.logHandler.printMsg("---------------------", 1)
 						
 			return str(newsResult)
 		except:
