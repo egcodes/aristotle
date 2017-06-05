@@ -32,7 +32,7 @@ class Main:
             for sourceList in sources:
                 startSource = datetime.now()
                 source = sourceList[0]
-                if not self.serverHandler.executeQuery("SELECT id FROM `links_%s` WHERE date BETWEEN DATE_SUB(NOW(), INTERVAL 3 DAY) AND NOW() and category='%s' and source='%s'" % (self.yearMonth, category, source)):
+                if not self.serverHandler.executeQuery("SELECT id FROM `links_%s` WHERE date > DATE_ADD(NOW(), INTERVAL - 48 HOUR) and category='%s' and source='%s'" % (self.yearMonth, category, source)):
                     print category, " -> ", source
 				
         self.serverHandler.closeConnection()
