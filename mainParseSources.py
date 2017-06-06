@@ -127,8 +127,10 @@ class Main:
 		self.contentTitleDescReplace = ['shiftdelete.net']
 		
 		#Gormek istemedigin linkleri gec #imageLink'i icinde bulunanlar sadece
-		self.blackListLinkImage ={
-								}
+		self.blackListLinkImage = {
+			'haberturk.com':'iller_', # haberturkde haber resmi yerine defaul resimler gelmesin diye
+			'odatv.com':'/yazarlar/' #koseyazilari haberlerde gelmesin diye	
+		}
 		
 
 		#=======================================================================
@@ -645,6 +647,8 @@ CREATE TABLE IF NOT EXISTS `tempLinks` (
 											if not soupDateDiv:
 												soupDateDiv = soup.findAll("a", { "class" : "%s"%dateClass})
 											if not soupDateDiv:
+												soupDateDiv = soup.findAll("h1", { "class" : "%s"%dateClass})
+											if not soupDateDiv:
 												soupDateDiv = soup.findAll("time", { "itemprop" : "%s"%dateClass})
 											if not soupDateDiv:
 												soupDateDiv = soup.findAll(dateClass)
@@ -661,6 +665,13 @@ CREATE TABLE IF NOT EXISTS `tempLinks` (
 													findedDate = item['value']
 												except:
 													pass
+											if not findedDate:
+												try:
+													findedDate = item['content']
+												except:
+													pass
+
+											#direk zaman yerine 1 saat once seklinde ise burada ayristirilir
 											if findedDate.find('önce') != -1:
 												try:
 													findedDate = soupDateDiv[0]["title"]
