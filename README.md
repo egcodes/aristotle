@@ -4,6 +4,8 @@ Site: [www.haberbus.com](http://www.haberbus.com)
 
 ÖNEMLİ NOT: Twitter ve Facebook public paylaşım oranı api'lerini kapattığı için bu toplama sistemi koddan kaldırılmıştır.
 
+ÖNEMLİ NOT 2: Bir kaynaktan maksimum kaç haber alinacağı, mainParserSource.py içinde self.maxLinkCount değişkeni ile belirlenir. Şu an kaynak başına 2 ayarlidir
+
 Temel olarak şu şekilde çalışmaktadır.
 - Kaynak listesinde (sourceList.py) tanımlı olan 5 kategori altındaki 50 link'i mainParseSources.py script'ine hiç bir parametre verilmez ise teker teker gezer.
 - Her haber sitesinin kendine özel keyword'ları yine sourceList.py içinde tanımlıdır. Ve bu keyword'lar ile link'leri toplayama başlar.
