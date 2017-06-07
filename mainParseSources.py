@@ -21,12 +21,6 @@ class Main:
 	def __init__(self):
 
 		#=======================================================================
-		# Configuration values
-		#=======================================================================
-		# Bir kaynak icin DB'e kaydedilecek maximum link sayisi
-		self.maxLinkCount = 2
-		
-		#=======================================================================
 		# Configuration system values
 		#=======================================================================
 		self.wwwPath = '/var/www/html/'
@@ -128,8 +122,8 @@ class Main:
 		
 		#Gormek istemedigin linkleri gec #imageLink'i icinde bulunanlar sadece
 		self.blackListLinkImage = {
-			'haberturk.com':'iller_', # haberturkde haber resmi yerine defaul resimler gelmesin diye
-			'odatv.com':'/yazarlar/' #koseyazilari haberlerde gelmesin diye	
+			'haberturk.com':['iller_'], # haberturkde haber resmi yerine defaul resimler gelmesin diye
+			'odatv.com':['/yazarlar/'] #koseyazilari haberlerde gelmesin diye	
 		}
 		
 
@@ -801,8 +795,6 @@ CREATE TABLE IF NOT EXISTS `tempLinks` (
 		try:
 			index = 1
 			for i in newsLinkDict:
-				if index > self.maxLinkCount:
-					break
 				try:
 					maxCountLink = random.choice(newsLinkDict.keys())
 					

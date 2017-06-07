@@ -119,7 +119,7 @@ def createNewsSourceByPresent(present):
 									('trthaber.com', 'http://www.trthaber.com/video-galerileri.html', ('/videolar/',), ('/videolar/ekonomi','/videolar/kultur-sanat', '/videolar/yasam', '/videolar/spor', '/videolar/gundem', '/videolar/magazin', '/videolar/cevre', '/videolar/dunya', '/videolar/medya', '/videolar/saglik', '/videolar/egitim', '/videolar/turkiye', '/videolar/bilim-teknik' ), ({'balonIc_bilgi':todayPointFormat},)),
 									('milliyet.com.tr', 'http://www.milliyet.com.tr/Milliyet-Tv/', ('video-izle',), ('canli-yayin-videosu',), ({'detSpan':todayTrFormat},)), 
 									('ntv.com.tr', 'http://www.ntv.com.tr/video', ('/video/',), (), ({'clock':todayPointFormat},)),
-									('haberturk.com','http://www.haberturk.com/video', ('/video/',), (), ({'mb10':todayTrFormat},)),
+									('haberturk.com','http://www.haberturk.com/video/haber', ('/haber/',), (), ({'mb10':todayTrFormat},)),
 								],
 			
 				'teknoloji':	[
