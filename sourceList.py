@@ -136,6 +136,7 @@ def createNewsSourceByPresent(present):
 									('silikonvadisi.tv', 'http://www.silikonvadisi.tv', ('.html',), ('sicak-haber',), ({'entry-date updated td-module-date':todayTrNonZeroFormat},), {'-':1}),
 									('webtekno.com', 'http://www.webtekno.com', ('.html',), (), ({'content-info__date':"önce"},), ),
  									('fizikist.com', 'http://www.fizikist.com', ('-',), (), ({'content_time':todayTrFormat},), {'-':1}),
+									('bilimpro.com', 'https://bilimpro.com', (todaySlashFormatReverse,), (), (1),),
  									('log.com.tr', 'http://www.log.com.tr', ('-',), (), ({'date':todayTrFormat},), {'-':1}),
 								],
 			
