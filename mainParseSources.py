@@ -44,7 +44,7 @@ class Main:
 									'http://www.aksam.com.tr':'image', 
 									'http://www.trthaber.com':'image', 
 									'http://www.trthaber.com/haber/kultur-sanat/':'image',
-									'http://amkspor.sozcu.com.tr':'in_image',
+									'http://skor.sozcu.com.tr':'in_image',
 									'http://www.sosyalmedya.co':'attachment-large wp-post-image', 
 									'http://www.teknolojioku.com':'newsImage', 
 									'http://www.webrazzi.com': 'post-content',
@@ -88,7 +88,7 @@ class Main:
 										'http://www.taraf.com.tr',
 										'http://www.taraf.com.tr/yazarlar/',
 										'http://www.samanyoluhaber.com',
-										'http://amkspor.sozcu.com.tr',
+										'http://skor.sozcu.com.tr',
 										'http://www.haberler.com',
 										'http://www.diken.com.tr',
 										'http://www.fizikist.com',
@@ -109,7 +109,7 @@ class Main:
 		self.hotlinks = []
 		
 		#Eger karakterler bozuk geliyor ise farkli bir Request tpye deneniyor bu kaynaklar icin
-		self.requestTypes = ['amkspor.sozcu.com.tr', 'yenisafak.com.tr']
+		self.requestTypes = ['skor.sozcu.com.tr', 'yenisafak.com.tr']
 
 		#Eger source'u encoding geliyor ise baska bir request yapilir
 		self.encodePageSource = ['mynet.com', 'trthaber.com']
@@ -123,7 +123,8 @@ class Main:
 		#Gormek istemedigin linkleri gec #imageLink'i icinde bulunanlar sadece
 		self.blackListLinkImage = {
 			'haberturk.com':['iller_'], # haberturkde haber resmi yerine defaul resimler gelmesin diye
-			'odatv.com':['/yazarlar/'] #koseyazilari haberlerde gelmesin diye	
+			'odatv.com':['/yazarlar/'], #koseyazilari haberlerde gelmesin diye	
+			'milliyet.com.tr':['milliyet_fb_paylas'], #koseyazilari haberlerde gelmesin diye	
 		}
 		
 
@@ -796,7 +797,7 @@ CREATE TABLE IF NOT EXISTS `tempLinks` (
 			index = 1
 			for i in newsLinkDict:
 				try:
-					maxCountLink = random.choice(newsLinkDict.keys())
+					maxCountLink = i
 					
 					linkTitle = newsLinkDict[maxCountLink][6]
 					linkDesc = newsLinkDict[maxCountLink][7]
