@@ -38,6 +38,8 @@ class Main:
 		#=======================================================================
 		# Configuration For Requests
 		#=======================================================================
+		# Api'de limit oldugundan bir sure sonra 403 veriyor
+		# Birden fazla ip saglanir link soruglama zamana yayilirsa kullanilabilir
 		self.facebookGraphApiFlag = False
 
 		#Bazi sitelerin haber resimleri icin class ile alinir
@@ -118,9 +120,12 @@ class Main:
 		
 		#Gormek istemedigin linkleri gec #imageLink'i icinde bulunanlar sadece
 		self.blackListLinkImage = {
-			'haberturk.com':['iller_'], # haberturkde haber resmi yerine defaul resimler gelmesin diye
+			'haberturk.com':['iller_'], # haberturkde haber resmi yerine default resimler gelmesin diye
 			'odatv.com':['/yazarlar/'], #koseyazilari haberlerde gelmesin diye	
-			'milliyet.com.tr':['milliyet_fb_paylas'], #koseyazilari haberlerde gelmesin diye	
+			'milliyet.com.tr':['milliyet_fb_paylas'], #default resim engelleme	
+			'tr.sputniknews.com':['logo-soc'],	#default resim engelleme
+			'haberler.com':['amp_default.png'],	#default resim engelleme
+			'gazetevatan.com':['facelogo.jpg'],	#default resim engelleme
 		}
 		
 
@@ -180,43 +185,6 @@ class Main:
 		return text
 		
 	def downloadImage(self, source, link, path):
-		#Bu kaynaklar icin bot olmadigimizi anlatmak icin donen link'e istek yollanir
-		if source == 'cumhuriyet.com.tr':
-			try:
-				ln = 'http://www.cumhuriyet.com.tr'
-				req = urllib2.Request(ln, headers={'User-Agent' : self.userAgent})
-				html = urllib2.urlopen(req, timeout=5).read()
-				if len(html) < 250:
-					firstIndex = html.find('url=')
-					endIndex = html[firstIndex:].find('"') + firstIndex
-					
-					url = html[firstIndex + len('url='): endIndex]
-					if url and url.find('http') != -1:
-						req = urllib2.Request(url, headers={'User-Agent' : self.userAgent})
-						html = urllib2.urlopen(req, timeout=5).read()
-						print url
-			except:
-				self.logHandler.logger("run")
-
-		#Bu kaynaklar icin bot olmadigimizi anlatmak icin donen link'e istek yollanir
-		elif source == 'odatv.com':
-			try:
-				ln = 'http://www.odatv.com'
-				req = urllib2.Request(ln, headers={'User-Agent' : self.userAgent})
-				html = urllib2.urlopen(req, timeout=5).read()
-				if len(html) < 300:
-					firstIndex = html.find('url=')
-					endIndex = html[firstIndex:].find('"') + firstIndex
-					
-					url = html[firstIndex + len('url='): endIndex]
-					if url and url.find('http') != -1:
-						req = urllib2.Request(url, headers={'User-Agent' : self.userAgent})
-						html = urllib2.urlopen(req, timeout=5).read()
-						print url
-			except:
-				self.logHandler.logger("run")
-		
-					
 		req = urllib2.Request(link, headers={'User-Agent' : self.userAgent})
 		try:
 			imageId = "default.png"
@@ -224,6 +192,7 @@ class Main:
 				imageId = link[link[:link.rfind('/')].rfind('/') + 1:].replace('/', '')
 			else:
 				imageId = link[link.rfind('/') + 1:]
+
 			if imageId.find('?') != -1:
 				imageId = imageId[:imageId.find('?')]
 			elif imageId.find('#') != -1:
@@ -979,45 +948,24 @@ CREATE TABLE IF NOT EXISTS `tempLinks` (
 					if self.initSource and source != self.initSource:
 						continue
 					
-					self.facebookGraphApiFlag = True
 					#===========================================================
-					# Siteye ozel asiri baglanma problemleri
-					# Buraya eklenen code downloadImage metodunada eklenecek
+					# Surekli baglanti saglaninca sitenin engellemesini asma yontemi
 					#===========================================================
-					if source == 'cumhuriyet.com.tr':
-						try:
-							ln = 'http://www.cumhuriyet.com.tr'
-							req = urllib2.Request(ln, headers={'User-Agent' : self.userAgent})
-							html = urllib2.urlopen(req, timeout=5).read()
-							if len(html) < 300:
-								firstIndex = html.find('url=')
-								endIndex = html[firstIndex:].find('"') + firstIndex
-								
-								url = html[firstIndex + len('url='): endIndex]
-								if url and url.find('http') != -1:
-									req = urllib2.Request(url, headers={'User-Agent' : self.userAgent})
-									html = urllib2.urlopen(req, timeout=5).read()
-									print url
-						except:
-							self.logHandler.logger("run")
-					
-					if source == 'odatv.com':
-						try:
-							ln = 'http://www.odatv.com'
-							req = urllib2.Request(ln, headers={'User-Agent' : self.userAgent})
-							html = urllib2.urlopen(req, timeout=5).read()
-							if len(html) < 300:
-								firstIndex = html.find('url=')
-								endIndex = html[firstIndex:].find('"') + firstIndex
-								
-								url = html[firstIndex + len('url='): endIndex]
-								if url and url.find('http') != -1:
-									req = urllib2.Request(url, headers={'User-Agent' : self.userAgent})
-									html = urllib2.urlopen(req, timeout=5).read()
-									print url
-						except:
-							self.logHandler.logger("run")
-					
+					try:
+						ln = sourceList[1]
+						req = urllib2.Request(ln, headers={'User-Agent' : self.userAgent})
+						html = urllib2.urlopen(req, timeout=5).read()
+						if len(html) < 300:
+							firstIndex = html.find('url=')
+							endIndex = html[firstIndex:].find('"') + firstIndex
+							
+							url = html[firstIndex + len('url='): endIndex]
+							if url and url.find('http') != -1:
+								req = urllib2.Request(url, headers={'User-Agent' : self.userAgent})
+								html = urllib2.urlopen(req, timeout=5).read()
+					except Exception, ex:
+						print ex
+				
 					#===========================================================
 					# Kaynagin parse islemi basliyor, ozellikleri aliniyor
 					#===========================================================
