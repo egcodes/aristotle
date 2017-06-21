@@ -100,7 +100,7 @@ def createNewsSourceByPresent(present):
 									('internethaber.com', 'http://www.internethaber.com', ('.htm',), ('gazeteoku.com', 'otomobil.internethaber.com', 'spor.', ), ({'rpt':'%s'%todayLineFormat},{'info':'Tarihi :%s'%todayLineFormat})),
 									('mynet.com', 'http://www.mynet.com', ('haber.', '/detay/', 'yurthaber.','.finans','/haber/','/yasam/', '/galeri/', '/ekonomi/', '/dunya/', '/medya/', '/saglik/'), ('/teknoloji/','spor.',), ({'newsInfo':todayTrNonZeroFormat},)),
 									('cumhuriyet.com.tr', 'http://www.cumhuriyet.com.tr', ('/siyaset/','/turkiye/', '/dunya/', '/ekonomi/','/yasam/', '/egitim/', '/saglik/',), (), ({'publish-date':todayTrFormat},)),
-									('yenisafak.com.tr', 'http://www.yenisafak.com.tr', ('/dunya/', '/gundem/', '/politika/', '/ekonomi/', '/saglik/', '/egitim/',), ('/yazarlar/', '/spor/', '/teknoloji/',), ({'info flx frw fcc':todayTrFormatSpecial3},), {'-':1}),										 
+									('yenisafak.com', 'http://www.yenisafak.com', ('/dunya/', '/gundem/', '/politika/', '/ekonomi/', '/saglik/', '/egitim/',), ('/yazarlar/', '/spor/', '/teknoloji/',), ({'info flx frw fcc':todayTrFormatSpecial3},), {'-':1}),										 
 									('takvim.com.tr', 'http://www.takvim.com.tr', (today,), ('/Yazarlar/', '/yazarlar/', '/spor/', '/Spor/', '/Televizyon', '/multimedya/', '/Saklambac/', '/saklambac/'), (1),),
 									('haberler.com', 'http://www.haberler.com', ('-haberi',), ('fotogaleri.',), ({'nav1':todayTrNonZeroFormat},)),
 									('diken.com.tr', 'http://www.diken.com.tr', ('-',), ('/kategori/', 'bu-gazete/', '-ekim-', '-kasim-', '-aralik-', '-ocak-', '-subat-', '-mart-', '-nisan-', '-mayis-', '-haziran-', '-temmuz-', '-agustos-', '-eylul-',), ({'entry-time':todaySlashFormat},), {'-':1}),
@@ -163,18 +163,21 @@ def createNewsSourceByPresent(present):
 								],
 				
 				'koseyazilari': [
-									('haberturk.com','http://www.haberturk.com/htyazarlar', ('/yazarlar/',), (), ({'author-detail-content':todayTrFormat},),),
+									('haberturk.com','http://www.haberturk.com/htyazarlar', ('/yazarlar/',), (), ({'author-detail-content':todayTrFormat},), {'-':1}),
 									('milliyet.com.tr','http://www.milliyet.com.tr/yazarlar/', ('/yazarlar/',), (), ({'nn1':todayPointFormat},), {'|':2}),
 									('haber7.com', 'http://www.haber7.com', ('/yazarlar/',), (), ({'info':todayPointFormat},)),
-									('gazetevatan.com', 'http://www.gazetevatan.com/yazarlar/', ('-yazar-yazisi-',), (), ({'cdate':todayTrFormat},), {'|':1}),
 									('sozcu.com.tr', 'http://www.sozcu.com.tr/kategori/yazarlar/', ('/yazarlar/',), (), ({'date':todayTrNonZeroFormat},)),
 									('star.com.tr', 'http://www.star.com.tr/yazarlar/', ('/yazar/',), (), ({'publisheddate':todayTrFormat},), {'-': 2}),
 									('sabah.com.tr', 'http://www.sabah.com.tr/Yazarlar', (today,), ('/gundem/','/ekonomi/', '/yasam/', '/dunya/', '/piyasa/', '/teknoloji/', '/egitim/', '/kultur_sanat/', '/sinema/', '/turizm/', '/fotohaber/', '/Turizm/', '/magazin/', '/multimedya/', '/spor/', '/webtv/', '/otomobil/'), (1), {'-':2}),
 									('cumhuriyet.com.tr', 'http://www.cumhuriyet.com.tr/yazarlar', ('/koseyazisi/',), (), ({'publish-date':todayTrFormat},)),
 									('t24.com.tr', 'http://t24.com.tr/yazarlar', ('/yazarlar/', ), (), ({'datePublished':todayTrFormat},)),
-									('yenisafak.com.tr', 'http://www.yenisafak.com.tr/yazarlar/', ('/yazarlar/',), (), ({'author-share':todayTrFormat},), {'|':1}),										 
-									('yeniakit.com.tr', 'http://www.yeniakit.com.tr/yazarlar', ('/yazarlar/',), (), ({'inside':todayTrFormat},)),	
 	   								('hurriyet.com.tr', 'http://www.hurriyet.com.tr/yazarlar/', ('/yazarlar/',), (), ({'article-date':todayTrNonZeroFormat},)),
+									# Haber tarihi split edilmis, o yuzden alinamiyor
+									#('yenisafak.com', 'http://www.yenisafak.com/Yazarlar', ('/yazarlar/',), (), ({'author-share':todayTrFormat},), {'|':1}),										 
+									# Haber tarihi yok 
+									#('yeniakit.com.tr', 'http://www.yeniakit.com.tr/yazarlar', ('/yazarlar/',), (), ({'inside':todayTrFormat},)),	
+									# Title tag var ama icerik yok
+									#('gazetevatan.com', 'http://www.gazetevatan.com/yazarlar/', ('-yazar-yazisi-',), (), ({'cdate':todayTrFormat},), {'|':1}),
 								],
 			}
 		

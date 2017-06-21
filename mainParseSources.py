@@ -57,7 +57,6 @@ class Main:
 									'http://www.cumhuriyet.com.tr/yazarlar':'author',
 									'http://www.sabah.com.tr/Yazarlar':'iBox',
 									'http://www.ensonhaber.com':'mansetresmi',
-									'http://www.yenisafak.com.tr/yazarlar/':'picture',
 									'http://www.haberler.com':'image',
 									'http://www.internethaber.com':'item img active',
 									'http://haber.sol.org.tr':'singlenews-image',
@@ -93,6 +92,7 @@ class Main:
 										'http://www.haberler.com',
 										'http://www.diken.com.tr',
 										'http://www.fizikist.com',
+										'http://www.millyet.com.tr/yazarlar/',
 										]
 		#Haberden alinan resim cok kucuk ise yada yanlis ise title baz alinarak google'dan resim cekilir
 		#Google image limit'leri oldugundan surekli cekince yasaklandi
@@ -110,7 +110,7 @@ class Main:
 		self.hotlinks = []
 		
 		#Eger karakterler bozuk geliyor ise farkli bir Request tpye deneniyor bu kaynaklar icin
-		self.requestTypes = ['skor.sozcu.com.tr', 'yenisafak.com.tr']
+		self.requestTypes = ['webrazzi.com', 'skor.sozcu.com.tr', 'yenisafak.com']
 
 		#Eger source'u encoding geliyor ise baska bir request yapilir
 		self.encodePageSource = ['mynet.com', 'trthaber.com']
