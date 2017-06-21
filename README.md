@@ -18,7 +18,7 @@ Yaklaşık tekil olarak 50 kaynak sourcelist'de tanımlıdır. (haberbus.com sit
 
 ![Günlük Toplama sonucu örnek istatisikler](/screenshots/statistics.png)
 
-![Parser Çıktısı](/screenshots/parser.png)
+![Parser Çıktısı](/screenshots/parseroutput.png)
 
 ## Kurulum İçin Gerekenler
 
