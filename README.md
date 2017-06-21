@@ -1,14 +1,19 @@
 # haberbus
 Haberbüs, Türkçe haber sitelerinden haberleri toplamak için kullanılan bir parser sistemidir.
+Bir haber bağlantısından title, description ve imageLink çekilip DB'e kaydedilir.
 Site: [www.haberbus.com](http://www.haberbus.com)
 
-ÖNEMLİ NOT: Twitter ve Facebook public paylaşım oranı api'lerini kapattığı için bu toplama sistemi koddan kaldırılmıştır.
+ÖNEMLİ NOT: Bir zamanlar mevcut olan Twitter,Facebook,GooglePlus'dan alınan paylaşım oranları, bu sistemler api'lerini 
+kapattığı için koddan kaldırılmıştır.
+Facebook Graph Public Api yeniden eklenmiş ama aktif değildir. Sürekli request'de cevap dönmemektedir. GraphApi'de 
+belirli zamanda belirli sayıda istek gönderme olayı var. Bu limitin aşılması bu kısmın 0 dönmesine sebep olur.
+Sonuç olarak link'lerin paylaşım oranları şu andaki default kodda toplanmamaktadır
 
 Temel olarak şu şekilde çalışmaktadır.
-- Kaynak listesinde (sourceList.py) tanımlı olan 5 kategori altındaki 50 link'i mainParseSources.py script'ine hiç bir parametre verilmez ise teker teker gezer.
+- Ana parser, kaynak listesinde (sourceList.py) tanımlı olan 5 kategori altındaki 50 link'i mainParseSources.py script'ine hiç bir parametre verilmez ise teker teker gezer.
 - Her haber sitesinin kendine özel keyword'ları yine sourceList.py içinde tanımlıdır. Ve bu keyword'lar ile link'leri toplayama başlar.
 
-Yaklaşık tekil olarak 50 kaynak sourcelist'de tanımlıdır.
+Yaklaşık tekil olarak 50 kaynak sourcelist'de tanımlıdır. (haberbus.com sitesi aktif oldugu icin bu kisim surekli gunceldir)
 ![Kaynak Listesi](/screenshots/sourcelist.png)
 
 ![Günlük Toplama sonucu örnek istatisikler](/screenshots/statistics.png)
@@ -24,11 +29,9 @@ Yaklaşık tekil olarak 50 kaynak sourcelist'de tanımlıdır.
 	- simplejson
 * Mysql Database
 
-Bunlar sağlandıktan sonra yapılması gereken ServerDatabaseHandler.py
-dosyamızı mysql db'imize ve oluşturduğumuz database'e göre editlemek ve
-her şey hazır.
+Bunlar sağlandıktan sonra yapılması gereken bir db oluşturmak MySql üzerinde ve
+gerekli bilgileri ServerDatabaseHandler.py dosyamıza girmektir. Ve her şey hazır.
 
-Test için: `python mainParseSources.py teknoloji webrazzi.com` sadece bu kategori bu link taranır.
-
-Tüm kaynakları taramak için: `python mainParseSources.py` komutu ile ekran görüntüsündeki gibi haber sitelerinden
-dataları toplayama başlayabiliriz. Gerekli tüm tablolar bu script'ler içinde üretilmektedir.
+Test için: `python mainParseSources.py teknoloji webrazzi.com` komutu ile sadece bu kategori bu linkleri toplayabilirsiniz.
+Tüm sourcelist'i gezmek için `python mainParseSources.py` demeniz yeterli. İlk sefer tüm link'ler tarandığı için 30 dk'ı bulabilir.
+Sonraları için 10 dk içerisinde tüm kaynaklar taranabilmektedir. Tabi sisteminde bandwitdth ve resource'una göre bu zamanlar değişebilir.
