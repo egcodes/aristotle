@@ -55,7 +55,7 @@ class LinkHandler:
                     req = urllib2.Request(self.link, None, headers={'User-Agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.97 Safari/537.11"})
                     self.htmlSource = urllib2.urlopen(req, timeout=self.timeout).read()
             except Exception, error:
-                print "\t\t\t%s: %s" % (error, self.link)
+                print "\t\t\t LinkHandler: %s: %s" % (error, self.link)
                 self.soup = -1
                 self.htmlSource = -1
                 return
@@ -265,6 +265,12 @@ class LinkHandler:
                     #===========================================================
                     if imgContent.find('mc.yandex.ru/watch') == -1:
                         self.imgContent = imgContent
+                    if imgContent.find('http://iatkn.tmgrup.com.tr') != -1:
+                        self.imgContent = imgContent.replace("http://", "https://")
+                    try:
+						self.imgContent = "http:" + self.imgContent.split("http:")[2]
+                    except:
+						pass
 				
                 #===============================================================
                 # Html'ler yok ediliyor
@@ -284,12 +290,12 @@ class LinkHandler:
                 # Print
                 #===============================================================
                 #===============================================================
-                # print "=" * 50
-                # print self.link
-                # print test.titleContent
-                # print test.descContent
-                # print test.imgContent
-                # print "=" * 50
+               # print "=" * 50
+               # print self.link
+               # print test.titleContent
+               # print test.descContent
+               # print test.imgContent
+               # print "=" * 50
                 #===============================================================
 					
         except ValueError, error:
@@ -328,11 +334,5 @@ class LinkHandler:
 # test = LinkHandler("http://www.chip.com.tr/haber/iphone-5s-ve-5c-yan-yana_42250.html")
 # test.run()
 # test = LinkHandler("http://www.cnnturk.com/2013/spor/futbol/08/26/stuttgartta.labbadianin.bileti.kesildi/720882.0/index.html")
-# test.run()
-# test = LinkHandler("http://www.ajansspor.com/futbol/superlig/h/20130826/muslera_ne_zaman_burada_oynasak.html")
-# test.run()
-# test = LinkHandler("http://www.zaman.com.tr/kultur_kerkukun-anadolunun-bir-parcasi-oldugunu-herkese-anlatmak-istedim_2124305.html")
-# test.run()
-# test = LinkHandler("http://www.ajansspor.com/yazarlar/lutfilutic/h/20130901/imparatore_olur_yalantore.html")
 # test.run()
 #===============================================================================
