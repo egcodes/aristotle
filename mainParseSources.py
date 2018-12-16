@@ -34,6 +34,9 @@ class Main:
 		self.yearMonth = ""
 		#Turkce karakter
 		self.turkishDict = {'ı': 'i', 'ü': 'u', 'ö':'o', 'ş':'s', 'ç':'c', 'ğ':'g'}
+
+		# Title ve Desc de asagidaki kelimeler var ise alma
+		self.filterWords = []
 			
 		#=======================================================================
 		# Configuration For Requests
@@ -57,7 +60,6 @@ class Main:
 									'http://www.cumhuriyet.com.tr/yazarlar':'author',
 									'http://www.sabah.com.tr/Yazarlar':'iBox',
 									'http://www.ensonhaber.com':'mansetresmi',
-									'http://www.haberler.com':'image',
 									'http://www.internethaber.com':'item img active',
 									'http://haber.sol.org.tr':'singlenews-image',
 									'http://www.yeniakit.com.tr/yazarlar':'au-top-right',
@@ -100,7 +102,8 @@ class Main:
 
 		#Link'in image link'inin icinde alindiktan sonra replace edilmesi gerek bir sey var ise
 		self.replaceStringForLink = {
-									'shiftdelete.net': ('/shiftdelete.net', '/s01.shiftdelete.net/img/general_b'), 
+									'shiftdelete.net': ('http://s01.shiftdelete.net/img/general_b/wp-content/uploads', 'https://ceres.shiftdelete.net/580x330/original'), 
+									'turkiyegazetesi.com.tr': ('www.', 'img2.cdn.'),
 									}
 
 		#Asagiya girilen keyword'lar link icinde geciyor ise o link alinmaz
@@ -110,7 +113,7 @@ class Main:
 		self.hotlinks = []
 		
 		#Eger karakterler bozuk geliyor ise farkli bir Request tpye deneniyor bu kaynaklar icin
-		self.requestTypes = ['webrazzi.com', 'skor.sozcu.com.tr', 'yenisafak.com']
+		self.requestTypes = ['dunyahalleri.com', 'silikonvadisi.tv', 'cnnturk.com', 'skor.sozcu.com.tr', 'yenisafak.com']
 
 		#Eger source'u encoding geliyor ise baska bir request yapilir
 		self.encodePageSource = ['mynet.com', 'trthaber.com']
@@ -348,8 +351,12 @@ class Main:
 				#Eger link icinde sourceTitle yok ise ve alttaki keyword'lardan biri var ise alakasi bir link gec
 				#Exm: https://itunes.apple.com.tr					
 				if link.find(sourceTitle) == -1 and (link.find('http://') != -1 or link.find('www.') != -1 or link.find('https://') != -1):
+					if self.showLink:
+						self.logHandler.printMsg("Link sourceTitle ve http,www,https yok:" + link, 3)
 					continue
 				if link.count('http://') > 1 or (link.count('http://') > 0 and link.count('https://') > 0) or link.count('www.') > 1:
+					if self.showLink:
+						self.logHandler.printMsg("http(s) yada www 1'den fazla: " + link, 3)
 					continue
 				
 				#Eger link'de hostname yok ise ekle, link'i duzenle
@@ -410,6 +417,8 @@ CREATE TABLE IF NOT EXISTS `tempLinks` (
 					
 				if linkDate:
 					if str(linkDate[0][0]) != str(present.strftime('%Y-%m-%d')):
+						if self.showLink:
+							self.logHandler.printMsg("Link dune kayitli geciliyor", 3)
 						continue
 
 
@@ -486,6 +495,16 @@ CREATE TABLE IF NOT EXISTS `tempLinks` (
 									desc = getLinkHandler.descContent
 									img = getLinkHandler.imgContent
 								
+									flagW = False
+									for keyword in self.filterWords:
+										if title.lower().find(keyword) != -1:
+											flagW = True
+											break
+										if desc.lower().find(keyword) != -1:
+											flagW = True
+											break
+									if flagW:
+										continue
                     
 									#Tanim yok ise title atanir
 									if len(desc) < 5:
@@ -557,6 +576,8 @@ CREATE TABLE IF NOT EXISTS `tempLinks` (
 												if not soupDateDiv:
 													soupDateDiv = soup.findAll("meta", { "itemprop" : "%s"%dateClass})
 												if not soupDateDiv:
+													soupDateDiv = soup.findAll("meta", { "property" : "%s"%dateClass})
+												if not soupDateDiv:
 													soupDateDiv = soup.findAll("div", { "id" : "%s"%dateClass})
 												if not soupDateDiv:
 													soupDateDiv = soup.findAll("span", { "class" : "%s"%dateClass})
@@ -606,7 +627,7 @@ CREATE TABLE IF NOT EXISTS `tempLinks` (
 														pass
                     
 												#direk zaman yerine 1 saat once seklinde ise burada ayristirilir
-												if findedDate.find('önce') != -1:
+												if findedDate.find('önce') != -1 and findedDate.find("gün") == -1:
 													try:
 														findedDate = soupDateDiv[0]["title"]
 													except:
@@ -625,6 +646,7 @@ CREATE TABLE IF NOT EXISTS `tempLinks` (
 													continue
                     
 												findedDate = findedDate.replace('s&#x0131;', 'ı')
+												findedDate = findedDate.replace('&#x131;', 'ı')
 												if findedDate.find(str(datetime.now().year)) == -1:
 													continue
 												else:
