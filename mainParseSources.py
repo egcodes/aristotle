@@ -53,6 +53,7 @@ class Main:
 									'http://www.trthaber.com/haber/kultur-sanat/':'image',
 									'http://skor.sozcu.com.tr':'in_image',
 									'http://www.sosyalmedya.co':'attachment-large wp-post-image', 
+									'http://www.posta.com.tr':'news-detail__headline-image fixed-ratio fixed-ratio__16x9', 
 									'http://www.teknolojioku.com':'newsImage', 
 									'http://www.webrazzi.com': 'post-content',
 									'http://www.donanimhaber.com':'entry',
@@ -113,7 +114,7 @@ class Main:
 		self.hotlinks = []
 		
 		#Eger karakterler bozuk geliyor ise farkli bir Request tpye deneniyor bu kaynaklar icin
-		self.requestTypes = ['dunyahalleri.com', 'silikonvadisi.tv', 'cnnturk.com', 'skor.sozcu.com.tr', 'yenisafak.com']
+		self.requestTypes = ['ntvspor.net','shiftdelete.net', 'dunyahalleri.com', 'silikonvadisi.tv', 'cnnturk.com', 'skor.sozcu.com.tr', 'yenisafak.com']
 
 		#Eger source'u encoding geliyor ise baska bir request yapilir
 		self.encodePageSource = ['mynet.com', 'trthaber.com']
@@ -345,8 +346,11 @@ class Main:
 				
 				#Ana source link duzenleme
 				sourceLink = newsSourceLink
-				if newsSourceLink[len('http://'):].find('/') != -1:
+				if newsSourceLink.find("http://") != -1 and newsSourceLink[len('http://'):].find('/') != -1:
 					sourceLink = sourceLink[:sourceLink[len('http://'):].find('/') + len('http://')]
+				else: 
+					if newsSourceLink[len('https://'):].find('/') != -1:
+						sourceLink = sourceLink[:sourceLink[len('https://'):].find('/') + len('https://')]
 
 				#Eger link icinde sourceTitle yok ise ve alttaki keyword'lardan biri var ise alakasi bir link gec
 				#Exm: https://itunes.apple.com.tr					
@@ -605,6 +609,10 @@ CREATE TABLE IF NOT EXISTS `tempLinks` (
 													soupDateDiv = soup.findAll("h1", { "class" : "%s"%dateClass})
 												if not soupDateDiv:
 													soupDateDiv = soup.findAll("time", { "itemprop" : "%s"%dateClass})
+												if not soupDateDiv:
+													soupDateDiv = soup.findAll("time", { "datetime" : "%s"%dateClass})
+												if not soupDateDiv:
+													soupDateDiv = soup.findAll("i", { "class" : "%s"%dateClass})
 												if not soupDateDiv:
 													soupDateDiv = soup.findAll(dateClass)
 											if self.showLink:

@@ -35,6 +35,10 @@ def createNewsSourceByPresent(present):
 		if todayTrFormat[0] == '0':
 			todayTrNonZeroFormat = todayTrFormat[1:]
 		
+		todayPointNonZeroFormat = todayPointFormat
+		if todayPointFormat[0] == '0':
+			todayPointNonZeroFormat = todayPointFormat[1:]
+
 		todayTrNonZeroShortFormat = todayTrNonZeroFormat.split()[0] + " " + todayTrNonZeroFormat.split()[1][:3] + " " + todayTrNonZeroFormat.split()[2]
 		
 		todayEnNonZeroFormat = todayTrNonZeroFormat.split()[0] + ' ' + monthEng[todayTrNonZeroFormat.split()[1]] + ' ' + todayTrNonZeroFormat.split()[2]
@@ -67,7 +71,7 @@ def createNewsSourceByPresent(present):
 			todayTrNonZeroShortFormat = todayTrShortFormat[1:]
 		else:
 			todayTrNonZeroShortFormat = todayTrShortFormat
-		
+	
 		#Haber kaynaklari
 		# Asagidaki dict sirasi ve anlamlari
 			# Kaynak adi
@@ -80,36 +84,37 @@ def createNewsSourceByPresent(present):
 		
 		newsSources = {
 				'gundem':	[
-									('sozcu.com.tr', 'http://www.sozcu.com.tr', ('/gundem/', '/gunun-icinden/', '/dunya/', '/ekonomi/', '/egitim/', '/saglik/',), ('spor_', 'video.', ), ({'date':todayTrNonZeroFormat},)),
-									#('yeniakit.com.tr', 'http://www.yeniakit.com.tr/gundem', ('/haber/',), ('futbol','Fenerbahce', 'Galatasaray', 'Besiktas', 'Trabzonspor', 'fenerbahce', 'besiktas', 'galatasaray', 'trabzonspor'), ({"date":todayTrFormat},)),	
-									('t24.com.tr', 'http://t24.com.tr', ('/haber/', '/gundem/','/politika/', '/egitim/', '/yasam/', '/ekonomi/', '/dunya/', ), (), ({'story-date':todayTrFormat},)),
+									('sozcu.com.tr', 'http://www.sozcu.com.tr', ('/gundem/', '/gunun-icinden/', '/dunya/', '/ekonomi/', '/egitim/', '/saglik/',), ('spor_', 'video.', ), ({'date-time':todayTrFormat},)),
+									('t24.com.tr', 'https://t24.com.tr', ('/haber/', '/gundem/','/politika/', '/egitim/', '/yasam/', '/ekonomi/', '/dunya/', ), (), ({'_392lz':todayTrFormat},)),
 									('milliyet.com.tr','http://www.milliyet.com.tr', ('-',), ('secure.milliyet.com.tr','/ydetay/', 'skorer.'),({'date':todayPointFormat},), {'-':1}),
 									('hurriyet.com.tr', 'http://www.hurriyet.com.tr', ('-',), ('-haberleri',), ({'rhd-time-box-text hidden-sm-down':todayPointFormat},)),
 									('haber7.com', 'http://www.haber7.com', ('/haber/',), ('/teknoloji/', 'spor.','/yazarlar/'), ({'date-item added':todayPointFormat}, )),
 									('odatv.com', 'http://www.odatv.com', ('-',), (), ({'yaziboyut':todayPointFormat},)),
-									('haberturk.com','http://www.haberturk.com', ('-',), ('/yazarlar/', '/fiskos/', '/video/', '/teknoloji/', '/spor/', '/kultur-sanat/','spor.', 'magazin.',), ({'news-detail-featured-date':todayTrFormat},), {'|':1}),
+									('haberturk.com','https://www.haberturk.com', ('-',), ('/yazarlar/', '/fiskos/', '/video/', '/teknoloji/', '/spor/', '/kultur-sanat/','spor.', 'magazin.',), ({'date':todayPointFormat},), {'|':1}),
 									('gazetevatan.com', 'http://www.gazetevatan.com', ('-gundem', '-dunya', '-siyaset', '-ekonomi', '-finas', '-yasam', '-egitim',), (), ({'cdate':todayTrFormat},{'datesrc':todayTrFormat}), {'|':1},),
-									('ntv.com.tr', 'http://www.ntv.com.tr', ('/turkiye/','/dunya/', '/ekonomi/', '/saglik/','/yasam/', '/egitim/',), (), ({'desktop-only':todayPointFormat},), ),
+									('ntv.com.tr', 'http://www.ntv.com.tr', ('/turkiye/','/dunya/', '/ekonomi/', '/saglik/','/yasam/', '/egitim/',), (), ({'news-info-text':todayPointFormat},), ),
 									('cnnturk.com', 'http://www.cnnturk.com', ('/ekonomi/', '/turkiye/', '/dunya/', '/yasam/',  ), (), ({'detail-metadata':todayPointFormat},), {'-':1}),
 									('ensonhaber.com', 'http://www.ensonhaber.com', ('.html',), ('kralspor.',),({'margin-right:15px;margin-bottom:10px;':todayPointFormat},)),
-									('birgun.net', 'http://www.birgun.net', ('/haber-detay/',), (),({'date':todayPointFormat},)),
+									('birgun.net', 'https://www.birgun.net', ('/haber/',), (),({'category-line':todayPointFormat},)),
 									('haber.sol.org.tr', 'http://haber.sol.org.tr/anasayfa', ('/turkiye/','/emek-sermaye/', '/dunya/', '/toplum/', '/medya/',), (), ({'date-display-single':todayTrFormat},), {'|':2},),
 									('trthaber.com', 'http://www.trthaber.com', ('/gundem/', '/turkiye/', '/dunya/', '/ekonomi/', '/egitim/',), (), ({'detTarih':todayTrFormat},)),
-									('posta.com.tr', 'http://www.posta.com.tr', ('-',), ('futbol','Fenerbahce', 'Galatasaray', 'Besiktas', 'Trabzonspor', 'fenerbahce', 'besiktas', 'galatasaray', 'trabzonspor'), ({'news-detail__info__date__item':todayTrFormat},), {'-':1},),										
-									('star.com.tr', 'http://www.star.com.tr/default.asp', ('/guncel/', '/politika/', '/ekonomi/', '/dunya/', '/medya/', '/egitim/',), (), ({'newsDate':todayPointFormat},), {'-':1}),
-									('internethaber.com', 'http://www.internethaber.com', ('.htm',), ('gazeteoku.com', 'otomobil.internethaber.com', 'spor.', ), ({'rpt':'%s'%todayLineFormat},{'info':'Tarihi :%s'%todayLineFormat})),
-									('mynet.com', 'http://www.mynet.com', ('/haber/',), ('/teknoloji/','spor.',), ({'post-date col-auto':todayTrNonZeroFormat},)),
-									('cumhuriyet.com.tr', 'http://www.cumhuriyet.com.tr', ('/siyaset/','/turkiye/', '/dunya/', '/ekonomi/','/yasam/', '/egitim/', '/saglik/',), (), ({'publish-date':todayTrFormat},)),
-									('yenisafak.com', 'http://www.yenisafak.com', ('/dunya/', '/gundem/', '/politika/', '/ekonomi/', '/saglik/', '/egitim/',), ('/yazarlar/', '/spor/', '/teknoloji/',), ({'item time':todayTrFormat},), {'-':1}),										 
-									#('takvim.com.tr', 'http://www.takvim.com.tr', (today,), ('/Yazarlar/', '/yazarlar/', '/spor/', '/Spor/', '/Televizyon', '/multimedya/', '/Saklambac/', '/saklambac/'), (1),),
-									('haberler.com', 'http://www.haberler.com', ('-haberi',), ('fotogaleri.','futbol','Fenerbahce', 'Galatasaray', 'Besiktas', 'Trabzonspor', 'fenerbahce', 'besiktas', 'galatasaray', 'trabzonspor'), ({'nav1':todayTrNonZeroFormat},)),
+									('star.com.tr', 'http://www.star.com.tr/default.asp', ('/guncel/', '/politika/', '/ekonomi/', '/dunya/', '/medya/', '/egitim/',), (), ({'time color-gray-medium margin-bottom-lg':todayTrFormat},), {'-':1}),
+									('internethaber.com', 'https://www.internethaber.com', ('.htm',), ('gazeteoku.com', 'otomobil.internethaber.com', 'spor.', ), ({'ml-auto':'%s'%todayPointFormat},{'info':'Tarihi :%s'%todayLineFormat})),
+									('mynet.com', 'https://www.mynet.com', ('/haber/',), ('/teknoloji/','spor.',), ({'post-date col-auto':todayPointFormat},)),
+									('cumhuriyet.com.tr', 'https://www.cumhuriyet.com.tr', ('/haber/',), (), ({'datePublished':todayLineFormatReverse},)),
+									('yenisafak.com', 'https://www.yenisafak.com', ('/dunya/', '/gundem/', '/politika/', '/ekonomi/', '/saglik/', '/egitim/',), ('/yazarlar/', '/spor/', '/teknoloji/',), ({'item time':todayTrFormat},), {'-':1}),	 
+									('haberler.com', 'https://www.haberler.com', ('-haberi',), ('fotogaleri.','futbol','Fenerbahce', 'Galatasaray', 'Besiktas', 'Trabzonspor', 'fenerbahce', 'besiktas', 'galatasaray', 'trabzonspor'), ({'tar nav1 mb10':todayPointFormat},)),
 									('diken.com.tr', 'http://www.diken.com.tr', ('-',), ('/kategori/', 'bu-gazete/', '-ekim-', '-kasim-', '-aralik-', '-ocak-', '-subat-', '-mart-', '-nisan-', '-mayis-', '-haziran-', '-temmuz-', '-agustos-', '-eylul-',), ({'entry-time':todaySlashFormat},), {'-':1}),
-									#('sabah.com.tr', 'http://www.sabah.com.tr', (today,), ('/yazarlar/', '/teknoloji/', '/kultur_sanat/', '/sinema/', '/fotohaber/', '/magazin/', '/multimedya/', '/spor/', '/spor-haberleri/', '/webtv/', '/otomobil/', '/eGazete/',), (1), {'-':1}),
 									('tr.sputniknews.com', 'http://tr.sputniknews.com', (todayCombine,), ('/spor/', '/bilim/',), (1),),
-									('aksam.com.tr', 'http://www.aksam.com.tr', ('/siyaset/', '/guncel/', '/yasam/', '/ekonomi/', '/dunya/',), ('/teknoloji/', '/spor/', '/magazin/', '/yazarlar/',), ({'newsDate':todayTrFormat},), {'-':1}),
 									('bbc.co.uk/turkce', 'http://www.bbc.co.uk/turkce',  ('haberler-',), (), ({'mini-info-list__item': todayTrNonZeroFormat},), {'-':1}),
+									#('yeniakit.com.tr', 'http://www.yeniakit.com.tr/gundem', ('/haber/',), ('futbol','Fenerbahce', 'Galatasaray', 'Besiktas', 'Trabzonspor', 'fenerbahce', 'besiktas', 'galatasaray', 'trabzonspor'), ({"date":todayTrFormat},)),	
+									#('sabah.com.tr', 'http://www.sabah.com.tr', (today,), ('/yazarlar/', '/teknoloji/', '/kultur_sanat/', '/sinema/', '/fotohaber/', '/magazin/', '/multimedya/', '/spor/', '/spor-haberleri/', '/webtv/', '/otomobil/', '/eGazete/',), (1), {'-':1}),
+									#('aksam.com.tr', 'http://www.aksam.com.tr', ('/siyaset/', '/guncel/', '/yasam/', '/ekonomi/', '/dunya/',), ('/teknoloji/', '/spor/', '/magazin/', '/yazarlar/',), ({'newsDate':todayTrFormat},), {'-':1}),
+									#('takvim.com.tr', 'http://www.takvim.com.tr', (today,), ('/Yazarlar/', '/yazarlar/', '/spor/', '/Spor/', '/Televizyon', '/multimedya/', '/Saklambac/', '/saklambac/'), (1),),
+									# resim class'i yeniden ayarlanmali
+									  #('posta.com.tr', 'http://www.posta.com.tr', ('-',), ('futbol','Fenerbahce', 'Galatasaray', 'Besiktas', 'Trabzonspor', 'fenerbahce', 'besiktas', 'galatasaray', 'trabzonspor'), ({'news-detail__info__date__item':todayTrFormat},), {'-':1},),										
 									#Resimleri gosterilmiyor
-									#('turkiyegazetesi.com.tr', 'http://www.turkiyegazetesi.com.tr', ('/gundem/','/dunya/', '/egitim/', '/yasam/', '/saglik/', '/politika/', '/ekonomi/', ), ('/spor/','/teknoloji/', '/yazarlar/',), ({'story_date clearfix':todayPointFormat},),),										
+									  #('turkiyegazetesi.com.tr', 'http://www.turkiyegazetesi.com.tr', ('/gundem/','/dunya/', '/egitim/', '/yasam/', '/saglik/', '/politika/', '/ekonomi/', ), ('/spor/','/teknoloji/', '/yazarlar/',), ({'story_date clearfix':todayPointFormat},),),										
 								],
 			
 				'videohaber': 	[
@@ -117,71 +122,64 @@ def createNewsSourceByPresent(present):
 									('cnnturk.com', 'http://www.cnnturk.com/video', ('/video/',), (), ({'detail-metadata hidden-xs hidden-sm':todayPointFormat},), {'-':1}),
 									('ensonhaber.com', 'http://videonuz.ensonhaber.com', ('/izle/',), (), ({'timeInfo':todayFirstYear},)),
 									('haber7.com', 'http://video.haber7.com/', ('/video-galeri/',), (), ({'description':todayPointFormat},)),
-									('trthaber.com', 'http://www.trthaber.com/video-galerileri.html', ('/videolar/',), ('/videolar/ekonomi','/videolar/kultur-sanat', '/videolar/yasam', '/videolar/spor', '/videolar/gundem', '/videolar/magazin', '/videolar/cevre', '/videolar/dunya', '/videolar/medya', '/videolar/saglik', '/videolar/egitim', '/videolar/turkiye', '/videolar/bilim-teknik' ), ({'balonIc_bilgi':todayPointFormat},)),
-									('milliyet.com.tr', 'http://www.milliyet.com.tr/Milliyet-Tv/', ('video-izle',), ('canli-yayin-videosu',), ({'detSpan':todayTrFormat},)), 
+									('trthaber.com', 'http://www.trthaber.com/video-galerileri.html', ('/videolar/',), ('/videolar/ekonomi','/videolar/kultur-sanat', '/videolar/yasam', '/videolar/spor', '/videolar/gundem', '/videolar/magazin', '/videolar/cevre', '/videolar/dunya', '/videolar/medya', '/videolar/saglik', '/videolar/egitim', '/videolar/turkiye', '/videolar/bilim-teknik' ), ({'detTarih':todayFirstYear},)),
+									('milliyet.com.tr', 'https://www.milliyet.com.tr/milliyet-tv/', ('-',), (), ({'date':todayFirstYear},)), 
 									('ntv.com.tr', 'http://www.ntv.com.tr/video', ('/video/',), (), ({'clock':todayPointFormat},)),
 									('haberturk.com','http://www.haberturk.com/video/haber', ('/haber/',), (), ({'mb10':todayTrFormat},)),
 								],
 			
 				'teknoloji':	[
 									('chip.com.tr', 'http://www.chip.com.tr', ('/haber/', '/makale/','/blog/','/inceleme/'), (), ({'datePublished':todayTrFormat},)),
-									('donanimhaber.com', 'http://www.donanimhaber.com', ('/haberleri/',), ('forum.donanimhaber.com','/2si1/','/mesut-cevik-ile-canli/',), ({'tarih post-date':todayTrNonZeroFormat},)),
 									('webrazzi.com', 'https://webrazzi.com', (today,), (), (1), {'|':1}),
-									('shiftdelete.net', 'http://shiftdelete.net', ('-',), ('forum.',), ({'font-size:14px;color:#888':"önce"},), {'-':1}),
-									('ntv.com.tr', 'http://www.ntv.com.tr/teknoloji', ('/teknoloji/',), (),({'desktop-only':todayPointFormat},),),
-									('teknokulis.com', 'http://www.teknokulis.com', (today,), ('teknokulis.com/Haberler/%s'%today,), (1), {'-':4}),
+									('shiftdelete.net', 'https://shiftdelete.net', ('-',), ('forum.',), ({'article:published_time':todayFirstYear},), {'-':1}),
+									('ntv.com.tr', 'http://www.ntv.com.tr/teknoloji', ('/teknoloji/',), (),({'news-info-text':todayPointFormat},),),
 									('teknolojioku.com', 'http://www.teknolojioku.com', ('-',), (),({'time':todaySlashFormat},) ),
-									('mynet.com', 'http://www.mynet.com/teknoloji', ('/teknoloji/',), (), ({'newsInfo':todayTrNonZeroFormat},)),
+									('mynet.com', 'http://www.mynet.com/teknoloji-haberler', ('-',), (), ({'post-date col-auto':todayPointFormat},)),
 									('bigumigu.com', 'http://www.bigumigu.com', ('/haber/',), (), ({'article:published_time':'%s'%todayFirstYear},)),
-									('sosyalmedya.co', 'http://www.sosyalmedya.co', ("-",), ('/sosyal-medya', '/sosyal-marka', '/yeni-girisimler', '/e-ticaret',), ({'article:published_time':'%s'%todayFirstYear},), {'Sosyal Medya':1}),
-									#('silikonvadisi.tv', 'http://www.silikonvadisi.tv', ('.html',), ('sicak-haber',), ({'entry-date updated td-module-date':todayTrNonZeroFormat},), {'-':1}),
 									('webtekno.com', 'http://www.webtekno.com', ('.html',), (), ({'content-info__date':"önce"},), ),
  									('fizikist.com', 'http://www.fizikist.com', ('-',), (), ({'content_time':todayTrFormat},), {'-':1}),
 									('bilimpro.com', 'https://bilimpro.com', (todaySlashFormatReverse,), (), (1),),
  									('log.com.tr', 'http://www.log.com.tr', ('-',), (), ({'date':todayTrFormat},), {'-':1}),
- 									('dunyahalleri.com', 'https://www.dunyahalleri.com', ('-',), (), ({'article:published_time':'%s'%todayFirstYear},), {'-':1}),
 								],
 			
 				'kulturvesanat':
 								[
-									('haberturk.com','http://www.haberturk.com/kultur-sanat', ('-',), (), ({'date':todayTrFormat},), {'|':1}),
-									('hurriyet.com.tr', 'http://www.hurriyet.com.tr/keyif', ('-',), (), ({'col-md-7 col-xs-12 text-right small-date':todayPointFormat},)),
-									('cnnturk.com', 'http://www.cnnturk.com/kultur-sanat', ('/kultur-sanat/', ), (), ({'detail-metadata':todayPointFormat},),  {'-':1}),
-									('ntv.com.tr', 'http://www.ntv.com.tr/sanat', ('/sanat/',), (),({'time':todayTrNonZeroFormat},),),
-									('haber7.com', 'http://www.haber7.com/kultur', ('/kultur/', '/kulturel-etkinlikler/', '/mimari/', '/muzik/', '/arkeoloji/', '/sinema/', '/tarih-ve-fikir/', '/edebiyat/', '/fotograf/', '/plastik-sanatlar/', 'tiyatro-ve-sahne-sanatlari',), (), ({'info':todayPointFormat}, )),
-									#('sabah.com.tr', 'http://www.sabah.com.tr/kultur_sanat', (today,), ('/gundem/','/ekonomi/', '/yasam/', '/dunya/', '/piyasa/', '/teknoloji/', '/egitim/', '/turizm/', '/fotohaber/', '/Turizm/', '/magazin/', '/multimedya/', '/spor/', '/webtv/', '/yazarlar/', '/otomobil/'), (1), {'-':1}),
-									('trthaber.com', 'http://www.trthaber.com/haber/kultur-sanat/', ('/kultur-sanat/', ), (), ({'detTarih':todayTrFormat},)),
-									('sozcu.com', 'http://www.sozcu.com.tr/hayatim/kultur-sanat-haberleri/', ('/kultur-sanat-haberleri/', ), (), ({'news-date':todayTrFormat},)),
+									('haberturk.com','https://www.haberturk.com/kultur-sanat', ('-',), (), ({'date':todayPointFormat},), {'|':1}),
+									('hurriyet.com.tr', 'https://www.hurriyet.com.tr/keyif', ('-',), (), ({'rhd-time-box-text ':todayPointFormat},)),
+									('cnnturk.com', 'https://www.cnnturk.com/kultur-sanat-haberleri', ('/kultur-sanat/', ), (), ({'modified-date':todayFirstYear},),  {'-':1}),
+									('ntv.com.tr', 'https://www.ntv.com.tr/sanat', ('-',), (),({'news-info-update':todayPointFormat},),),
+									('trthaber.com', 'https://www.trthaber.com/haber/kultur-sanat/', ('/kultur-sanat/', ), (), ({'detTarih':todayTrFormat},)),
+									('sozcu.com', 'https://www.sozcu.com.tr/hayatim/kultur-sanat-haberleri/', ('/kultur-sanat-haberleri/', ), (), ({'news-date':todayTrFormat},)),
 
 
 								],
 			
 				'spor':			[
-									('fanatik.com.tr', 'http://www.fanatik.com.tr', (today,), ('KategoriSayfasi','AnketmerkeziTumYorumlar',"tum-yorumlar",), (1), {'-':1}),
-									('ntvspor.net', 'http://www.ntvspor.net', ('-',), (), ({'time':todayTrNonZeroFormat},),),
+									('fanatik.com.tr', 'http://www.fanatik.com.tr', ('-',), (), ({'news-detail__info__date__item':todayTrFormat},),),
+									('ntvspor.net', 'https://www.ntvspor.net', ('-',), (), ({'time':todayTrNonZeroFormat},),),
 									('skor.sozcu.com.tr', 'http://skor.sozcu.com.tr', (today,), (), (1), {'-':1}),
 									('sporx.com', 'http://www.sporx.com/?giris=ok', ('-',), (), ({'haberdate':todayTrFormat},)),
 									('mackolik.com', 'http://www.mackolik.com/default.aspx', ('/Haber/',), (), ({'datePublished':todayFirstYear},)),
 									('cnnturk.com', 'http://www.cnnturk.com/spor', ('/spor/', ), (), ({'detail-metadata':todayPointFormat},),),
-									#('fotomac.com.tr', 'http://www.fotomac.com.tr', (today,), ('/Yazarlar/',), (1), {'–':2}),
+									('fotomac.com.tr', 'https://www.fotomac.com.tr', (today,), ('/Yazarlar/',), (1), {'–':2}),
 								],
 				
 				'koseyazilari': [
-									('haberturk.com','http://www.haberturk.com/htyazarlar', ('/yazarlar/',), (), ({'author-detail-content':todayTrFormat},), {'-':1}),
-									('milliyet.com.tr','http://www.milliyet.com.tr/yazarlar/', ('/yazarlar/',), (), ({'nn1':todayPointFormat},), {'|':2}),
-									('haber7.com', 'http://www.haber7.com', ('/yazarlar/',), (), ({'info':todayPointFormat},)),
+									('haberturk.com','http://www.haberturk.com/htyazarlar', ('/yazarlar/',), (), ({'date':todayPointFormat},), {'-':1}),
+									('milliyet.com.tr','http://www.milliyet.com.tr/yazarlar/', ('/yazarlar/',), (), ({'article__date':todayTrFormat},), {'|':2}),
+									('haber7.com', 'http://www.haber7.com', ('/yazarlar/',), (), ({'readInfo':todayPointFormat},)),
 									('sozcu.com.tr', 'http://www.sozcu.com.tr/kategori/yazarlar/', ('/yazarlar/',), (), ({'date':todayTrNonZeroFormat},)),
-									('star.com.tr', 'http://www.star.com.tr/yazarlar/', ('/yazar/',), (), ({'publisheddate':todayTrFormat},), {'-': 2}),
-									#('sabah.com.tr', 'http://www.sabah.com.tr/Yazarlar', (today,), ('/gundem/','/ekonomi/', '/yasam/', '/dunya/', '/piyasa/', '/teknoloji/', '/egitim/', '/kultur_sanat/', '/sinema/', '/turizm/', '/fotohaber/', '/Turizm/', '/magazin/', '/multimedya/', '/spor/', '/webtv/', '/otomobil/'), (1), {'-':2}),
-									('cumhuriyet.com.tr', 'http://www.cumhuriyet.com.tr/yazarlar', ('/koseyazisi/',), (), ({'publish-date':todayTrFormat},)),
-									('t24.com.tr', 'http://t24.com.tr/yazarlar', ('/yazarlar/', ), (), ({'datePublished':todayTrFormat},)),
+									('star.com.tr', 'http://www.star.com.tr/yazarlar/', ('/yazar/',), (), ({'date font-weight-7 font-size-17':todayTrFormat},), {'-': 2}),
+									('sabah.com.tr', 'http://www.sabah.com.tr/yazarlar', (today,), ('/gundem/','/ekonomi/', '/yasam/', '/dunya/', '/piyasa/', '/teknoloji/', '/egitim/', '/kultur_sanat/', '/sinema/', '/turizm/', '/fotohaber/', '/Turizm/', '/magazin/', '/multimedya/', '/spor/', '/webtv/', '/otomobil/'), (1), {'-':2}),
+									('cumhuriyet.com.tr', 'http://www.cumhuriyet.com.tr/yazarlar', ('/yazarlar/',), (), ({'yayin-tarihi':todayTrFormat},)),
+									('t24.com.tr', 'https://t24.com.tr/son-yazilar', ('/yazarlar/', ), (), ({'_392lz':todayTrFormat},)),
 	   								('hurriyet.com.tr', 'http://www.hurriyet.com.tr/yazarlar/', ('/yazarlar/',), (), ({'article-date':todayTrNonZeroFormat},)),
 									# Haber tarihi split edilmis, o yuzden alinamiyor
-									#('yenisafak.com', 'http://www.yenisafak.com/Yazarlar', ('/yazarlar/',), (), ({'author-share':todayTrFormat},), {'|':1}),										 
+									  #('yenisafak.com', 'http://www.yenisafak.com/Yazarlar', ('/yazarlar/',), (), ({'author-share':todayTrFormat},), {'|':1}),										 
 									# Haber tarihi yok 
-									#('yeniakit.com.tr', 'http://www.yeniakit.com.tr/yazarlar', ('/yazarlar/',), (), ({'inside':todayTrFormat},)),	
+									  #('yeniakit.com.tr', 'http://www.yeniakit.com.tr/yazarlar', ('/yazarlar/',), (), ({'inside':todayTrFormat},)),	
 									# Title tag var ama icerik yok
-									#('gazetevatan.com', 'http://www.gazetevatan.com/yazarlar/', ('-yazar-yazisi-',), (), ({'cdate':todayTrFormat},), {'|':1}),
+									  #('gazetevatan.com', 'http://www.gazetevatan.com/yazarlar/', ('-yazar-yazisi-',), (), ({'cdate':todayTrFormat},), {'|':1}),
 								],
 			}
 		
