@@ -21,7 +21,7 @@ class LogHandler:
     # Hata ve uyarilarin loglanmasi
     def logger(self, function, message=""):
         #Dosyaya
-        with open("error.log", "a") as f:
+        with open("logs/error.log", "a") as f:
             f.writelines("[%s]\n%s.%s %s\n" % (str(datetime.now())[:19], self.className, function, message))
             traceback.print_exc(file=f)
             f.writelines("\n")
