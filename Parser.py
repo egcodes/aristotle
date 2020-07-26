@@ -5,7 +5,7 @@ import urllib, urllib2, requests, json
 import time
 import simplejson
 import signal
-from sourceList import createNewsSourceByPresent
+from SourceList import createNewsSourceByPresent
 from datetime import datetime
 from LinkHandler import LinkHandler
 from LogHandler import LogHandler
