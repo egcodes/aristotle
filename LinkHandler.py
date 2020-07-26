@@ -5,24 +5,25 @@ from LogHandler import LogHandler
 import requests
 import urllib2
 
+
 class LinkHandler:
     def __init__(self, link, imageClass="", descMetaType="", linkContentDownload=False, requestType=0, cleanBrokenCh=False, timeout=3):
         self.logHandle = LogHandler("LinkHandler")
-		
+
         self.htmlSource = ""
         self.soup = ""
         self.titleContent = ""
         self.descContent = ""
         self.imgContent = ""
-		
-        self.imageClass = imageClass		
+
+        self.imageClass = imageClass
         self.descMetaType = descMetaType
         self.link = link
         self.linkContentDownload = linkContentDownload
-        self.requestType = requestType 
+        self.requestType = requestType
         self.cleanBrokenCh = cleanBrokenCh
         self.timeout = timeout
-		
+
     def cleanUp(self, xstr):
         xstr = xstr.encode('utf-8').replace('Äą', 'ı').decode('utf-8')
         xstr = xstr.encode('utf-8').replace('Ä±', "ı").decode('utf-8')
@@ -43,91 +44,85 @@ class LinkHandler:
         xstr = xstr.encode('utf-8').replace('Ã&oelig', 'ü').decode('utf-8')
         xstr = xstr.encode('utf-8').replace('Ã&Dagger;', 'Ç').decode('utf-8')
 
-		
         return xstr
-	
-    def run(self):			
+
+    def run(self):
         try:
             try:
                 if self.requestType:
-                    self.htmlSource = requests.get(self.link, headers={'User-Agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.97 Safari/537.11"}, timeout=self.timeout).text
+                    self.htmlSource = requests.get(self.link, headers={
+                        'User-Agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.97 Safari/537.11"},
+                                                   timeout=self.timeout).text
                 else:
-                    req = urllib2.Request(self.link, None, headers={'User-Agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.97 Safari/537.11"})
+                    req = urllib2.Request(self.link, None, headers={
+                        'User-Agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.97 Safari/537.11"})
                     self.htmlSource = urllib2.urlopen(req, timeout=self.timeout).read()
             except Exception, error:
                 print "\t\t\t LinkHandler: %s: %s" % (error, self.link)
                 self.soup = -1
                 self.htmlSource = -1
                 return
-				
-            #Link indirme degilse buraya
+
+            # Link indirme degilse buraya
             if not self.linkContentDownload:
-                #meta, title, content siralamasina gore parse
+                # meta, title, content siralamasina gore parse
                 self.soup = BeautifulSoup(self.htmlSource)
-				
-                #===============================================================
+
+                # ===============================================================
                 # #Title
-                #===============================================================
-                titleContent = self.soup.findAll(attrs={"property":"og:title"})
+                # ===============================================================
+                titleContent = self.soup.findAll(attrs={"property": "og:title"})
                 if not titleContent:
-                    titleContent = self.soup.findAll(attrs={"name":"title"})
+                    titleContent = self.soup.findAll(attrs={"name": "title"})
                 if not titleContent:
-                    titleContent = self.soup.findAll(attrs={"name":"twitter:title"})
+                    titleContent = self.soup.findAll(attrs={"name": "twitter:title"})
                 if not titleContent:
-                    titleContent = self.soup.findAll(attrs={"name":"Search.Title"})
+                    titleContent = self.soup.findAll(attrs={"name": "Search.Title"})
                 if not titleContent:
-                    titleContent = self.soup.findAll(attrs={"name":"Title"})
+                    titleContent = self.soup.findAll(attrs={"name": "Title"})
                 if not titleContent:
-                    titleContent = self.soup.findAll(attrs={"name":"TITLE"})
+                    titleContent = self.soup.findAll(attrs={"name": "TITLE"})
                 if not titleContent:
                     try:
                         titleContent = self.soup.html.head.title
                     except:
                         pass
-				
-                #===============================================================
+
+                # ===============================================================
                 # #Description
-                #===============================================================
+                # ===============================================================
                 if self.descMetaType:
                     descContent = self.soup.findAll(attrs=self.descMetaType)
                     if not descContent:
-                        descContent = self.soup.findAll(attrs={"name":"description"})
+                        descContent = self.soup.findAll(attrs={"name": "description"})
                 else:
-                    descContent = self.soup.findAll(attrs={"name":"description"})
+                    descContent = self.soup.findAll(attrs={"name": "description"})
                     if not descContent:
-                        descContent = self.soup.findAll(attrs={"property":"og:description"})
+                        descContent = self.soup.findAll(attrs={"property": "og:description"})
                     if not descContent:
-                        descContent = self.soup.findAll(attrs={"name":"twitter:description"})
+                        descContent = self.soup.findAll(attrs={"name": "twitter:description"})
                     if not descContent:
-                        descContent = self.soup.findAll(attrs={"name":"Search.Description"})
+                        descContent = self.soup.findAll(attrs={"name": "Search.Description"})
                     if not descContent:
-                        descContent = self.soup.findAll(attrs={"name":"Description"})
+                        descContent = self.soup.findAll(attrs={"name": "Description"})
                     if not descContent:
-                        descContent = self.soup.findAll(attrs={"name":"DESCRIPTION"})
-						
-                #===============================================================
+                        descContent = self.soup.findAll(attrs={"name": "DESCRIPTION"})
+
+                # ===============================================================
                 # #Image
-                #===============================================================
+                # ===============================================================
                 imgContent = ""
                 if self.imageClass:
                     for imgClass in self.imageClass.split(','):
-                        imgContentSpecial = self.soup.findAll(attrs={"id":"%s" % imgClass})
+                        imgContentSpecial = self.soup.findAll(attrs={"id": "%s" % imgClass})
                         if imgContentSpecial:
                             imgContent = imgContentSpecial
                             break
-				
+
                 if not imgContent:
                     if self.imageClass:
                         for imgClass in self.imageClass.split(','):
-                            imgContentSpecial = self.soup.findAll(attrs={"class":"%s" % imgClass})
-                            if imgContentSpecial:
-                                imgContent = imgContentSpecial
-                                break
-							
-                if not imgContent:
-                    if self.imageClass:
-                        for imgClass in self.imageClass.split(','):
-                            imgContentSpecial = self.soup.findAll(attrs={"itemprop":"%s" % imgClass})
+                            imgContentSpecial = self.soup.findAll(attrs={"class": "%s" % imgClass})
                             if imgContentSpecial:
                                 imgContent = imgContentSpecial
                                 break
@@ -135,19 +130,27 @@ class LinkHandler:
                 if not imgContent:
                     if self.imageClass:
                         for imgClass in self.imageClass.split(','):
-                            imgContentSpecial = self.soup.findAll(attrs={"rel":"%s" % imgClass})
+                            imgContentSpecial = self.soup.findAll(attrs={"itemprop": "%s" % imgClass})
                             if imgContentSpecial:
                                 imgContent = imgContentSpecial
                                 break
-							
+
                 if not imgContent:
                     if self.imageClass:
                         for imgClass in self.imageClass.split(','):
-                            imgContentSpecial = self.soup.findAll(attrs={"name":"%s" % imgClass})
+                            imgContentSpecial = self.soup.findAll(attrs={"rel": "%s" % imgClass})
                             if imgContentSpecial:
                                 imgContent = imgContentSpecial
                                 break
-							
+
+                if not imgContent:
+                    if self.imageClass:
+                        for imgClass in self.imageClass.split(','):
+                            imgContentSpecial = self.soup.findAll(attrs={"name": "%s" % imgClass})
+                            if imgContentSpecial:
+                                imgContent = imgContentSpecial
+                                break
+
                 try:
                     if len(imgContent) > 0:
                         for i in imgContent:
@@ -164,38 +167,39 @@ class LinkHandler:
                     imgContent = ""
 
                 try:
-                    if str(imgContent).lower().find('.jpg') == -1 and str(imgContent).lower().find('.png') == -1 and str(imgContent).lower().find('.jpeg') == -1:
+                    if str(imgContent).lower().find('.jpg') == -1 and str(imgContent).lower().find(
+                            '.png') == -1 and str(imgContent).lower().find('.jpeg') == -1:
                         imgContent = ""
                 except:
                     imgContent = ""
-				
+
                 if not imgContent:
-                    imgContent = self.soup.findAll(attrs={"property":"og:image"})
+                    imgContent = self.soup.findAll(attrs={"property": "og:image"})
                 if not imgContent:
-                    imgContent = self.soup.findAll(attrs={"name":"image"})
+                    imgContent = self.soup.findAll(attrs={"name": "image"})
                 if not imgContent:
-                    imgContent = self.soup.findAll(attrs={"name":"twitter:image"})
+                    imgContent = self.soup.findAll(attrs={"name": "twitter:image"})
                 if not imgContent:
-                    imgContent = self.soup.findAll(attrs={"name":"Search.Image"})
+                    imgContent = self.soup.findAll(attrs={"name": "Search.Image"})
                 if not imgContent:
-                    imgContent = self.soup.findAll(attrs={"name":"Image"})
+                    imgContent = self.soup.findAll(attrs={"name": "Image"})
                 if not imgContent:
-                    imgContent = self.soup.findAll(attrs={"name":"IMAGE"})
-				
-                #Resim varmi yokmu kontrolu
+                    imgContent = self.soup.findAll(attrs={"name": "IMAGE"})
+
+                # Resim varmi yokmu kontrolu
                 if str(imgContent)[str(imgContent).find('/'):].rfind('.') == -1:
                     imgContent = ""
-					
+
                 if not imgContent:
-                    imgContent = self.soup.findAll(attrs={"id":"NewsImagePath"})
+                    imgContent = self.soup.findAll(attrs={"id": "NewsImagePath"})
                 if not imgContent:
-                    imgContent = self.soup.findAll(attrs={"class":"yenihaberresmi"})
+                    imgContent = self.soup.findAll(attrs={"class": "yenihaberresmi"})
                 if not imgContent:
                     imgContent = self.soup.find("link", {"rel": "image_src"})
-					
-                #=======================================================================
+
+                # =======================================================================
                 # Title hazirlaniyor
-                #=======================================================================
+                # =======================================================================
                 if titleContent:
                     if str(titleContent)[0] == '<':
                         self.titleContent = titleContent.text
@@ -207,10 +211,10 @@ class LinkHandler:
                                 self.titleContent = titleContent[0]['value']
                             except:
                                 pass
-							
-                #===============================================================
+
+                # ===============================================================
                 # Description hazirlaniyor
-                #===============================================================
+                # ===============================================================
                 if descContent:
                     try:
                         self.descContent = descContent[0]['content']
@@ -219,10 +223,10 @@ class LinkHandler:
                             self.descContent = descContent[0]['value']
                         except:
                             pass
-						
-                #===========================================================
+
+                # ===========================================================
                 # Image hazirlaniyor
-                #===========================================================
+                # ===========================================================
                 if imgContent:
                     try:
                         imgContent = imgContent[0]['src']
@@ -238,66 +242,65 @@ class LinkHandler:
                                 except:
                                     try:
                                         imgContent = dict(imgContent.attrs)['href']
-                                    except:	
+                                    except:
                                         imgContent = str(imgContent)
-							
-						
+
                     if imgContent.count('http://') > 1:
                         imgContent = imgContent[imgContent[5:].find('http://') + 5:]
                     if imgContent.find('https://') != -1:
                         imgContent = imgContent.replace('https://', 'http://')
-		    if imgContent.startswith("//") == True:
-		        imgContent = "http://" + imgContent[2:]
-						
+                    if imgContent.startswith("//") == True:
+                        imgContent = "http://" + imgContent[2:]
+
                     if imgContent.find('http://') == -1:
-                        #Uzanti var ise hostname ekleme
+                        # Uzanti var ise hostname ekleme
                         from urlparse import urlparse
                         hostname = urlparse(self.link).netloc
                         ext = '.' + hostname.split('.')[-1]
                         if imgContent.find(ext) == -1:
                             imgContent = hostname + '/' + imgContent
-                        #http ekle
+                        # http ekle
                         imgContent = "http://" + imgContent
-						
+
                     imgContent = imgContent.replace('////', '//')
-                    #===========================================================
+                    # ===========================================================
                     # imgContent = imgContent[:10] + imgContent[10:].replace('//', '/')
-                    #===========================================================
+                    # ===========================================================
                     if imgContent.find('mc.yandex.ru/watch') == -1:
                         self.imgContent = imgContent
                     if imgContent.find('http://iatkn.tmgrup.com.tr') != -1:
                         self.imgContent = imgContent.replace("http://", "https://")
                     try:
-						self.imgContent = "http:" + self.imgContent.split("http:")[2]
+                        self.imgContent = "http:" + self.imgContent.split("http:")[2]
                     except:
-						pass
-				
-                #===============================================================
+                        pass
+
+                # ===============================================================
                 # Html'ler yok ediliyor
-                #===============================================================
+                # ===============================================================
                 soup = BeautifulSoup(self.titleContent)
                 self.titleContent = soup.text
                 soup = BeautifulSoup(self.descContent)
                 self.descContent = soup.text
                 soup = BeautifulSoup(self.imgContent)
                 self.imgContent = soup.text
-	
+
                 if self.cleanBrokenCh:
                     self.titleContent = self.cleanUp(self.titleContent)
                     self.descContent = self.cleanUp(self.descContent)
-				
-                #===============================================================
+
+                # ===============================================================
                 # Print
-                #===============================================================
-                #===============================================================
-               # print "=" * 50
-               # print self.link
-               # print test.titleContent
-               # print test.descContent
-               # print test.imgContent
-               # print "=" * 50
-                #===============================================================
-					
+                # ===============================================================
+                # ===============================================================
+            # print "=" * 50
+            # print self.link
+            # print test.titleContent
+            # print test.descContent
+            # print test.imgContent
+            # print "=" * 50
+            # ===============================================================
+
         except ValueError, error:
             if str(error).find('unichr() arg not in range(0x10000) (narrow Python build)') == -1:
                 self.logHandle.logger("run", self.link)
@@ -316,9 +319,8 @@ class LinkHandler:
             self.logHandle.logger("run", self.link)
             self.logHandle.logger("run")
             return
-		
 
-#===============================================================================
+# ===============================================================================
 # test = LinkHandler("http://www.haber7.com/ortadogu/haber/1453906-isidten-dunyayi-sarsacak-plan", imageClass="image_src")
 # test.run()
 # test = LinkHandler("http://amkspor.com/2014/03/03/torogludan-f-bahce-gondermesi-266914/", imageClass="in_image")
@@ -335,4 +337,4 @@ class LinkHandler:
 # test.run()
 # test = LinkHandler("http://www.cnnturk.com/2013/spor/futbol/08/26/stuttgartta.labbadianin.bileti.kesildi/720882.0/index.html")
 # test.run()
-#===============================================================================
+# ===============================================================================

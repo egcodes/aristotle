@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from BeautifulSoup import BeautifulSoup
 from LogHandler import LogHandler
 from ServerDatabaseHandler import ServerDatabaseHandler
 from datetime import datetime
