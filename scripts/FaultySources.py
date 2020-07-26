@@ -36,7 +36,6 @@ class Main:
                     print category, " -> ", source
 				
         self.serverHandler.closeConnection()
-        print "Finished\n"
         sys.stdout.flush()
 
 if __name__ == "__main__":

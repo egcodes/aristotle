@@ -1013,7 +1013,8 @@ CREATE TABLE IF NOT EXISTS `tempLinks` (
 					try:
 						newsLinkDict.update(self.getNewsLinkFromSource(present, category, source, newsSourceLink, newsSourceDiffWords, newsSourceBlackWords))
 					except Exception, ex:
-						self.logHandler.logger("run: %s:%s"%(newsSourceLink, ex))
+						if str(ex).find("NoneType") == -1:
+							self.logHandler.logger("run: %s:%s"%(newsSourceLink, ex))
 					count += 1
 					
 					self.logHandler.printMsg("Time: %s"%(str(datetime.now() - startSource)[:7]), 1)
