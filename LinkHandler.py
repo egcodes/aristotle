@@ -35,7 +35,6 @@ class LinkHandler:
             self.description = self.getDescription(self.soup)
             self.imageLink = self.getImageLink(self.soup)
 
-            print(self.title, self.description, self.imageLink)
         except ValueError as error:
             if str(error).find('unichr() arg not in range(0x10000) (narrow Python build)') == -1:
                 self.logHandler.logger("run", self.link)

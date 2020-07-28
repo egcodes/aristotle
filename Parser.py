@@ -269,7 +269,7 @@ class Main:
                     self.serverHandler.executeQuery(query.insertTempLink % linkInj)
 
                     try:
-                        for categories in list(self.newsSources):
+                        for categories in list(self.newsSources.values()):
                             for source in categories:
                                 if source[1] == newsSourceLink:
                                     title = getLinkHandler.title
@@ -293,7 +293,7 @@ class Main:
                                     try:
                                         if len(source) > 5:
                                             seperator = list(source[5])[0]
-                                            seperatorCount = list(source[5])[0]
+                                            seperatorCount = list(source[5].values())[0]
                                             if title.count(seperator) >= seperatorCount:
                                                 for i in range(seperatorCount):
                                                     if title.rfind(seperator) > 20:
@@ -324,7 +324,7 @@ class Main:
                                         for dateFormats in source[4]:
                                             dateKeyword = dateFormats
                                             dateClass = list(dateKeyword)[0]
-                                            dateToday = list(dateKeyword)[0]
+                                            dateToday = list(dateKeyword.values())[0]
 
                                             soupDateDiv = soup.findAll("div", {"class": "%s" % dateClass})
 
