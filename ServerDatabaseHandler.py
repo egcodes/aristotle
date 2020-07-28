@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from LogHandler import LogHandler
-import MySQLdb
+import mysql.connector
 
 
 class ServerDatabaseHandler:
@@ -10,9 +10,13 @@ class ServerDatabaseHandler:
         try:
             self.logHandler = LogHandler("ServerDatabaseHandle")
 
-            self.serverHandler = MySQLdb.connect('127.0.0.1', 'root', 'yourdbpassowrd', 'haberbus');
-            self.serverHandler.set_character_set('utf8')
-            self.serverHandler.autocommit(True)
+            self.serverHandler = mysql.connector.connect(host='localhost',
+                                                         database='haberbus',
+                                                         user='root',
+                                                         password='root',
+                                                         autocommit=True,
+                                                         auth_plugin='mysql_native_password'
+                                                         )
 
             self.cursor = self.serverHandler.cursor()
             self.cursor.execute('SET NAMES utf8;')
@@ -31,3 +35,4 @@ class ServerDatabaseHandler:
 
     def closeConnection(self):
         self.serverHandler.close()
+        self.cursor.close()
