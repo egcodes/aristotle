@@ -1,0 +1,383 @@
+gundem:
+  - domain: sozcu.com.tr
+    link: http://www.sozcu.com.tr
+    whiteWords: ['/gundem/', '/gunun-icinden/', '/dunya/', '/ekonomi/', '/egitim/', '/saglik/']
+    blackWords: ['spor_', 'video.']
+    dateElement: date-time
+
+  - domain: t24.com.tr
+    link: http://t24.com.tr
+    whiteWords: ['/haber/',]
+    blackWords: []
+    dateElement: _392lz
+
+  - domain: milliyet.com.tr
+    link: http://www.milliyet.com.tr
+    whiteWords: ['-',]
+    blackWords: ['secure.milliyet.com.tr', '/ydetay/', 'skorer.']
+    dateElement: date
+
+  - domain: hurriyet.com.tr
+    link: http://www.hurriyet.com.tr
+    whiteWords: ['-',]
+    blackWords: ['-haberleri',]
+    dateElement: rhd-time-box-text hidden-sm-down
+
+  - domain: haber7.com
+    link: http://www.haber7.com
+    whiteWords: ['/haber/',]
+    blackWords: ['/teknoloji/', 'spor.', '/yazarlar/']
+    dateElement: date-item added
+
+  - domain: odatv.com
+    link: http://www.odatv.com
+    whiteWords: ['-',]
+    blackWords: []
+    dateElement: yaziboyut
+
+  - domain: haberturk.com
+    link: https://www.haberturk.com
+    whiteWords: ['-',]
+    blackWords: ['/yazarlar/', '/fiskos/', '/video/', '/teknoloji/', '/spor/', '/kultur-sanat/', 'spor.', 'magazin.']
+    dateElement: date
+
+  - domain: gazetevatan.com
+    link: http://www.gazetevatan.com
+    whiteWords: ['-gundem', '-dunya', '-siyaset', '-ekonomi', '-finas', '-yasam', '-egitim']
+    blackWords: []
+    dateElement: cdate
+
+  - domain: ntv.com.tr
+    link: http://www.ntv.com.tr
+    whiteWords: ['/turkiye/', '/dunya/', '/ekonomi/', '/saglik/', '/yasam/', '/egitim/']
+    blackWords: []
+    dateElement: news-info-text
+
+  - domain: cnnturk.com
+    link: http://www.cnnturk.com
+    whiteWords: ['/ekonomi/', '/turkiye/', '/dunya/', '/yasam/']
+    blackWords: []
+    dateElement: detail-metadata
+
+  - domain: ensonhaber.com
+    link: http://www.ensonhaber.com
+    whiteWords: ['/gundem/',]
+    blackWords: []
+    dateElement: c-date
+
+  - domain: birgun.net
+    link: https://www.birgun.net
+    whiteWords: ['/haber/',]
+    blackWords: []
+    dateElement: category-line
+
+  - domain: sol.org.tr
+    link: http://sol.org.tr/bugun
+    whiteWords: ['/haber/',]
+    blackWords: []
+    dateElement: datetime
+
+  - domain: trthaber.com
+    link: http://www.trthaber.com
+    whiteWords: ['/gundem/', '/turkiye/', '/dunya/', '/ekonomi/', '/egitim/']
+    blackWords: []
+    dateElement: detTarih
+
+  - domain: star.com.tr
+    link: http://www.star.com.tr/default.asp
+    whiteWords: ['/guncel/', '/politika/', '/ekonomi/', '/dunya/', '/medya/', '/egitim/']
+    blackWords: []
+    dateElement: time color-gray-medium margin-bottom-lg
+
+  - domain: internethaber.com
+    link: https://www.internethaber.com
+    whiteWords: ['.htm',]
+    blackWords: ['gazeteoku.com', 'otomobil.internethaber.com', 'spor.']
+    dateElement: ml-auto
+
+  - domain: mynet.com
+    link: https://www.mynet.com
+    whiteWords: ['/haber/',]
+    blackWords: ['/teknoloji/', 'spor.']
+    dateElement: post-date col-auto
+
+  - domain: cumhuriyet.com.tr
+    link: https://www.cumhuriyet.com.tr
+    whiteWords: ['/haber/',]
+    blackWords: []
+    dateElement: datePublished
+
+  - domain: yenisafak.com
+    link: http://www.yenisafak.com
+    whiteWords: ['/dunya/', '/gundem/', '/politika/', '/ekonomi/', '/saglik/', '/egitim/']
+    blackWords: ['/yazarlar/', '/spor/', '/teknoloji/']
+    dateElement: item time
+
+  - domain: haberler.com
+    link: http://www.haberler.com
+    whiteWords: ['-haberi',]
+    blackWords: ['fotogaleri.', 'futbol', 'Fenerbahce', 'Galatasaray', 'Besiktas', 'Trabzonspor', 'fenerbahce', 'besiktas', 'galatasaray', 'trabzonspor']
+    dateElement: hbptDate
+
+  - domain: diken.com.tr
+    link: http://www.diken.com.tr
+    whiteWords: ['-',]
+    blackWords: ['/kategori/', 'bu-gazete/', '-ekim-', '-kasim-', '-aralik-', '-ocak-', '-subat-', '-mart-', '-nisan-', '-mayis-', '-haziran-', '-temmuz-', '-agustos-', '-eylul-']
+    dateElement: entry-time
+
+  - domain: tr.sputniknews.com
+    link: http://tr.sputniknews.com
+    whiteWords: ['20200729',]
+    blackWords: ['/spor/', '/bilim/']
+
+  - domain: bbc.co.uk/turkce
+    link: http://www.bbc.co.uk/turkce
+    whiteWords: ['haberler-',]
+    blackWords: []
+    dateElement: mini-info-list__item
+
+videohaber:
+  - domain: hurriyet.com.tr
+    link: http://www.hurriyet.com.tr/video/
+    whiteWords: ['/video/',]
+    blackWords: ['/playlist/',]
+    dateElement: date
+
+  - domain: cnnturk.com
+    link: http://www.cnnturk.com/video
+    whiteWords: ['/video/',]
+    blackWords: []
+    dateElement: detail-metadata hidden-xs hidden-sm
+
+  - domain: ensonhaber.com
+    link: http://videonuz.ensonhaber.com
+    whiteWords: ['/izle/',]
+    blackWords: []
+    dateElement: timeInfo
+
+  - domain: haber7.com
+    link: http://video.haber7.com/
+    whiteWords: ['/video-galeri/',]
+    blackWords: []
+    dateElement: description
+
+  - domain: trthaber.com
+    link: http://www.trthaber.com/video-galerileri.html
+    whiteWords: ['/videolar/',]
+    blackWords: ['/videolar/ekonomi', '/videolar/kultur-sanat', '/videolar/yasam', '/videolar/spor', '/videolar/gundem', '/videolar/magazin', '/videolar/cevre', '/videolar/dunya', '/videolar/medya', '/videolar/saglik', '/videolar/egitim', '/videolar/turkiye', '/videolar/bilim-teknik']
+    dateElement: detTarih
+
+  - domain: milliyet.com.tr
+    link: https://www.milliyet.com.tr/milliyet-tv/
+    whiteWords: ['-',]
+    blackWords: []
+    dateElement: date
+
+  - domain: ntv.com.tr
+    link: http://www.ntv.com.tr/video
+    whiteWords: ['/video/',]
+    blackWords: []
+    dateElement: clock
+
+  - domain: haberturk.com
+    link: http://www.haberturk.com/video/haber
+    whiteWords: ['/haber/',]
+    blackWords: []
+    dateElement: mb10
+
+teknoloji:
+  - domain: chip.com.tr
+    link: http://www.chip.com.tr
+    whiteWords: ['/haber/', '/makale/', '/blog/', '/inceleme/']
+    blackWords: []
+    dateElement: datePublished
+
+  - domain: webrazzi.com
+    link: https://webrazzi.com
+    whiteWords: 2020/07/29
+    blackWords: []
+
+  - domain: shiftdelete.net
+    link: https://shiftdelete.net
+    whiteWords: ['-',]
+    blackWords: ['forum.',]
+    dateElement: article:published_time
+
+  - domain: ntv.com.tr
+    link: http://www.ntv.com.tr/teknoloji
+    whiteWords: ['/teknoloji/',]
+    blackWords: []
+    dateElement: news-info-text
+
+  - domain: teknolojioku.com
+    link: http://www.teknolojioku.com
+    whiteWords: ['-',]
+    blackWords: []
+    dateElement: time
+
+  - domain: mynet.com
+    link: http://www.mynet.com/teknoloji-haberler
+    whiteWords: ['-',]
+    blackWords: []
+    dateElement: post-date col-auto
+
+  - domain: bigumigu.com
+    link: http://www.bigumigu.com
+    whiteWords: ['/haber/',]
+    blackWords: []
+    dateElement: updated
+
+  - domain: webtekno.com
+    link: http://www.webtekno.com
+    whiteWords: ['.html',]
+    blackWords: []
+    dateElement: content-info__date
+
+  - domain: fizikist.com
+    link: http://www.fizikist.com
+    whiteWords: ['-',]
+    blackWords: []
+    dateElement: content_time
+
+  - domain: bilimpro.com
+    link: https://bilimpro.com
+    whiteWords: ['2020/07/29',]
+    blackWords: []
+
+  - domain: log.com.tr
+    link: http://www.log.com.tr
+    whiteWords: ['-',]
+    blackWords: []
+    dateElement: date
+
+kulturvesanat:
+  - domain: haberturk.com
+    link: https://www.haberturk.com/kultur-sanat
+    whiteWords: ['-',]
+    blackWords: []
+    dateElement: date
+
+  - domain: hurriyet.com.tr
+    link: https://www.hurriyet.com.tr/keyif
+    whiteWords: ['-',]
+    blackWords: []
+    dateElement: rhd-time-box-text
+
+  - domain: cnnturk.com
+    link: https://www.cnnturk.com/kultur-sanat-haberleri
+    whiteWords: ['/kultur-sanat/',]
+    blackWords: []
+    dateElement: modified-date
+
+  - domain: ntv.com.tr
+    link: https://www.ntv.com.tr/sanat
+    whiteWords: ['-',]
+    blackWords: []
+    dateElement: news-info-update
+
+  - domain: trthaber.com
+    link: https://www.trthaber.com/haber/kultur-sanat/
+    whiteWords: ['/kultur-sanat/',]
+    blackWords: []
+    dateElement: detTarih
+
+  - domain: sozcu.com
+    link: https://www.sozcu.com.tr/hayatim/kultur-sanat-haberleri/
+    whiteWords: ['/kultur-sanat-haberleri/',]
+    blackWords: []
+    dateElement: news-date
+
+spor:
+  - domain: fanatik.com.tr
+    link: http://www.fanatik.com.tr
+    whiteWords: ['-',]
+    blackWords: []
+    dateElement: news-detail__info__date__item
+
+  - domain: ntvspor.net
+    link: https://www.ntvspor.net
+    whiteWords: ['-',]
+    blackWords: []
+    dateElement: time
+
+  - domain: skor.sozcu.com.tr
+    link: http://skor.sozcu.com.tr
+    whiteWords: 2020/07/29
+    blackWords: []
+
+  - domain: sporx.com
+    link: http://www.sporx.com/?giris=ok
+    whiteWords: ['-',]
+    blackWords: []
+    dateElement: haberdate
+
+  - domain: mackolik.com
+    link: http://www.mackolik.com/default.aspx
+    whiteWords: ['/Haber/',]
+    blackWords: []
+    dateElement: datePublished
+
+  - domain: cnnturk.com
+    link: http://www.cnnturk.com/spor
+    whiteWords: ['/spor/',]
+    blackWords: []
+    dateElement: detail-metadata
+
+  - domain: fotomac.com.tr
+    link: https://www.fotomac.com.tr
+    whiteWords: 2020/07/29
+    blackWords: ['/Yazarlar/',]
+
+koseyazilari:
+  - domain: haberturk.com
+    link: http://www.haberturk.com/htyazarlar
+    whiteWords: ['/yazarlar/',]
+    blackWords: []
+    dateElement: date
+
+  - domain: milliyet.com.tr
+    link: http://www.milliyet.com.tr/yazarlar/
+    whiteWords: ['/yazarlar/',]
+    blackWords: []
+    dateElement: article__date
+
+  - domain: haber7.com
+    link: http://www.haber7.com
+    whiteWords: ['/yazarlar/',]
+    blackWords: []
+    dateElement: readInfo
+
+  - domain: sozcu.com.tr
+    link: http://www.sozcu.com.tr/kategori/yazarlar/
+    whiteWords: ['/yazarlar/',]
+    blackWords: []
+    dateElement: date
+
+  - domain: star.com.tr
+    link: http://www.star.com.tr/yazarlar/
+    whiteWords: ['/yazar/',]
+    blackWords: []
+    dateElement: date font-weight-7 font-size-17
+
+  - domain: sabah.com.tr
+    link: http://www.sabah.com.tr/yazarlar
+    whiteWords: 2020/07/29
+    blackWords: ['/gundem/', '/ekonomi/', '/yasam/', '/dunya/', '/piyasa/', '/teknoloji/', '/egitim/', '/kultur_sanat/', '/sinema/', '/turizm/', '/fotohaber/', '/Turizm/', '/magazin/', '/multimedya/', '/spor/', '/webtv/', '/otomobil/']
+
+  - domain: cumhuriyet.com.tr
+    link: http://www.cumhuriyet.com.tr/yazarlar
+    whiteWords: ['/yazarlar/',]
+    blackWords: []
+    dateElement: yayin-tarihi
+
+  - domain: t24.com.tr
+    link: http://t24.com.tr/son-yazilar
+    whiteWords: ['/yazarlar/',]
+    blackWords: []
+    dateElement: _392lz
+
+  - domain: hurriyet.com.tr
+    link: http://www.hurriyet.com.tr/yazarlar/
+    whiteWords: ['/yazarlar/',]
+    blackWords: []
+    dateElement: article-date
