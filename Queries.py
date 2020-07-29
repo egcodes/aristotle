@@ -4,6 +4,8 @@ findFromImgLinkByLink = "SELECT date, title, description, imgLink FROM `links_%s
 
 countFromLinksByLink = "SELECT COUNT(*) FROM `links_%s` WHERE link='%s'"
 
+updateTempLink = "UPDATE `tempLinks` SET date=CURRENT_DATE() WHERE link='%s'"
+
 insertTempLink = "INSERT INTO `tempLinks` VALUES(NULL, CURRENT_DATE()-1, '%s')"
 insertLink = "INSERT INTO `links_%s` VALUES(NULL, CURRENT_DATE(), '%s', '%s', '%s', %d, %d, %d, '%s', '%s', '%s',0, NULL)"
 
@@ -27,7 +29,7 @@ createTableIfNotExists = """CREATE TABLE IF NOT EXISTS `links_%s` (
   `description` varchar(1024) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `imgLink` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `clickedCount` int(11) NOT NULL DEFAULT '0',
-  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `timestamp` timestamp DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;"""
 
 addPrimaryKeyToTable = "ALTER TABLE `%s` ADD PRIMARY KEY (`id`)"
