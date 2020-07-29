@@ -15,6 +15,7 @@ class LinkHandler:
         self.title = ""
         self.description = ""
         self.imageLink = ""
+        self.date = ""
 
         self.link = link
         self.timeout = timeout
@@ -22,7 +23,10 @@ class LinkHandler:
     def run(self):
         try:
             try:
-                self.htmlSource = requests.get(self.link, headers={'User-Agent': prop.userAgent}, timeout=self.timeout).text
+                r = requests.get(self.link, headers={'User-Agent': prop.userAgent}, timeout=self.timeout)
+                r.encoding = 'utf-8'
+                self.date = r.headers.get('Date')
+                self.htmlSource = r.text
             except Exception as error:
                 print("\t\t\t LinkHandler: %s: %s" % (error, self.link))
                 self.soup = -1
@@ -166,8 +170,3 @@ class LinkHandler:
                 pass
 
         return imageLink
-
-# ===============================================================================
-# test = LinkHandler("https://webrazzi.com//2013/08/26/web-uyelik-kapatma-justdeleteme/")
-# test.run()
-# ===============================================================================
