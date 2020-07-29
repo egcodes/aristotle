@@ -3,24 +3,28 @@
 import random
 import signal
 import sys
-import time
 from datetime import datetime
 
 from LinkHandler import LinkHandler
 from LogHandler import LogHandler
-from ServerDatabaseHandler import ServerDatabaseHandler
-from SourceList import createNewsSource
-import Properties as prop
+from DbHandler import DbHandler
 import Queries as query
 
 from bs4 import BeautifulSoup
 import requests
+import yaml
 
 
 class Main:
     def __init__(self):
         self.logHandler = LogHandler("Parser")
-        self.serverHandler = ServerDatabaseHandler()
+        self.serverHandler = DbHandler()
+
+        with open(r'config/sources.yaml') as file:
+            self.sources = yaml.load(file, Loader=yaml.FullLoader)
+
+        with open(r'config/properties.yaml') as file:
+            self.props = yaml.load(file, Loader=yaml.FullLoader)
 
         self.yearMonth = ""
 
@@ -46,47 +50,30 @@ class Main:
             present = datetime.now()
             self.yearMonth = str(present.strftime('%Y%m'))
 
-            # tempLinks truncate
             if present.hour == 0:
                 self.serverHandler.executeQuery("TRUNCATE `tempLinks`")
 
             self.logHandler.printMsg("Starting [%s]" % str(present)[:19])
 
-            # ===========================================================
-            # Kaynaklar olusturuluyor
-            # ===========================================================
-            self.newsSources = createNewsSource(present)
-
-            # ===========================================================================
-            # Source sayimi icin count olusturuluyor sadece print'e lazim
-            # ===========================================================================
-            totalSource = 0
             gundemTotalSource = 0
             otherCategoryTotalSource = 0
-            for sourceCategory, sources in self.newsSources.items():
-                for sourceList in sources:
-                    if sourceCategory == "gundem":
-                        gundemTotalSource += 1
-                    else:
-                        otherCategoryTotalSource += 1
-            if category == "gundem":
-                totalSource = gundemTotalSource
-            else:
-                totalSource = otherCategoryTotalSource
+            for domainCategory in self.sources:
+                if domainCategory == "gundem":
+                    gundemTotalSource = len(self.sources.get(domainCategory))
+                else:
+                    otherCategoryTotalSource += len(self.sources.get(domainCategory))
 
-            # ===========================================================
-            # Her bir kategor ve her onun her bir source'i icin tek tek islem yapiliyor
-            # ===========================================================
+            if category == "gundem":
+                domainCount = gundemTotalSource
+            else:
+                domainCount = otherCategoryTotalSource
+
             count = 1
             newsLinkDict = {}
 
-            for data in self.newsSources.items():
-                category = data[0]
-                sources = data[1]
+            for category in self.sources:
+                sources = self.sources.get(category)
 
-                random.shuffle(sources)
-
-                # Kose yazilari 18'den once ve 2 saaate bir kontrol edilsin
                 if present.hour < 18 and present.hour % 2 != 0 and category == "koseyazilari":
                     continue
 
@@ -97,30 +84,25 @@ class Main:
                     if initCategory.split('-')[0] == 'non' and initCategory.split('-')[1] == category:
                         continue
 
-                for sourceList in sources:
+                for source in sources:
                     startSource = datetime.now()
-                    source = sourceList[0]
-                    if initSource and source != initSource:
+                    if initSource and source.get("domain") != initSource:
                         continue
 
-                    newsSourceLink = sourceList[1]
-                    newsSourceDiffWords = ()
-                    newsSourceBlackWords = ()
-                    if len(sourceList) > 2:
-                        newsSourceDiffWords = sourceList[2]
-                    if len(sourceList) > 3:
-                        newsSourceBlackWords = sourceList[3]
+                    link = source.get("link")
+                    whiteWords = source.get("whiteWords")
+                    blackWords = source.get("blackWords")
 
-                    self.logHandler.printMsg("Source: (%d / %d) %s" % (count, totalSource, newsSourceLink), 1)
+                    self.logHandler.printMsg("Source: (%d / %d) %s" % (count, domainCount, link), 1)
 
                     try:
                         newsLinkDict.update(
-                            self.getNewsLinkFromSource(present, category, source, newsSourceLink, newsSourceDiffWords,
-                                                       newsSourceBlackWords)
-                        )
+                            self.getNewsLinkFromSource(present, category, source.get("domain"), link, whiteWords, blackWords)
+                       )
+                        return
                     except Exception as ex:
                         if str(ex).find("NoneType") == -1:
-                            self.logHandler.logger("run: %s:%s" % (newsSourceLink, ex))
+                            self.logHandler.logger("run: %s:%s" % (link, ex))
                     count += 1
 
                     self.logHandler.printMsg("Time: %s" % (str(datetime.now() - startSource)[:7]), 1)
@@ -131,24 +113,17 @@ class Main:
         except:
             self.logHandler.logger("run")
 
-    def getNewsLinkFromSource(self, present, category, sourceTitle, newsSourceLink, newsSourceDiffWords,
-                              newsSourceBlackWords):
-        """
-			Verilen link icin kategoriye uygun haber linklerini cikarip en cok paylasim sayisina 
-			ve bugunun tarine sahip olanlari liste olarak geri doner
-		"""
-
+    def getNewsLinkFromSource(self, present, category, domain, link, whiteWords, blackWords):
         class BreakIt(Exception):
             pass
 
         try:
-            htmlSource = requests.get(newsSourceLink, headers={'User-Agent': prop.userAgent}, timeout=5).text
+            htmlSource = requests.get(link, headers={'User-Agent': self.props.get("userAgent")}, timeout=5).text
         except:
-            time.sleep(10)
             try:
-                htmlSource = requests.get(newsSourceLink, headers={'User-Agent': prop.userAgent}, timeout=5).text
+                htmlSource = requests.get(link, headers={'User-Agent': self.props.get("userAgent")}, timeout=5).text
             except Exception as error:
-                return []
+                self.logHandler.printMsg(error)
 
         if htmlSource != -1:
             linkList = self.getLinks(htmlSource)
@@ -157,7 +132,7 @@ class Main:
             storedDataInDB = ""
             try:
                 storedDataInDB = self.serverHandler.executeQuery(query.findLinkFromLinksByCategoryAndSourceAndDate %
-                                                            (self.yearMonth, category, sourceTitle,
+                                                            (self.yearMonth, category, domain,
                                                              str(present.strftime('%Y-%m-%d'))))
             except:
                 self.serverHandler.executeQuery(query.createTableIfNotExists % self.yearMonth)
@@ -176,74 +151,27 @@ class Main:
             countHtmlSource = 0
             self.logHandler.printMsg("Total Link Count: %d" % len(linkList), 2)
             for link in linkList:
-                linkData = []
-
-                # Ana source link duzenleme
-                sourceLink = newsSourceLink
-                if newsSourceLink.find("http://") != -1 and newsSourceLink[len('http://'):].find('/') != -1:
-                    sourceLink = sourceLink[:sourceLink[len('http://'):].find('/') + len('http://')]
-                else:
-                    if newsSourceLink[len('https://'):].find('/') != -1:
-                        sourceLink = sourceLink[:sourceLink[len('https://'):].find('/') + len('https://')]
-
-                # Eger link icinde sourceTitle yok ise ve alttaki keyword'lardan biri var ise alakasi bir link gec
-                if link.find(sourceTitle) == -1 and (
-                        link.find('http://') != -1 or link.find('www.') != -1 or link.find('https://') != -1):
+                link = self.fixUrl(link, domain, whiteWords, blackWords)
+                if not link:
                     continue
-                if link.count('http://') > 1 or (
-                        link.count('http://') > 0 and link.count('https://') > 0) or link.count('www.') > 1:
-                    continue
-
-                # Eger link'de hostname yok ise ekle, link'i duzenle
-                if link.find(sourceTitle) == -1:
-                    if link[0] == '/':
-                        link = sourceLink + link
-                    else:
-                        link = sourceLink + '/' + link
-                else:
-                    if link[0] != 'w' and link[0] != 'h':
-                        link = 'http://' + link[2:]
-
-                # Black word'ler varsa linkde gec
-                if newsSourceBlackWords:
-                    flag = False
-                    for word in newsSourceBlackWords:
-                        if link.find(word) != -1:
-                            flag = True
-                            break
-                    if flag:
-                        continue
-
-                # Linkleri ayiraca gore ayikla, uygun olmayanlari alma
-                if newsSourceDiffWords:
-                    flag = True
-                    for word in newsSourceDiffWords:
-                        if link.find(word) != -1:
-                            flag = False
-                            break
-                    if flag:
-                        continue
-
-                # Injection onleme
-                linkInj = link.replace("'", "''")
 
                 # ===========================================================================================
                 # Eger link temp tabloda var ise tarihine bakilir bugun ise alinir yoksa gecilir sonraki linke
                 # ===========================================================================================
                 try:
-                    linkDate = self.serverHandler.executeQuery(query.findDateFromTempLinksByLink % linkInj)
+                    linkDate = self.serverHandler.executeQuery(query.findDateFromTempLinksByLink % link)
                 except:
                     self.serverHandler.executeQuery(query.createTableIfNotExistsForTempLinks)
                     self.serverHandler.executeQuery(query.addPrimaryKeyToTable % "tempLinks")
                     self.serverHandler.executeQuery(query.addAutoIncrementToTable % "tempLinks")
-                    linkDate = self.serverHandler.executeQuery(query.findDateFromTempLinksByLink % linkInj)
+                    linkDate = self.serverHandler.executeQuery(query.findDateFromTempLinksByLink % link)
 
                 if linkDate:
                     if str(linkDate[0][0]) != str(present.strftime('%Y-%m-%d')):
                         continue
 
                 try:
-                    linkData = self.serverHandler.executeQuery(query.findFromImgLinkByLink % (self.yearMonth, linkInj))
+                    linkData = self.serverHandler.executeQuery(query.findFromImgLinkByLink % (self.yearMonth, link))
                 except:
                     self.logHandler.logger("getNewsLinkFromSource")
                     continue
@@ -255,199 +183,35 @@ class Main:
                         linkData = linkData[0]
                         returnLinkDict[link] = (linkData[1], linkData[2], linkData[3])
                         continue
-
                 else:
                     countHtmlSource += 1
 
-                    getLinkHandler = LinkHandler(link)
+                    getLinkHandler = LinkHandler(link, self.props, self.sources)
                     getLinkHandler.run()
                     soup = getLinkHandler.soup
                     if soup == -1:
-                        self.serverHandler.executeQuery(query.insertTempLink % linkInj)
+                        self.serverHandler.executeQuery(query.insertTempLink % link)
                         continue
 
-                    self.serverHandler.executeQuery(query.insertTempLink % linkInj)
+                    self.serverHandler.executeQuery(query.insertTempLink % link)
 
-                    try:
-                        for categories in list(self.newsSources.values()):
-                            for source in categories:
-                                if source[1] == newsSourceLink:
-                                    title = getLinkHandler.title
-                                    desc = getLinkHandler.description
-                                    img = getLinkHandler.imageLink
-
-                                    flagW = False
-                                    for keyword in prop.blackListWords:
-                                        if title.lower().find(keyword) != -1:
-                                            flagW = True
-                                            break
-                                        if desc.lower().find(keyword) != -1:
-                                            flagW = True
-                                            break
-                                    if flagW:
-                                        continue
-
-                                    if len(desc) < 5:
-                                        desc = title
-
-                                    try:
-                                        if len(source) > 5:
-                                            seperator = list(source[5])[0]
-                                            seperatorCount = list(source[5].values())[0]
-                                            if title.count(seperator) >= seperatorCount:
-                                                for i in range(seperatorCount):
-                                                    if title.rfind(seperator) > 20:
-                                                        title = title[:title.rfind(seperator)].strip()
-                                    except:
-                                        self.logHandler.logger("getNewsLinkFromSource", "Title replace")
-
-                                    try:
-                                        if len(source) > 6:
-                                            seperator = source[6]
-                                            desc = desc.split(seperator)[0]
-                                    except:
-                                        self.logHandler.logger("getNewsLinkFromSource", "Desc replace")
-
-                                    # link'de 2013/09/09 sekli icin, 0 ise direk al
-                                    if source[4] == 0:
-                                        returnLinkDict[link] = (title, desc, img)
-                                    elif source[4] == 1:
-                                        todayFormat = source[2][0]
-                                        if link.find(todayFormat) != -1:
-                                            returnLinkDict[link] = (title, desc, img)
-                                    elif source[4] == 2:
-                                        todayFormat = source[2][0]
-                                        monthDay = todayFormat[4:]
-                                        if link.find(monthDay) != -1:
-                                            returnLinkDict[link] = (title, desc, img)
-                                    else:
-                                        for dateFormats in source[4]:
-                                            dateKeyword = dateFormats
-                                            dateClass = list(dateKeyword)[0]
-                                            dateToday = list(dateKeyword.values())[0]
-
-                                            soupDateDiv = soup.findAll("div", {"class": "%s" % dateClass})
-
-                                            if not soupDateDiv:
-                                                soupDateDiv = soup.findAll("meta", {"itemprop": "%s" % dateClass})
-                                            if not soupDateDiv:
-                                                soupDateDiv = soup.findAll("meta", {"property": "%s" % dateClass})
-                                            if not soupDateDiv:
-                                                soupDateDiv = soup.findAll("div", {"id": "%s" % dateClass})
-                                            if not soupDateDiv:
-                                                soupDateDiv = soup.findAll("span", {"class": "%s" % dateClass})
-                                            if not soupDateDiv:
-                                                soupDateDiv = soup.findAll("span", {"style": "%s" % dateClass})
-                                            if not soupDateDiv:
-                                                soupDateDiv = soup.findAll("time", {"class": "%s" % dateClass})
-                                            if not soupDateDiv:
-                                                soupDateDiv = soup.findAll("div", {"style": "%s" % dateClass})
-                                            if not soupDateDiv:
-                                                soupDateDiv = soup.findAll("span", {"id": "%s" % dateClass})
-                                            if not soupDateDiv:
-                                                soupDateDiv = soup.findAll("p", {"class": "%s" % dateClass})
-                                            if not soupDateDiv:
-                                                soupDateDiv = soup.findAll("div", {"itemprop": "%s" % dateClass})
-                                            if not soupDateDiv:
-                                                soupDateDiv = soup.findAll("span", {"itemprop": "%s" % dateClass})
-                                            if not soupDateDiv:
-                                                soupDateDiv = soup.findAll("li", {"class": "%s" % dateClass})
-                                            if not soupDateDiv:
-                                                soupDateDiv = soup.findAll("p", {"itemprop": "%s" % dateClass})
-                                            if not soupDateDiv:
-                                                soupDateDiv = soup.findAll("a", {"class": "%s" % dateClass})
-                                            if not soupDateDiv:
-                                                soupDateDiv = soup.findAll("h1", {"class": "%s" % dateClass})
-                                            if not soupDateDiv:
-                                                soupDateDiv = soup.findAll("time", {"itemprop": "%s" % dateClass})
-                                            if not soupDateDiv:
-                                                soupDateDiv = soup.findAll("time", {"datetime": "%s" % dateClass})
-                                            if not soupDateDiv:
-                                                soupDateDiv = soup.findAll("i", {"class": "%s" % dateClass})
-                                            if not soupDateDiv:
-                                                soupDateDiv = soup.findAll(dateClass)
-
-                                            # Tarihin string olarak aliniyor
-                                            findedDate = ""
-                                            for item in soupDateDiv:
-                                                findedDate = str(item.text)
-                                                if not findedDate:
-                                                    try:
-                                                        findedDate = item['value']
-                                                    except:
-                                                        pass
-                                                if not findedDate:
-                                                    try:
-                                                        findedDate = item['content']
-                                                    except:
-                                                        pass
-
-                                                # direk zaman yerine 1 saat once seklinde ise burada ayristirilir
-                                                if findedDate.find('önce') != -1 and findedDate.find("gün") == -1:
-                                                    try:
-                                                        findedDate = soupDateDiv[0]["title"]
-                                                    except:
-                                                        pass
-
-                                                    for i in soupDateDiv:
-                                                        try:
-                                                            if i.getText("title").find("saat") != -1:
-                                                                findedDate = str(present.strftime('%d.%m.%Y'))
-                                                                break
-                                                        except:
-                                                            findedDate = ""
-
-                                                # Bir tane keyword bulundu ama istenen degil tarih olup olmadigi kontrol edilir
-                                                if len(findedDate) == 0:
-                                                    continue
-
-                                                findedDate = findedDate.replace('s&#x0131;', 'ı')
-                                                findedDate = findedDate.replace('&#x131;', 'ı')
-                                                if findedDate.find(str(datetime.now().year)) == -1:
-                                                    continue
-                                                else:
-                                                    break
-
-                                            if not findedDate:
-                                                continue
-
-                                            try:
-                                                dateText = findedDate
-                                                # Html ü karakteri
-                                                dateText = dateText.replace('&#x00FC;', 'ü')
-                                                dateText = dateText.replace('&amp;#305;', 'ı')
-                                                dateText = dateText.replace('&#252;', 'ü')
-                                                dateText = dateText.replace('&amp;#350;', 'Ş')
-
-                                                # ===============================
-                                                # Bazi tarihlerde guncelleme var onu almasin diye
-                                                # ===============================
-                                                if dateText[10:].find("Güncelleme") != -1:
-                                                    firstIndex = dateText.find("Güncelleme")
-                                                    endIndex = firstIndex + len('Güncelleme') + 10
-                                                    dateText = dateText[:firstIndex] + dateText[endIndex:]
-
-                                                if dateText.find(dateToday) != -1:
-                                                    # Eger linkDate yoksa ekle
-                                                    self.serverHandler.executeQuery(
-                                                        "UPDATE `tempLinks` SET date=CURRENT_DATE() WHERE link='%s'" % linkInj)
-
-                                                    returnLinkDict[link] = (title, desc, img)
-
-                                                break
-                                            except AttributeError as error:
-                                                print(error)
-                                                continue
-                                    raise BreakIt
-                    except BreakIt:
-                        continue
+                    publishDate = getLinkHandler.publishDate
+                    if str(publishDate).find("dateToday") != -1:
+                        self.serverHandler.executeQuery(query.updateTempLink % link)
+                        returnLinkDict[link] = (getLinkHandler.title, getLinkHandler.description, getLinkHandler.imageLink)
 
             # Duplicate linkleri temizle
             returnLinkList = list(set(returnLinkDict))
+
             self.logHandler.printMsg("Locate for link info (Database / Source) - ( %d / %d)" % (countDatabase, countHtmlSource), 2)
             self.logHandler.printMsg("Eliminated links : %d" % len(returnLinkList), 2)
 
-            linkCountDict = self.getSocialCount(category, sourceTitle, returnLinkList, returnLinkDict)
+            linkCountDict = {}
+            for src in returnLinkList:
+                linkTitle = returnLinkDict[src][0]
+                linkDesc = returnLinkDict[src][1]
+                linkImage = returnLinkDict[src][2]
+                linkCountDict[link] = (0, 0, 0, 0, category, domain, linkTitle, linkDesc, linkImage)
 
             choiceList = {}
             for i in range(0, len(linkCountDict)):
@@ -456,34 +220,10 @@ class Main:
                     choiceList[maxCountLink] = linkCountDict[maxCountLink]
                     del linkCountDict[maxCountLink]
                 except:
-                    self.logHandler.logger('getNewsLinkFromSource', "Hic sayfa gelmedi: %s" % newsSourceLink)
+                    self.logHandler.logger('getNewsLinkFromSource', "Hic sayfa gelmedi: %s" % link)
                     break
 
         return choiceList
-
-    def getSocialCount(self, category, sourceTitle, returnLinkList, returnLinkDict):
-        linkCountDict = {}
-
-        for link in returnLinkList:
-            linkTitle = returnLinkDict[link][0]
-            linkDesc = returnLinkDict[link][1]
-            linkImage = returnLinkDict[link][2]
-            countTwitter = 0
-            countGoogle = 0
-            countFacebook = 0
-
-            linkCountDict[link] = (
-                countTwitter + countFacebook + countGoogle, countTwitter, countFacebook, countGoogle, category,
-                sourceTitle,
-                linkTitle, linkDesc, linkImage
-            )
-
-            # LinkDatabase'de var ise count'lari update et
-            # self.serverHandler.executeQuery(
-            #    "UPDATE `links_%s` SET tweetCount=%d, facebookCount=%d, googleCount=%d  WHERE `link`='%s'" % (
-            #        self.yearMonth, countTwitter, countFacebook, countGoogle, link))
-
-        return linkCountDict
 
     def isAscii(self, s):
         return all(ord(c) < 128 for c in s)
@@ -571,7 +311,7 @@ class Main:
             try:
                 if len(href) > 8:
                     flagGet = True
-                    for keyword in prop.blackListWordsForLinks:
+                    for keyword in self.props.get("blackListWordsForLinks"):
                         if href.find(keyword) != -1:
                             flagGet = False
                             break
@@ -580,6 +320,32 @@ class Main:
             except:
                 pass
         return linkList
+
+    def fixUrl(self, link, domain, whiteWords, blackWords):
+        if link.find(domain) == -1:
+            link = "https://" + domain + link
+
+        if blackWords:
+            flag = False
+            for word in blackWords:
+                if link.find(word) != -1:
+                    flag = True
+                    break
+            if flag:
+                return
+
+        if whiteWords:
+            flag = True
+            for word in whiteWords:
+                if link.find(word) != -1:
+                    flag = False
+                    break
+            if flag:
+                return
+
+        link = link.replace("'", "''")
+
+        return link
 
     def fixLinks(self, linkList):
         newLinkList = []

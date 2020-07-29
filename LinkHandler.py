@@ -1,31 +1,32 @@
 #! -*- coding:utf-8 -*-
-
+import yaml
 from bs4 import BeautifulSoup
 from LogHandler import LogHandler
 import requests
-import Properties as prop
 
 
 class LinkHandler:
-    def __init__(self, link, timeout=3):
+    def __init__(self, link, props, sources, timeout=3):
         self.logHandler = LogHandler("LinkHandler")
+
+        self.link = link
+        self.props = props
+        self.sources = sources
+        self.timeout = timeout
 
         self.htmlSource = ""
         self.soup = ""
+
         self.title = ""
         self.description = ""
         self.imageLink = ""
-        self.date = ""
-
-        self.link = link
-        self.timeout = timeout
+        self.publishDate = ""
 
     def run(self):
         try:
             try:
-                r = requests.get(self.link, headers={'User-Agent': prop.userAgent}, timeout=self.timeout)
+                r = requests.get(self.link, headers={'User-Agent': self.props.get("userAgent")}, timeout=self.timeout)
                 r.encoding = 'utf-8'
-                self.date = r.headers.get('Date')
                 self.htmlSource = r.text
             except Exception as error:
                 print("\t\t\t LinkHandler: %s: %s" % (error, self.link))
@@ -35,138 +36,58 @@ class LinkHandler:
 
             self.soup = BeautifulSoup(self.htmlSource, 'html.parser')
 
-            self.title = self.getTitle(self.soup)
-            self.description = self.getDescription(self.soup)
-            self.imageLink = self.getImageLink(self.soup)
+            metas = self.soup.find_all('meta')
+            for meta in metas:
+                if 'name' in meta.attrs:
+                    metaName = meta.attrs['name']
+                    if metaName in self.props.get("descriptionKeys"):
+                        self.setDescription(meta.attrs['content'])
 
-        except ValueError as error:
-            if str(error).find('unichr() arg not in range(0x10000) (narrow Python build)') == -1:
-                self.logHandler.logger("run", self.link)
+                elif 'property' in meta.attrs:
+                    metaProperty = meta.attrs['property']
+                    if metaProperty in self.props.get("titleKeys"):
+                        self.setTitle(meta.attrs['content'])
+                    elif metaProperty in self.props.get("descriptionKeys"):
+                        self.setDescription(meta.attrs['content'])
+                    elif metaProperty in self.props.get("imageLinkKeys"):
+                        self.setImageLink(meta.attrs['content'])
+                    elif metaProperty in self.props.get("publishDateKeys"):
+                        self.setPublishDate(meta.attrs['content'])
+
+                elif 'itemprop' in meta.attrs:
+                    metaItemprop = meta.attrs['itemprop']
+                    if metaItemprop in self.props.get("publishDateKeys"):
+                        self.setPublishDate(meta.attrs['content'])
+
+                if self.isMetadataComplete():
+                    break
+
+            if not self.isMetadataComplete():
+                for category in self.sources:
+                    for source in self.sources.get(category):
+                        if self.link.find(source.get("domain")) != -1:
+                            dateContent = self.soup.findAll(source.get("dateElement"))
+                            self.setPublishDate(dateContent)
+                            break
+
+
+        except Exception as ex:
             self.soup = -1
             self.htmlSource = -1
-            return
-        except TypeError as error:
-            if str(error).find("cannot concatenate 'str' and 'NoneType' objects") == -1:
-                self.logHandler.logger("run", self.link)
-            self.soup = -1
-            self.htmlSource = -1
-            return
-        except:
-            self.soup = -1
-            self.htmlSource = -1
-            self.logHandler.logger("run", self.link)
-            self.logHandler.logger("run")
+            self.logHandler.logger("run", self.link, ex)
             return
 
-    def getTitle(self, soup):
-        title = soup.findAll(attrs={"property": "og:title"})
-        if not title:
-            title = soup.findAll(attrs={"name": "title"})
-        if not title:
-            title = soup.findAll(attrs={"name": "twitter:title"})
-        if not title:
-            title = soup.findAll(attrs={"name": "Search.Title"})
-        if not title:
-            title = soup.findAll(attrs={"name": "Title"})
-        if not title:
-            title = soup.findAll(attrs={"name": "TITLE"})
-        if not title:
-            try:
-                title = soup.html.head.title
-            except:
-                pass
+    def setTitle(self, title):
+        if not self.title: self.title = title
 
-        if title:
-            if str(title)[0] == '<':
-                title = title.text
-            else:
-                try:
-                    title = title[0]['content']
-                except:
-                    try:
-                        title = title[0]['value']
-                    except:
-                        pass
-        return title
+    def setDescription(self, description):
+        if not self.description: self.description = description
 
-    def getDescription(self, soup):
-        description = soup.findAll(attrs={"name": "description"})
-        if not description:
-            description = soup.findAll(attrs={"property": "og:description"})
-        if not description:
-            description = soup.findAll(attrs={"name": "twitter:description"})
-        if not description:
-            description = soup.findAll(attrs={"name": "Search.Description"})
-        if not description:
-            description = soup.findAll(attrs={"name": "Description"})
-        if not description:
-            description = soup.findAll(attrs={"name": "DESCRIPTION"})
+    def setImageLink(self, imageLink):
+        if not self.imageLink: self.imageLink = imageLink
 
-        if description:
-            try:
-                description = description[0]['content']
-            except Exception as error:
-                try:
-                    description = description[0]['value']
-                except:
-                    pass
+    def setPublishDate(self, publishDate):
+        if not self.publishDate: self.publishDate = publishDate
 
-        return description
-
-    def getImageLink(self, soup):
-        imageLink = ""
-        if not imageLink:
-            imageLink = soup.findAll(attrs={"property": "og:image"})
-        if not imageLink:
-            imageLink = soup.findAll(attrs={"name": "image"})
-        if not imageLink:
-            imageLink = soup.findAll(attrs={"name": "twitter:image"})
-        if not imageLink:
-            imageLink = soup.findAll(attrs={"name": "Search.Image"})
-        if not imageLink:
-            imageLink = soup.findAll(attrs={"name": "Image"})
-        if not imageLink:
-            imageLink = soup.findAll(attrs={"name": "IMAGE"})
-        if not imageLink:
-            imageLink = soup.findAll(attrs={"id": "NewsImagePath"})
-        if not imageLink:
-            imageLink = soup.findAll(attrs={"class": "yenihaberresmi"})
-        if not imageLink:
-            imageLink = soup.find("link", {"rel": "image_src"})
-
-        if imageLink:
-            try:
-                imageLink = imageLink[0]['src']
-            except:
-                try:
-                    imageLink = imageLink[0]['content']
-                except:
-                    try:
-                        imageLink = imageLink[0]['value']
-                    except:
-                        try:
-                            imageLink = imageLink[0]['href']
-                        except:
-                            try:
-                                imageLink = dict(imageLink.attrs)['href']
-                            except:
-                                imageLink = str(imageLink)
-
-            if imageLink.count('http://') > 1:
-                imageLink = imageLink[imageLink[5:].find('http://') + 5:]
-            if imageLink.find('https://') != -1:
-                imageLink = imageLink.replace('https://', 'http://')
-            if imageLink.startswith("//"):
-                imageLink = "http://" + imageLink[2:]
-
-            imageLink = imageLink.replace('////', '//')
-            if imageLink.find('mc.yandex.ru/watch') == -1:
-                imageLink = imageLink
-            if imageLink.find('http://iatkn.tmgrup.com.tr') != -1:
-                imageLink = imageLink.replace("http://", "https://")
-            try:
-                imageLink = "http:" + imageLink.split("http:")[2]
-            except:
-                pass
-
-        return imageLink
+    def isMetadataComplete(self):
+        return self.title and self.description and self.imageLink and self.publishDate
