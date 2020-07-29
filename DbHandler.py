@@ -1,14 +1,14 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from LogHandler import LogHandler
+import logging
 import mysql.connector
 
 
 class DbHandler:
     def __init__(self, props):
         try:
-            self.logHandler = LogHandler("DbHandler")
+            self.logger = logging.getLogger("DbHandler")
 
             self.serverHandler = mysql.connector.connect(host=props.get("database").get("url"),
                                                          database=props.get("database").get("name"),
@@ -24,7 +24,7 @@ class DbHandler:
             self.cursor.execute('SET character_set_connection=utf8;')
 
         except:
-            self.logHandler.logger("__init__")
+            self.logger.critical("__init__")
 
     def executeQuery(self, query):
         self.cursor.execute(query)

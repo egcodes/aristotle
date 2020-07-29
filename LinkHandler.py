@@ -1,13 +1,13 @@
 #! -*- coding:utf-8 -*-
-import yaml
+
 from bs4 import BeautifulSoup
-from LogHandler import LogHandler
 import requests
+import logging
 
 
 class LinkHandler:
     def __init__(self, link, props, sources, timeout=3):
-        self.logHandler = LogHandler("LinkHandler")
+        self.logger = logging.getLogger("DbHandler")
 
         self.link = link
         self.props = props
@@ -74,7 +74,7 @@ class LinkHandler:
         except Exception as ex:
             self.soup = -1
             self.htmlSource = -1
-            self.logHandler.logger("run", self.link, ex)
+            self.logger.warning("run", self.link, ex)
             return
 
     def setTitle(self, title):

@@ -3,10 +3,11 @@
 import random
 import signal
 import sys
+import logging
+import logging.config
 from datetime import datetime
 
 from LinkHandler import LinkHandler
-from LogHandler import LogHandler
 from DbHandler import DbHandler
 import Queries as query
 
@@ -15,7 +16,7 @@ import requests
 import yaml
 
 
-class Main:
+class Parser:
     def __init__(self):
         with open(r'config/sources.yaml') as file:
             self.sources = yaml.load(file, Loader=yaml.FullLoader)
@@ -23,7 +24,16 @@ class Main:
         with open(r'config/properties.yaml') as file:
             self.props = yaml.load(file, Loader=yaml.FullLoader)
 
-        self.logHandler = LogHandler("Parser")
+        logging.config.dictConfig(yaml.load(open('config/logging.yaml', 'r'), Loader=yaml.FullLoader))
+        self.logger = logging.getLogger("Parser")
+
+        self.logger.debug("Debug")
+        self.logger.info("Test")
+        self.logger.warning("Warnig")
+        self.logger.error("Error")
+        self.logger.critical("Critic")
+        return
+
         self.serverHandler = DbHandler(self.props)
 
         self.yearMonth = ""
@@ -45,7 +55,7 @@ class Main:
             if category:
                 initCategory = category
                 initSource = source
-                print(initCategory, initSource)
+                self.logger.info("%s %s", initCategory, initSource)
 
             present = datetime.now()
             self.yearMonth = str(present.strftime('%Y%m'))
@@ -53,7 +63,7 @@ class Main:
             if present.hour == 0:
                 self.serverHandler.executeQuery("TRUNCATE `tempLinks`")
 
-            self.logHandler.printMsg("Starting [%s]" % str(present)[:19])
+            self.logger.info("Starting [%s]" % str(present)[:19])
 
             gundemTotalSource = 0
             otherCategoryTotalSource = 0
@@ -93,7 +103,7 @@ class Main:
                     whiteWords = source.get("whiteWords")
                     blackWords = source.get("blackWords")
 
-                    self.logHandler.printMsg("Source: (%d / %d) %s" % (count, domainCount, link), 1)
+                    self.logger.info("Source: (%d / %d) %s", count, domainCount, link)
 
                     try:
                         newsLinkDict.update(
@@ -102,16 +112,16 @@ class Main:
                         return
                     except Exception as ex:
                         if str(ex).find("NoneType") == -1:
-                            self.logHandler.logger("run: %s:%s" % (link, ex))
+                            self.logger.warning("run: %s:%s" % (link, ex))
                     count += 1
 
-                    self.logHandler.printMsg("Time: %s" % (str(datetime.now() - startSource)[:7]), 1)
+                    self.logger.info("Time: %s", str(datetime.now() - startSource)[:7])
                     self.insertToDatabase(category, newsLinkDict, 5)
                     newsLinkDict.clear()
 
-            self.logHandler.printMsg(str(datetime.now()) + ": Finished [%s]\n" % str(datetime.now() - present)[:19])
+            self.logger.info(str(datetime.now()) + ": Finished [%s]\n" % str(datetime.now() - present)[:19])
         except:
-            self.logHandler.logger("run")
+            self.logger.warning("run")
 
     def getNewsLinkFromSource(self, present, category, domain, link, whiteWords, blackWords):
         class BreakIt(Exception):
@@ -123,7 +133,7 @@ class Main:
             try:
                 htmlSource = requests.get(link, headers={'User-Agent': self.props.get("userAgent")}, timeout=5).text
             except Exception as error:
-                self.logHandler.printMsg(error)
+                self.logger.warning(error)
 
         if htmlSource != -1:
             linkList = self.getLinks(htmlSource)
@@ -149,7 +159,7 @@ class Main:
             returnLinkDict = {}
             countDatabase = 0
             countHtmlSource = 0
-            self.logHandler.printMsg("Total Link Count: %d" % len(linkList), 2)
+            self.logger.info("Total Link Count: %d", len(linkList))
             for link in linkList:
                 link = self.fixUrl(link, domain, whiteWords, blackWords)
                 if not link:
@@ -173,7 +183,7 @@ class Main:
                 try:
                     linkData = self.serverHandler.executeQuery(query.findFromImgLinkByLink % (self.yearMonth, link))
                 except:
-                    self.logHandler.logger("getNewsLinkFromSource")
+                    self.logger.warning("getNewsLinkFromSource")
                     continue
 
                 if linkData:
@@ -203,8 +213,8 @@ class Main:
             # Duplicate linkleri temizle
             returnLinkList = list(set(returnLinkDict))
 
-            self.logHandler.printMsg("Locate for link info (Database / Source) - ( %d / %d)" % (countDatabase, countHtmlSource), 2)
-            self.logHandler.printMsg("Eliminated links : %d" % len(returnLinkList), 2)
+            self.logger.info("Locate for link info (Database / Source) - ( %d / %d)", countDatabase, countHtmlSource)
+            self.logger.info("Eliminated links : %d", len(returnLinkList))
 
             linkCountDict = {}
             for src in returnLinkList:
@@ -220,7 +230,7 @@ class Main:
                     choiceList[maxCountLink] = linkCountDict[maxCountLink]
                     del linkCountDict[maxCountLink]
                 except:
-                    self.logHandler.logger('getNewsLinkFromSource', "Hic sayfa gelmedi: %s" % link)
+                    self.logger.warning('getNewsLinkFromSource', "Hic sayfa gelmedi: %s" % link)
                     break
 
         return choiceList
@@ -263,7 +273,7 @@ class Main:
                                     chIndex = 340
                                     continue
                     except:
-                        self.logHandler.logger("generateHtmlFormat: %s" % maxCountLink)
+                        self.logger.warning("generateHtmlFormat: %s" % maxCountLink)
 
                     imageId = linkImage[linkImage.rfind('/') + 1:]
                     if not (imageId and linkTitle):
@@ -294,14 +304,14 @@ class Main:
 
                 except:
                     index -= 1
-                    self.logHandler.logger("insertToDatabase", "Link html format hatasi: %s")
+                    self.logger.warning("insertToDatabase", "Link html format hatasi: %s")
 
-            self.logHandler.printMsg("DB (new/exists) -> %d / %d" % (insertedCount, existsCount), 1)
-            self.logHandler.printMsg("---------------------", 1)
+            self.logger.info("DB (new/exists) -> %d / %d", insertedCount, existsCount)
+            self.logger.info("---------------------")
 
             return str(newsResult)
         except:
-            self.logHandler.logger("insertToDatabase")
+            self.logger.warning("insertToDatabase")
 
     def getLinks(self, htmlSource):
         linkList = []
@@ -311,7 +321,7 @@ class Main:
             try:
                 if len(href) > 8:
                     flagGet = True
-                    for keyword in self.props.get("blackListWordsForLinks"):
+                    for keyword in self.props.get("blackListWords"):
                         if href.find(keyword) != -1:
                             flagGet = False
                             break
@@ -366,5 +376,5 @@ class Main:
 
 
 if __name__ == '__main__':
-    main = Main()
-    signal.signal(signal.SIGINT, main.closeProcess)
+    parser = Parser()
+    signal.signal(signal.SIGINT, parser.closeProcess)
