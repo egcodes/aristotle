@@ -6,14 +6,14 @@ import mysql.connector
 
 
 class DbHandler:
-    def __init__(self):
+    def __init__(self, props):
         try:
             self.logHandler = LogHandler("DbHandler")
 
-            self.serverHandler = mysql.connector.connect(host='localhost',
-                                                         database='haberbus',
-                                                         user='root',
-                                                         password='root',
+            self.serverHandler = mysql.connector.connect(host=props.get("database").get("url"),
+                                                         database=props.get("database").get("name"),
+                                                         user=props.get("database").get("userName"),
+                                                         password=props.get("database").get("password"),
                                                          autocommit=True,
                                                          auth_plugin='mysql_native_password'
                                                          )

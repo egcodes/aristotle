@@ -24,7 +24,7 @@ Yaklaşık tekil olarak 50 kaynak config/sources.yaml'da tanımlıdır. (haberbu
 * Mysql Database
 
 Bunlar sağlandıktan sonra, yapılması gereken, MySql üzerinde bir db oluşturmak ve
-user, password, dbName bilgilerini DbHandler.py dosyamıza girmek. Ve her şey hazır.
+user, password, dbName ayarlarını config/properties.yaml dosyayına girmek. Ve her şey hazır.
 
 Test için: `python Parser.py teknoloji webrazzi.com` komutu ile sadece bu kategori ve bu domain için linkleri toplayabilirsiniz.
 Tüm sourcelist linklerini toplamak için `python Parser.py` demeniz yeterli. İlk çalşmada tüm linkler tarandığı için 30 dk'ı bulabilir.

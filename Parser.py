@@ -17,14 +17,14 @@ import yaml
 
 class Main:
     def __init__(self):
-        self.logHandler = LogHandler("Parser")
-        self.serverHandler = DbHandler()
-
         with open(r'config/sources.yaml') as file:
             self.sources = yaml.load(file, Loader=yaml.FullLoader)
 
         with open(r'config/properties.yaml') as file:
             self.props = yaml.load(file, Loader=yaml.FullLoader)
+
+        self.logHandler = LogHandler("Parser")
+        self.serverHandler = DbHandler(self.props)
 
         self.yearMonth = ""
 
