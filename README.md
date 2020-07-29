@@ -22,16 +22,16 @@ Yaklaşık tekil olarak 50 kaynak sourcelist'de tanımlıdır. (haberbus.com sit
 
 ## Kurulum İçin Gerekenler
 
-- Python 2.x (2.6 ve üstü)
-	- MySQLdb
-	- BeautifulSoup
+- Python 3.x 
+	- mysql.connector
+	- bs4
 	- requests
-	- simplejson
+	- yaml
 * Mysql Database
 
 Bunlar sağlandıktan sonra yapılması gereken bir db oluşturmak MySql üzerinde ve
-gerekli bilgileri ServerDatabaseHandler.py dosyamıza girmektir. Ve her şey hazır.
+gerekli bilgileri DbHandler.py dosyamıza girmektir. Ve her şey hazır.
 
-Test için: `python mainParseSources.py teknoloji webrazzi.com` komutu ile sadece bu kategori bu linkleri toplayabilirsiniz.
-Tüm sourcelist'i gezmek için `python mainParseSources.py` demeniz yeterli. İlk sefer tüm link'ler tarandığı için 30 dk'ı bulabilir.
+Test için: `python Parser.py teknoloji webrazzi.com` komutu ile sadece bu kategori bu linkleri toplayabilirsiniz.
+Tüm sourcelist'i gezmek için `python Parser.py` demeniz yeterli. İlk sefer tüm link'ler tarandığı için 30 dk'ı bulabilir.
 Sonraları için 10 dk içerisinde tüm kaynaklar taranabilmektedir. Tabi sisteminde bandwitdth ve resource'una göre bu zamanlar değişebilir.
