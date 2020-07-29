@@ -5,10 +5,10 @@ from LogHandler import LogHandler
 import mysql.connector
 
 
-class ServerDatabaseHandler:
+class DbHandler:
     def __init__(self):
         try:
-            self.logHandler = LogHandler("ServerDatabaseHandle")
+            self.logHandler = LogHandler("DbHandler")
 
             self.serverHandler = mysql.connector.connect(host='localhost',
                                                          database='haberbus',
