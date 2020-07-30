@@ -1,93 +1,130 @@
-#! -*- coding:utf-8 -*-
-
+import yaml
 from bs4 import BeautifulSoup
 import requests
 import logging
 
 
 class LinkHandler:
-    def __init__(self, link, props, sources, timeout=3):
-        self.logger = logging.getLogger("DbHandler")
+    def __init__(self, link, props, sources):
+        self.log = logging.getLogger("DbHandler")
 
         self.link = link
         self.props = props
         self.sources = sources
-        self.timeout = timeout
 
         self.htmlSource = ""
         self.soup = ""
 
         self.title = ""
         self.description = ""
-        self.imageLink = ""
+        self.image = ""
         self.publishDate = ""
 
     def run(self):
         try:
-            try:
-                r = requests.get(self.link, headers={'User-Agent': self.props.get("userAgent")}, timeout=self.timeout)
-                r.encoding = 'utf-8'
-                self.htmlSource = r.text
-            except Exception as error:
-                print("\t\t\t LinkHandler: %s: %s" % (error, self.link))
-                self.soup = -1
-                self.htmlSource = -1
-                return
+            r = requests.get(self.link, headers={'User-Agent': self.props["request"]["userAgent"]},
+                             timeout=self.props["request"]["timeout"])
+            r.encoding = self.props["request"]["encoding"]
+            self.htmlSource = r.text
 
             self.soup = BeautifulSoup(self.htmlSource, 'html.parser')
-
-            metas = self.soup.find_all('meta')
-            for meta in metas:
-                if 'name' in meta.attrs:
-                    metaName = meta.attrs['name']
-                    if metaName in self.props.get("descriptionKeys"):
-                        self.setDescription(meta.attrs['content'])
-
-                elif 'property' in meta.attrs:
-                    metaProperty = meta.attrs['property']
-                    if metaProperty in self.props.get("titleKeys"):
-                        self.setTitle(meta.attrs['content'])
-                    elif metaProperty in self.props.get("descriptionKeys"):
-                        self.setDescription(meta.attrs['content'])
-                    elif metaProperty in self.props.get("imageLinkKeys"):
-                        self.setImageLink(meta.attrs['content'])
-                    elif metaProperty in self.props.get("publishDateKeys"):
-                        self.setPublishDate(meta.attrs['content'])
-
-                elif 'itemprop' in meta.attrs:
-                    metaItemprop = meta.attrs['itemprop']
-                    if metaItemprop in self.props.get("publishDateKeys"):
-                        self.setPublishDate(meta.attrs['content'])
-
-                if self.isMetadataComplete():
-                    break
-
-            if not self.isMetadataComplete():
-                for category in self.sources:
-                    for source in self.sources.get(category):
-                        if self.link.find(source.get("domain")) != -1:
-                            dateContent = self.soup.findAll(source.get("dateElement"))
-                            self.setPublishDate(dateContent)
-                            break
-
+            self.setFromMetadata()
+            self.setFromProperties()
 
         except Exception as ex:
+            self.log.warning("LinkHandler", self.link, ex)
             self.soup = -1
             self.htmlSource = -1
-            self.logger.warning("run", self.link, ex)
-            return
+
+    def setFromMetadata(self):
+        metas = self.soup.find_all('meta')
+        for meta in metas:
+            if 'name' in meta.attrs:
+                metaName = meta.attrs['name']
+                if metaName in "og:description":
+                    self.setDescription(meta.attrs['content'])
+
+            elif 'property' in meta.attrs:
+                metaProperty = meta.attrs['property']
+                if metaProperty in "og:title":
+                    self.setTitle(meta.attrs['content'])
+                elif metaProperty in "og:description":
+                    self.setDescription(meta.attrs['content'])
+                elif metaProperty in "og:image":
+                    self.setImage(meta.attrs['content'])
+                elif metaProperty in "datePublished":
+                    self.setPublishDate(meta.attrs['content'])
+
+            elif 'itemprop' in meta.attrs:
+                metaItemprop = meta.attrs['itemprop']
+                if metaItemprop in "datePublished":
+                    self.setPublishDate(meta.attrs['content'])
+
+            if self.isMetadataComplete():
+                break
+
+    def setFromProperties(self):
+        if not self.isMetadataComplete():
+            for category in self.sources:
+                for source in self.sources.get(category):
+                    if self.link.find(source.get("domain")) != -1:
+                        if not self.title:
+                            title = self.soup.findAll(source["tagForMetadata"]["title"])
+                            self.setTitle(title)
+
+                        if not self.description:
+                            description = self.soup.findAll(source["tagForMetadata"]["description"])
+                            self.setDescription(description)
+
+                        if not self.image:
+                            image = self.soup.findAll(source["tagForMetadata"]["image"])
+                            self.setImage(image)
+
+                        if not self.publishDate:
+                            publishDate = self.soup.findAll(source["tagForMetadata"]["publishDate"])
+                            self.setPublishDate(publishDate)
+
+    def getTitle(self):
+        return self.title
 
     def setTitle(self, title):
         if not self.title: self.title = title
 
-    def setDescription(self, description):
-        if not self.description: self.description = description
+    def getDescription(self):
+        return self.description
 
-    def setImageLink(self, imageLink):
-        if not self.imageLink: self.imageLink = imageLink
+    def setDescription(self, description):
+        if not self.description:
+            self.description = description
+
+    def getImage(self):
+        return self.image
+
+    def setImage(self, image):
+        if not self.image:
+            self.image = image
+
+    def getPublishDate(self):
+        return self.publishDate
 
     def setPublishDate(self, publishDate):
-        if not self.publishDate: self.publishDate = publishDate
+        if not self.publishDate:
+            self.publishDate = publishDate
 
     def isMetadataComplete(self):
-        return self.title and self.description and self.imageLink and self.publishDate
+        return self.title and self.description and self.image and self.publishDate
+
+"""
+with open(r'config/sources.yaml') as file:
+    sources = yaml.load(file, Loader=yaml.FullLoader)
+
+with open(r'config/properties.yaml') as file:
+    props = yaml.load(file, Loader=yaml.FullLoader)
+
+l = LinkHandler("https://mashable.com/video/ice-t-jimmy-fallon-coronavirus-law-and-order/", props, sources)
+l.run()
+print(l.getTitle())
+print(l.getDescription())
+print(l.getImage())
+print(l.getPublishDate())
+"""

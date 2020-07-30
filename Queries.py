@@ -29,7 +29,7 @@ createTableIfNotExists = """CREATE TABLE IF NOT EXISTS `links_%s` (
   `description` varchar(1024) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `imgLink` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `clickedCount` int(11) NOT NULL DEFAULT '0',
-  `timestamp` timestamp DEFAULT CURRENT_TIMESTAMP
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;"""
 
 addPrimaryKeyToTable = "ALTER TABLE `%s` ADD PRIMARY KEY (`id`)"
