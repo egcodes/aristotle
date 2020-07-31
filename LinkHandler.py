@@ -1,4 +1,3 @@
-import yaml
 from bs4 import BeautifulSoup
 import requests
 import logging
@@ -30,9 +29,10 @@ class LinkHandler:
             self.soup = BeautifulSoup(self.htmlSource, 'html.parser')
             self.setFromMetadata()
             self.setFromProperties()
+            self.fixStr()
 
         except Exception as ex:
-            self.log.warning("LinkHandler", self.link, ex)
+            self.log.warning("LinkHandler: %s, %s", self.link, ex)
             self.soup = -1
             self.htmlSource = -1
 
@@ -52,7 +52,7 @@ class LinkHandler:
                     self.setDescription(meta.attrs['content'])
                 elif metaProperty in "og:image":
                     self.setImage(meta.attrs['content'])
-                elif metaProperty in "datePublished":
+                elif metaProperty in ["datePublished", "og:article:published_time"]:
                     self.setPublishDate(meta.attrs['content'])
 
             elif 'itemprop' in meta.attrs:
@@ -88,7 +88,8 @@ class LinkHandler:
         return self.title
 
     def setTitle(self, title):
-        if not self.title: self.title = title
+        if not self.title:
+            self.title = title
 
     def getDescription(self):
         return self.description
@@ -111,20 +112,20 @@ class LinkHandler:
         if not self.publishDate:
             self.publishDate = publishDate
 
+    def getHtmlSource(self):
+        return self.htmlSource
+
+    def getParsedHtml(self):
+        return self.soup
+
     def isMetadataComplete(self):
         return self.title and self.description and self.image and self.publishDate
 
-"""
-with open(r'config/sources.yaml') as file:
-    sources = yaml.load(file, Loader=yaml.FullLoader)
+    def fixStr(self):
+        if self.title:
+            self.title = self.title.replace("'", "''")
+            self.title = self.title[0:self.props["parser"]["titleCharLimit"]]
+        if self.description:
+            self.description = self.description.replace("'", "''")
+            self.description = self.description[0:self.props["parser"]["descriptionCharLimit"]]
 
-with open(r'config/properties.yaml') as file:
-    props = yaml.load(file, Loader=yaml.FullLoader)
-
-l = LinkHandler("https://mashable.com/video/ice-t-jimmy-fallon-coronavirus-law-and-order/", props, sources)
-l.run()
-print(l.getTitle())
-print(l.getDescription())
-print(l.getImage())
-print(l.getPublishDate())
-"""

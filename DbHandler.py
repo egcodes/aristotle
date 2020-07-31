@@ -27,8 +27,6 @@ class DbHandler:
         self.cursor.execute(query)
         if query.split()[0].lower() == "select":
             return self.cursor.fetchall()
-        else:
-            self.serverHandler.commit()
 
     def closeConnection(self):
         self.serverHandler.close()

@@ -1,8 +1,8 @@
 article:
-  - domain: bbc.com
-    link: https://www.bbc.com
+  - domain: haberturk.com
+    link: https://www.haberturk.com
     filterForLink:
-      permissibleWords: ['/news/']
+      permissibleWords: ['-']
       impermissibleWords: []
     tagForMetadata:
       title: og:title
