@@ -1,12 +1,6 @@
-findLinkFromLinksByCategoryAndDomainAndDate = "SELECT link FROM `links_%s` WHERE category='%s' AND domain='%s' AND date='%s'"
-findDateFromLinkCacheByLink = "SELECT date FROM `link_cache` WHERE `link`='%s'"
-findFromImgLinkByLink = "SELECT date, title, description, image FROM `links_%s` WHERE `link`='%s'"
+findCachedLinksByDomain = "SELECT link FROM `link_cache` WHERE domain='%s'"
 
-countFromLinksByLink = "SELECT COUNT(*) FROM `links_%s` WHERE link='%s'"
-
-updateTempLink = "UPDATE `link_cache` SET date=CURRENT_DATE() WHERE link='%s'"
-
-insertTempLink = "INSERT INTO `link_cache` VALUES(NULL, CURRENT_DATE()-1, '%s')"
+insertCacheLink = "INSERT INTO `link_cache` VALUES(NULL, '%s', '%s')"
 insertLink = "INSERT INTO `links_%s` VALUES(NULL, CURRENT_DATE(), '%s', '%s', '%s', '%s', '%s', '%s', 0, NOW())"
 
 truncateCache = "TRUNCATE `link_cache`"
@@ -14,7 +8,7 @@ truncateCache = "TRUNCATE `link_cache`"
 createTableIfNotExistsForLinkCache = """
 CREATE TABLE IF NOT EXISTS `link_cache` (
   `id` int(11) NOT NULL,
-  `date` date NOT NULL,
+  `domain` varchar(255) NOT NULL,
   `link` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;"""
 

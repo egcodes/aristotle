@@ -1,0 +1,129 @@
+gundem:
+  - domain: sozcu.com.tr
+    active: true
+    link: https://www.sozcu.com.tr
+    filterForLink:
+      permissibleWords: ['/gundem/', '/gunun-icinden/', '/dunya/', '/ekonomi/', '/egitim/', '/saglik/']
+      impermissibleWords: ['spor_', 'video.', '/yazarlar/', '/kategori/']
+    tagForMetadata:
+      publishDate: time,datetime
+      publishDateFormat: "%Y-%m-%d"
+
+  - domain: t24.com.tr
+    active: true
+    link: https://t24.com.tr
+    filterForLink:
+      permissibleWords: ['/haber/',]
+      impermissibleWords: []
+    tagForMetadata:
+      publishDate: div,class,_392lz
+      publishDateFormat: "%d %B %Y"
+
+
+videohaber:
+  - domain: hurriyet.com.tr
+    active: true
+    link: https://www.hurriyet.com.tr/video/
+    filterForLink:
+      permissibleWords: ['/video/',]
+      impermissibleWords: ['/playlist/',]
+    tagForMetadata:
+      publishDate: 
+      publishDateFormat: 
+
+  - domain: cnnturk.com
+    active: true
+    link: https://www.cnnturk.com/video
+    filterForLink:
+      permissibleWords: ['/video/',]
+      impermissibleWords: []
+    tagForMetadata:
+      publishDate: 
+      publishDateFormat: 
+
+
+teknoloji:
+  - domain: chip.com.tr
+    active: true
+    link: https://www.chip.com.tr
+    filterForLink:
+      permissibleWords: ['/haber/', '/makale/', '/blog/', '/inceleme/']
+      impermissibleWords: []
+    tagForMetadata:
+      publishDate: 
+      publishDateFormat: 
+
+  - domain: webrazzi.com
+    active: true
+    link: https://webrazzi.com
+    filterForLink:
+      permissibleWords: ['2020/07/31',]
+      impermissibleWords: []
+    tagForMetadata:
+      publishDate: 
+      publishDateFormat: 
+
+
+kulturvesanat:
+  - domain: haberturk.com
+    active: true
+    link: https://www.haberturk.com/kultur-sanat
+    filterForLink:
+      permissibleWords: ['-',]
+      impermissibleWords: []
+    tagForMetadata:
+      publishDate: 
+      publishDateFormat: 
+
+  - domain: hurriyet.com.tr
+    active: true
+    link: https://www.hurriyet.com.tr/keyif
+    filterForLink:
+      permissibleWords: ['-',]
+      impermissibleWords: []
+    tagForMetadata:
+      publishDate: 
+      publishDateFormat: 
+
+spor:
+  - domain: fanatik.com.tr
+    active: true
+    link: https://www.fanatik.com.tr
+    filterForLink:
+      permissibleWords: ['-',]
+      impermissibleWords: []
+    tagForMetadata:
+      publishDate: 
+      publishDateFormat: 
+
+  - domain: ntvspor.net
+    active: true
+    link: https://www.ntvspor.net
+    filterForLink:
+      permissibleWords: ['-',]
+      impermissibleWords: []
+    tagForMetadata:
+      publishDate: 
+      publishDateFormat: 
+
+
+koseyazilari:
+  - domain: haberturk.com
+    active: true
+    link: https://www.haberturk.com/htyazarlar
+    filterForLink:
+      permissibleWords: ['/yazarlar/',]
+      impermissibleWords: []
+    tagForMetadata:
+      publishDate: 
+      publishDateFormat: 
+
+  - domain: milliyet.com.tr
+    active: true
+    link: https://www.milliyet.com.tr/yazarlar/
+    filterForLink:
+      permissibleWords: ['/yazarlar/',]
+      impermissibleWords: []
+    tagForMetadata:
+      publishDate: 
+      publishDateFormat:

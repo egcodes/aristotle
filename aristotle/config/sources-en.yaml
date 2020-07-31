@@ -1,4 +1,17 @@
 article:
+  - domain: haber7.com
+    active: true
+    link: https://www.haber7.com
+    filterForLink:
+      permissibleWords: ['-']
+      impermissibleWords: []
+    tagForMetadata:
+      title: og:title
+      description: og:description
+      image: og:image
+      publishDate: span,class,date-item added
+      publishDateFormat: "%d.%m.%Y"
+
   - domain: haberturk.com
     active: true
     link: https://www.haberturk.com
@@ -9,19 +22,8 @@ article:
       title: og:title
       description: og:description
       image: og:image
-      publishDate: data-datetime
-
-  - domain: test.com
-    active: true
-    link: https://test.com
-    filterForLink:
-      permissibleWords: ['/article/']
-      impermissibleWords: []
-    tagForMetadata:
-      title: og:title
-      description: og:description
-      image: og:image
-      publishDate: date
+      publishDate: dateTime
+      publishDateFormat: "%d.%m.%Y"
 
 video-news:
   - domain: test.com
@@ -35,6 +37,7 @@ video-news:
       description: og:description
       image: og:image
       publishDate: date
+      publishDateFormat: "%d.%m.%Y"
 
   - domain: test.com
     active: true
@@ -47,6 +50,7 @@ video-news:
       description: og:description
       image: og:image
       publishDate: date
+      publishDateFormat: "%d.%m.%Y"
 
 technology:
   - domain: mashable.com
@@ -60,6 +64,7 @@ technology:
       description: og:description
       image: og:image
       publishDate: datetime
+      publishDateFormat: "%d.%m.%Y"
 
   - domain: test.com
     active: true
@@ -72,3 +77,4 @@ technology:
       description: og:description
       image: og:image
       publishDate: date
+      publishDateFormat: "%d.%m.%Y"

@@ -2,6 +2,8 @@ from bs4 import BeautifulSoup
 import requests
 import logging
 
+from aristotle.util import trim_str
+
 
 class Parser:
     def __init__(self, link, props, sources):
@@ -33,6 +35,7 @@ class Parser:
 
         except Exception as ex:
             self.log.warning("Parser: %s, %s", self.link, ex)
+            self.log.exception(ex)
             self.soup = -1
             self.htmlSource = -1
 
@@ -69,19 +72,25 @@ class Parser:
                 for source in self.sources.get(category):
                     if self.link.find(source.get("domain")) != -1:
                         if not self.title:
-                            title = self.soup.findAll(source["tagForMetadata"]["title"])
+                            title = self.soup.find(source["tagForMetadata"]["title"])
                             self.setTitle(title)
 
                         if not self.description:
-                            description = self.soup.findAll(source["tagForMetadata"]["description"])
+                            description = self.soup.find(source["tagForMetadata"]["description"])
                             self.setDescription(description)
 
                         if not self.image:
-                            image = self.soup.findAll(source["tagForMetadata"]["image"])
+                            image = self.soup.find(source["tagForMetadata"]["image"])
                             self.setImage(image)
 
                         if not self.publishDate:
-                            publishDate = self.soup.findAll(source["tagForMetadata"]["publishDate"])
+                            tags = source["tagForMetadata"]["publishDate"].split(",")
+                            if len(tags) == 3:
+                                publishDate = self.soup.find(tags[0], {tags[1]: tags[2]})
+                                if publishDate:
+                                    publishDate = publishDate.text
+                            else:
+                                publishDate = self.soup.find(tags[0])[tags[1]]
                             self.setPublishDate(publishDate)
 
     def getTitle(self):
@@ -89,28 +98,31 @@ class Parser:
 
     def setTitle(self, title):
         if not self.title:
-            self.title = title
+            if title:
+                self.title = title.strip()
 
     def getDescription(self):
         return self.description
 
     def setDescription(self, description):
         if not self.description:
-            self.description = description
+            if description:
+                self.description = description.strip()
 
     def getImage(self):
         return self.image
 
     def setImage(self, image):
         if not self.image:
-            self.image = image
+            self.image = image.strip()
 
     def getPublishDate(self):
         return self.publishDate
 
     def setPublishDate(self, publishDate):
         if not self.publishDate:
-            self.publishDate = publishDate
+            if publishDate:
+                self.publishDate = publishDate.strip()
 
     def getHtmlSource(self):
         return self.htmlSource
@@ -124,8 +136,24 @@ class Parser:
     def fixStr(self):
         if self.title:
             self.title = self.title.replace("'", "''")
-            self.title = self.title[0:self.props["parser"]["titleCharLimit"]]
+            self.title = trim_str(self.title, self.props["parser"]["titleCharLimit"])
         if self.description:
             self.description = self.description.replace("'", "''")
-            self.description = self.description[0:self.props["parser"]["descriptionCharLimit"]]
+            self.description = trim_str(self.description, self.props["parser"]["descriptionCharLimit"])
+"""
+import yaml, os
 
+with open(os.path.dirname(os.path.realpath(__file__)) + '/config/sources-tr.yaml') as file:
+    sources = yaml.load(file, Loader=yaml.FullLoader)
+
+with open(os.path.dirname(os.path.realpath(__file__)) + '/config/properties.yaml') as file:
+    props = yaml.load(file, Loader=yaml.FullLoader)
+
+l = Parser("https://www.sozcu.com.tr/2020/dunya/son-dakika-nasa-duyurdu-marsa-gidemeyiz-ama-ona-en-yakin-yer-turkiyede-5963560/"
+           , props, sources)
+l.run()
+print(l.getTitle())
+print(l.getDescription())
+print(l.getImage())
+print(l.getPublishDate())
+"""

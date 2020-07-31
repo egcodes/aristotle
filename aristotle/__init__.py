@@ -6,14 +6,17 @@ __copyright__ = 'Copyright 2013, Erdi Gurbuz'
 import argparse
 import logging.config
 import yaml
+import locale
 
 from aristotle.news import News
 
-with open(r'config/sources.yaml') as file:
-    sources = yaml.load(file, Loader=yaml.FullLoader)
-
 with open(r'config/properties.yaml') as file:
     props = yaml.load(file, Loader=yaml.FullLoader)
+
+with open(r'config/%s.yaml'%props.get("sourceName")) as file:
+    sources = yaml.load(file, Loader=yaml.FullLoader)
+
+locale.setlocale(locale.LC_ALL, props.get("locale"))
 
 logging.config.dictConfig(yaml.load(open('config/logging.yaml', 'r'), Loader=yaml.FullLoader))
 

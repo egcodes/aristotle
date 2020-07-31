@@ -1,10 +1,11 @@
 import logging
 import mysql.connector
 
-log = logging.getLogger(__name__)
 
 class DB:
     def __init__(self, props):
+        self.log = logging.getLogger(__name__)
+
         try:
 
             self.serverHandler = mysql.connector.connect(host=props.get("database").get("url"),
@@ -21,11 +22,11 @@ class DB:
             self.cursor.execute('SET character_set_connection=utf8;')
 
         except:
-            log.critical("__init__")
+            self.log.critical("__init__")
 
     def executeQuery(self, query):
         self.cursor.execute(query)
-        if query.split()[0].lower() == "select":
+        if query.startswith("SELECT"):
             return self.cursor.fetchall()
 
     def closeConnection(self):
