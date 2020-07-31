@@ -1,56 +1,32 @@
-import signal
-import sys
 import logging
-import logging.config
 from datetime import datetime
-
-from LinkHandler import LinkHandler
-from DbHandler import DbHandler
-import Queries as query
-
 from bs4 import BeautifulSoup
 import requests
-import yaml
+
+from aristotle import query
+from aristotle.db import DB
+from aristotle.parser import Parser
 
 
-class Parser:
-    def __init__(self):
-        with open(r'config/sources.yaml') as file:
-            self.sources = yaml.load(file, Loader=yaml.FullLoader)
-
-        with open(r'config/properties.yaml') as file:
-            self.props = yaml.load(file, Loader=yaml.FullLoader)
-
-        logging.config.dictConfig(yaml.load(open('config/logging.yaml', 'r'), Loader=yaml.FullLoader))
-        self.log = logging.getLogger("Parser")
-
-        self.dbHandler = DbHandler(self.props)
-
+class News:
+    def __init__(self, category, domain, props, sources):
+        self.db = DB(props)
+        self.category = category
+        self.domain = domain
+        self.props = props
+        self.sources = sources
         self.yearMonth = ""
+        self.log = logging.getLogger(__name__)
 
-        if len(sys.argv) == 2:
-            category = sys.argv[1]
-            self.run(category)
-        elif len(sys.argv) == 3:
-            category = sys.argv[1]
-            source = sys.argv[2]
-            self.run(category, source)
-        else:
-            self.run()
+        self.run()
 
-    def run(self, category="", source=""):
+    def run(self):
         try:
-            initCategory = ""
-            initSource = ""
-            if category:
-                initCategory = category
-                initSource = source
-
             present = datetime.now()
             self.yearMonth = str(present.strftime('%Y%m'))
 
             if present.hour == 0:
-                self.dbHandler.executeQuery("TRUNCATE `link_cache`")
+                self.db.executeQuery(query.truncateCache)
 
             self.log.info("Begin [%s]" % str(present)[:19])
 
@@ -61,8 +37,6 @@ class Parser:
 
                 for source in sources:
                     startSource = datetime.now()
-                    if initSource and source.get("domain") != initSource:
-                        continue
 
                     link = source.get("link")
                     self.log.info("Link: %s", link)
@@ -91,13 +65,13 @@ class Parser:
 
             storedDataInDB = ""
             try:
-                storedDataInDB = self.dbHandler.executeQuery(query.findLinkFromLinksByCategoryAndDomainAndDate %
-                                                             (self.yearMonth, category, domain,
-                                                              str(present.strftime('%Y-%m-%d'))))
+                storedDataInDB = self.db.executeQuery(query.findLinkFromLinksByCategoryAndDomainAndDate %
+                                                      (self.yearMonth, category, domain,
+                                                       str(present.strftime('%Y-%m-%d'))))
             except:
-                self.dbHandler.executeQuery(query.createTableIfNotExists % self.yearMonth)
-                self.dbHandler.executeQuery(query.addPrimaryKeyToTable % ("links_" + self.yearMonth))
-                self.dbHandler.executeQuery(query.addAutoIncrementToTable % ("links_" + self.yearMonth))
+                self.db.executeQuery(query.createTableIfNotExists % self.yearMonth)
+                self.db.executeQuery(query.addPrimaryKeyToTable % ("links_" + self.yearMonth))
+                self.db.executeQuery(query.addAutoIncrementToTable % ("links_" + self.yearMonth))
 
             for link in storedDataInDB:
                 linkList.append(link[0])
@@ -111,19 +85,19 @@ class Parser:
             self.log.info("Browsing links...")
             for link in linkList:
                 try:
-                    linkDate = self.dbHandler.executeQuery(query.findDateFromLinkCacheByLink % link)
+                    linkDate = self.db.executeQuery(query.findDateFromLinkCacheByLink % link)
                 except:
-                    self.dbHandler.executeQuery(query.createTableIfNotExistsForLinkCache)
-                    self.dbHandler.executeQuery(query.addPrimaryKeyToTable % "link_cache")
-                    self.dbHandler.executeQuery(query.addAutoIncrementToTable % "link_cache")
-                    linkDate = self.dbHandler.executeQuery(query.findDateFromLinkCacheByLink % link)
+                    self.db.executeQuery(query.createTableIfNotExistsForLinkCache)
+                    self.db.executeQuery(query.addPrimaryKeyToTable % "link_cache")
+                    self.db.executeQuery(query.addAutoIncrementToTable % "link_cache")
+                    linkDate = self.db.executeQuery(query.findDateFromLinkCacheByLink % link)
 
                 if linkDate:
                     if str(linkDate[0][0]) != str(present.strftime('%Y-%m-%d')):
                         continue
 
                 try:
-                    linkData = self.dbHandler.executeQuery(query.findFromImgLinkByLink % (self.yearMonth, link))
+                    linkData = self.db.executeQuery(query.findFromImgLinkByLink % (self.yearMonth, link))
                 except Exception as ex:
                     self.log.warning("getNewsLinkFromSource: %s", ex)
                     continue
@@ -137,23 +111,23 @@ class Parser:
                 else:
                     countHtmlSource += 1
 
-                    getLinkHandler = LinkHandler(link, self.props, self.sources)
-                    getLinkHandler.run()
-                    if getLinkHandler.getParsedHtml() == -1:
-                        self.dbHandler.executeQuery(query.insertTempLink % link)
+                    getParser = Parser(link, self.props, self.sources)
+                    getParser.run()
+                    if getParser.getParsedHtml() == -1:
+                        self.db.executeQuery(query.insertTempLink % link)
                         continue
 
-                    self.dbHandler.executeQuery(query.insertTempLink % link)
+                    self.db.executeQuery(query.insertTempLink % link)
 
-                    publishDate = getLinkHandler.getPublishDate()
+                    publishDate = getParser.getPublishDate()
                     year = str(present.strftime('%Y'))
                     month = str(present.strftime('%m'))
                     day = str(present.strftime('%d'))
 
                     if year in str(publishDate) and month in str(publishDate) and day in str(publishDate):
-                        self.dbHandler.executeQuery(query.updateTempLink % link)
+                        self.db.executeQuery(query.updateTempLink % link)
                         returnLinkDict[link] = (
-                            getLinkHandler.getTitle(), getLinkHandler.getDescription(), getLinkHandler.getImage()
+                            getParser.getTitle(), getParser.getDescription(), getParser.getImage()
                         )
 
             returnLinkList = list(set(returnLinkDict))
@@ -182,8 +156,8 @@ class Parser:
                 description = info[3]
                 image = info[4]
 
-                if self.dbHandler.executeQuery(query.countFromLinksByLink % (self.yearMonth, link))[0][0] == 0:
-                    self.dbHandler.executeQuery(
+                if self.db.executeQuery(query.countFromLinksByLink % (self.yearMonth, link))[0][0] == 0:
+                    self.db.executeQuery(
                         query.insertLink % (self.yearMonth, category, domain, link, title, description, image))
                     insertedCount += 1
                 else:
@@ -231,12 +205,3 @@ class Parser:
                 linkList[index] = link + href
 
         return linkList
-
-    def closeProcess(self, arg1, signal):
-        self.dbHandler.closeConnection()
-        sys.exit(1)
-
-
-if __name__ == '__main__':
-    parser = Parser()
-    signal.signal(signal.SIGINT, parser.closeProcess)

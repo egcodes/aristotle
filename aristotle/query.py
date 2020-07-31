@@ -9,6 +9,8 @@ updateTempLink = "UPDATE `link_cache` SET date=CURRENT_DATE() WHERE link='%s'"
 insertTempLink = "INSERT INTO `link_cache` VALUES(NULL, CURRENT_DATE()-1, '%s')"
 insertLink = "INSERT INTO `links_%s` VALUES(NULL, CURRENT_DATE(), '%s', '%s', '%s', '%s', '%s', '%s', 0, NOW())"
 
+truncateCache = "TRUNCATE `link_cache`"
+
 createTableIfNotExistsForLinkCache = """
 CREATE TABLE IF NOT EXISTS `link_cache` (
   `id` int(11) NOT NULL,

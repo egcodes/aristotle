@@ -3,9 +3,9 @@ import requests
 import logging
 
 
-class LinkHandler:
+class Parser:
     def __init__(self, link, props, sources):
-        self.log = logging.getLogger("DbHandler")
+        self.log = logging.getLogger(__name__)
 
         self.link = link
         self.props = props
@@ -32,7 +32,7 @@ class LinkHandler:
             self.fixStr()
 
         except Exception as ex:
-            self.log.warning("LinkHandler: %s, %s", self.link, ex)
+            self.log.warning("Parser: %s, %s", self.link, ex)
             self.soup = -1
             self.htmlSource = -1
 
