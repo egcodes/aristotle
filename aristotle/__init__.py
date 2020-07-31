@@ -23,4 +23,4 @@ with open(r'config/properties.yaml') as file:
 
 logging.config.dictConfig(yaml.load(open('config/logging.yaml', 'r'), Loader=yaml.FullLoader))
 
-news = News("article", "haberturk.com", props, sources)
+news = News(props, sources)

@@ -1,5 +1,6 @@
 article:
   - domain: haberturk.com
+    active: true
     link: https://www.haberturk.com
     filterForLink:
       permissibleWords: ['-']
@@ -11,6 +12,7 @@ article:
       publishDate: data-datetime
 
   - domain: test.com
+    active: true
     link: https://test.com
     filterForLink:
       permissibleWords: ['/article/']
@@ -23,6 +25,7 @@ article:
 
 video-news:
   - domain: test.com
+    active: true
     link: https://test.com
     filterForLink:
       permissibleWords: ['/article/']
@@ -34,6 +37,7 @@ video-news:
       publishDate: date
 
   - domain: test.com
+    active: true
     link: https://test.com
     filterForLink:
       permissibleWords: ['/article/']
@@ -46,6 +50,7 @@ video-news:
 
 technology:
   - domain: mashable.com
+    active: true
     link: https://mashable.com
     filterForLink:
       permissibleWords: ['/article/']
@@ -57,6 +62,7 @@ technology:
       publishDate: datetime
 
   - domain: test.com
+    active: true
     link: https://test.com
     filterForLink:
       permissibleWords: ['/article/']

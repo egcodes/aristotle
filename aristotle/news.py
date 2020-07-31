@@ -9,10 +9,8 @@ from aristotle.parser import Parser
 
 
 class News:
-    def __init__(self, category, domain, props, sources):
+    def __init__(self, props, sources):
         self.db = DB(props)
-        self.category = category
-        self.domain = domain
         self.props = props
         self.sources = sources
         self.yearMonth = ""
@@ -30,24 +28,24 @@ class News:
 
             self.log.info("Begin [%s]" % str(present)[:19])
 
-            newsLinkDict = {}
-
+            news = {}
             for category in self.sources:
                 sources = self.sources.get(category)
 
-                for source in sources:
-                    startSource = datetime.now()
+                for domain in sources:
+                    if domain.get("active"):
+                        startSource = datetime.now()
 
-                    link = source.get("link")
-                    self.log.info("Link: %s", link)
-                    try:
-                        newsLinkDict.update(self.getNewsLinkFromSource(present, category, source.get("domain"), link))
-                    except Exception as ex:
-                        self.log.exception(ex)
+                        link = domain.get("link")
+                        self.log.info("Link: %s", link)
+                        try:
+                            news.update(self.getNewsLinkFromSource(present, category, domain.get("domain"), link))
+                        except Exception as ex:
+                            self.log.exception(ex)
 
-                    self.log.info("Time: %s", str(datetime.now() - startSource)[:7])
-                    self.insertToDatabase(newsLinkDict)
-                    newsLinkDict.clear()
+                        self.log.info("Time: %s", str(datetime.now() - startSource)[:7])
+                        self.insertToDatabase(news)
+                        news.clear()
 
             self.log.info("End: " + str(datetime.now()) + " - " + str(datetime.now() - present)[:19])
         except Exception as ex:
