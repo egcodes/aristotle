@@ -9,10 +9,11 @@ from aristotle.parser import Parser
 
 
 class News:
-    def __init__(self, props, sources):
+    def __init__(self, props, sources, categories):
         self.db = DB(props)
         self.props = props
         self.sources = sources
+        self.categories = categories
         self.yearMonth = ""
         self.log = logging.getLogger(__name__)
 
@@ -30,8 +31,10 @@ class News:
 
             news = {}
             for category in self.sources:
-                sources = self.sources.get(category)
+                if category not in self.categories:
+                    continue
 
+                sources = self.sources.get(category)
                 for domain in sources:
                     if domain.get("active"):
                         startSource = datetime.now()
