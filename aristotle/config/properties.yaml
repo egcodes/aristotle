@@ -5,7 +5,6 @@ database:
   password: root
 
 locale: tr_TR
-sourceName: sources-tr
 
 request:
   timeout: 3

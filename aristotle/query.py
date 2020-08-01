@@ -1,9 +1,12 @@
 findCachedLinksByDomain = "SELECT link FROM `link_cache` WHERE domain='%s'"
 
 insertCacheLink = "INSERT INTO `link_cache` VALUES(NULL, '%s', '%s')"
+
 insertLink = "INSERT INTO `links_%s` VALUES(NULL, CURRENT_DATE(), '%s', '%s', '%s', '%s', '%s', '%s', 0, NOW())"
 
 truncateCache = "TRUNCATE `link_cache`"
+
+checkTableIsExists = "SELECT id FROM `%s` LIMIT 1"
 
 createTableIfNotExistsForLinkCache = """
 CREATE TABLE IF NOT EXISTS `link_cache` (

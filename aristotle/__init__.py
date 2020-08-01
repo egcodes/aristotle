@@ -13,10 +13,12 @@ from aristotle.news import News
 with open(r'config/properties.yaml') as file:
     props = yaml.load(file, Loader=yaml.FullLoader)
 
-with open(r'config/%s.yaml'%props.get("sourceName")) as file:
+loc = props.get("locale")
+
+with open(r'config/sources-%s.yaml'%loc) as file:
     sources = yaml.load(file, Loader=yaml.FullLoader)
 
-locale.setlocale(locale.LC_ALL, props.get("locale"))
+locale.setlocale(locale.LC_ALL, loc)
 
 logging.config.dictConfig(yaml.load(open('config/logging.yaml', 'r'), Loader=yaml.FullLoader))
 
