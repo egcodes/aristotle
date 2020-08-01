@@ -2,16 +2,16 @@ from bs4 import BeautifulSoup
 import requests
 import logging
 
-from aristotle.util import trim_str
+from aristotle.settings import *
+from aristotle.util import *
 
 
 class Parser:
-    def __init__(self, link, props, sources):
+    def __init__(self, domain , link):
         self.log = logging.getLogger(__name__)
 
+        self.domain = domain
         self.link = link
-        self.props = props
-        self.sources = sources
 
         self.htmlSource = ""
         self.soup = ""
@@ -23,9 +23,9 @@ class Parser:
 
     def run(self):
         try:
-            r = requests.get(self.link, headers={'User-Agent': self.props["request"]["userAgent"]},
-                             timeout=self.props["request"]["timeout"])
-            r.encoding = self.props["request"]["encoding"]
+            requestProps = getProps("request")
+            r = requests.get(self.link, headers={'User-Agent': requestProps["userAgent"]}, timeout=requestProps["timeout"])
+            r.encoding = requestProps["encoding"]
             self.htmlSource = r.text
 
             self.soup = BeautifulSoup(self.htmlSource, 'html.parser')
@@ -34,7 +34,7 @@ class Parser:
             self.fixStr()
 
         except Exception as ex:
-            self.log.warning("Parser: %s, %s", self.link, ex)
+            self.log.warning("Parser: %s, %s", ex, self.link)
             self.soup = -1
             self.htmlSource = -1
 
@@ -69,30 +69,30 @@ class Parser:
 
     def setFromProperties(self):
         if not self.isMetadataComplete():
-            for category in self.sources:
-                for source in self.sources.get(category):
-                    if self.link.find(source.get("domain")) != -1:
-                        if not self.title:
-                            title = self.soup.find(source["tagForMetadata"]["title"])
-                            self.setTitle(title)
+            domainProps = getDomainProps(self.domain, "tagForMetadata")
 
-                        if not self.description:
-                            description = self.soup.find(source["tagForMetadata"]["description"])
-                            self.setDescription(description)
+            if not self.title:
+                title = self.soup.find(domainProps["title"])
+                self.setTitle(title)
 
-                        if not self.image:
-                            image = self.soup.find(source["tagForMetadata"]["image"])
-                            self.setImage(image)
+            if not self.description:
+                description = self.soup.find(domainProps["description"])
+                self.setDescription(description)
 
-                        if not self.publishDate:
-                            tags = source["tagForMetadata"]["publishDate"].split(",")
-                            if len(tags) == 3:
-                                publishDate = self.soup.find(tags[0], {tags[1]: tags[2]})
-                                if publishDate:
-                                    publishDate = publishDate.text
-                            else:
-                                publishDate = self.soup.find(tags[0])[tags[1]]
-                            self.setPublishDate(publishDate)
+            if not self.image:
+                image = self.soup.find(domainProps["image"])
+                self.setImage(image)
+
+            if not self.publishDate:
+                if domainProps["publishDate"]:
+                    tags = domainProps["publishDate"].split(",")
+                    if len(tags) == 3:
+                        publishDate = self.soup.find(tags[0], {tags[1]: tags[2]})
+                        if publishDate:
+                            publishDate = publishDate.text
+                    else:
+                        publishDate = self.soup.find(tags[0])[tags[1]]
+                    self.setPublishDate(publishDate)
 
     def getTitle(self):
         return self.title
@@ -135,10 +135,11 @@ class Parser:
         return self.title and self.description and self.image and self.publishDate
 
     def fixStr(self):
+        parserProps = getProps("parser")
         if self.title:
             self.title = self.title.replace("'", "''")
-            self.title = trim_str(self.title, self.props["parser"]["titleCharLimit"])
+            self.title = trim_str(self.title, parserProps["titleCharLimit"])
         if self.description:
             self.description = self.description.replace("'", "''")
-            self.description = trim_str(self.description, self.props["parser"]["descriptionCharLimit"])
+            self.description = trim_str(self.description, parserProps["descriptionCharLimit"])
 

@@ -6,18 +6,17 @@ import requests
 from aristotle import query
 from aristotle.db import DB
 from aristotle.parser import Parser
+from aristotle.settings import *
 
 
 class News:
-    def __init__(self, props, sources, categories):
+    def __init__(self, categories):
         self.present = datetime.now()
         self.yearMonth = str(self.present.strftime('%Y%m'))
 
-        self.db = DB(props)
+        self.db = DB(getProps("database"))
         self.createTablesIfNotExists()
 
-        self.props = props
-        self.sources = sources
         self.categories = categories
         self.log = logging.getLogger(__name__)
 
@@ -30,12 +29,11 @@ class News:
 
             self.log.info("Begin [%s]" % str(self.present)[:19])
             news = {}
-            for category in self.sources:
+            for category in sources:
                 if category not in self.categories:
                     continue
 
-                sources = self.sources.get(category)
-                for domain in sources:
+                for domain in sources.get(category):
                     if domain.get("active"):
                         start = datetime.now()
                         self.log.info("Link: %s",  domain.get("link"))
@@ -57,17 +55,14 @@ class News:
             return False
 
         try:
-            htmlSource = requests.get(link, headers={'User-Agent': self.props.get("userAgent")}, timeout=5).text
+            htmlSource = requests.get(link, headers={'User-Agent': getProps("request", "userAgent")}, timeout=5).text
         except Exception as ex:
             self.log.exception(ex)
 
-        for src in self.sources.get(category):
-            if src.get("domain") == domain:
-                sourceProps = src
-
+        domainProps = getDomainProps(domain)
         fetchedLinks = {}
         if htmlSource != -1:
-            linkList = self.getFilteredLinks(htmlSource, category, domain)
+            linkList = self.getFilteredLinks(htmlSource, domain)
             linkList = self.fixBrokenLinks(linkList, domain, link)
 
             linkList = list(set(linkList))
@@ -79,7 +74,7 @@ class News:
                 if isLinkCached(link):
                     continue
 
-                getParser = Parser(link, self.props, self.sources)
+                getParser = Parser(domain, link)
                 getParser.run()
                 if getParser.getParsedHtml() == -1:
                     self.db.executeQuery(query.insertCacheLink % (domain, link))
@@ -88,7 +83,7 @@ class News:
                 self.db.executeQuery(query.insertCacheLink % (domain, link))
 
                 publishDate = getParser.getPublishDate()
-                presentDate = str(self.present.strftime(sourceProps["tagForMetadata"]["publishDateFormat"]))
+                presentDate = str(self.present.strftime(domainProps["tagForMetadata"]["publishDateFormat"]))
                 if presentDate in publishDate:
                     fetchedLinks[link] = (getParser.getTitle(), getParser.getDescription(), getParser.getImage())
 
@@ -118,31 +113,31 @@ class News:
 
         self.log.info("Added links: %d", insertedCount)
 
-    def getFilteredLinks(self, htmlSource, category, domain):
+    def getFilteredLinks(self, htmlSource, domain):
         linkList = []
         soup = BeautifulSoup(htmlSource, 'html.parser')
-        for propCategory in self.sources:
-            if category == propCategory:
-                for source in self.sources.get(category):
-                    if domain == source.get("domain"):
-                        sourceProps = source
+        filterLinkProps = getDomainProps(domain, "filterForLink")
 
         def isContainMandatoryKeywords():
-            for word in sourceProps["filterForLink"].get("mandatoryWords"):
-                if word not in href:
-                    return False
+            if filterLinkProps["mandatoryWords"]:
+                for word in filterLinkProps["mandatoryWords"]:
+                    if word not in href:
+                        return False
             return True
 
         def isAllowed():
-            for word in sourceProps["filterForLink"].get("permissibleWords"):
-                if word in href:
-                    return True
-            return False
+            if filterLinkProps["permissibleWords"]:
+                for word in filterLinkProps["permissibleWords"]:
+                    if word in href:
+                        return True
+                return False
+            return True
 
         def isForbidden():
-            for word in sourceProps["filterForLink"].get("impermissibleWords"):
-                if word in href:
-                    return True
+            if filterLinkProps["impermissibleWords"]:
+                for word in filterLinkProps["impermissibleWords"]:
+                    if word in href:
+                        return True
             return False
 
         for link in soup.findAll('a'):
@@ -158,7 +153,7 @@ class News:
 
     def fixBrokenLinks(self, linkList, domain, link):
         for index, href in enumerate(linkList):
-            if domain not in href:
+            if domain not in href and ":" not in href:
                 linkList[index] = link + href
 
         return linkList

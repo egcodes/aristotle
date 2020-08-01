@@ -8,10 +8,10 @@ class DB:
 
         try:
 
-            self.serverHandler = mysql.connector.connect(host=props.get("database").get("url"),
-                                                         database=props.get("database").get("name"),
-                                                         user=props.get("database").get("userName"),
-                                                         password=props.get("database").get("password"),
+            self.serverHandler = mysql.connector.connect(host=props["url"],
+                                                         database=props["name"],
+                                                         user=props["userName"],
+                                                         password=props["password"],
                                                          autocommit=True,
                                                          auth_plugin='mysql_native_password'
                                                          )
