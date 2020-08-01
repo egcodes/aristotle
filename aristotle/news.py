@@ -37,10 +37,12 @@ class News:
                 sources = self.sources.get(category)
                 for domain in sources:
                     if domain.get("active"):
+                        start = datetime.now()
                         self.log.info("Link: %s",  domain.get("link"))
                         news.update(self.fetchNews(category, domain.get("domain"),  domain.get("link")))
                         self.insertNews(category, domain.get("domain"), news)
                         news.clear()
+                        self.log.info("Elapsed: %s" % str(datetime.now() - start)[:10])
 
             self.log.info("End: " + "[" + str(datetime.now())[:19] + "]")
 
@@ -104,7 +106,7 @@ class News:
                 description = info[1]
                 image = info[2]
 
-                insertQuery = query.insertLink % (self.yearMonth, category, domain, link, title, description, image)
+                insertQuery = query.insertLink % (self.yearMonth, category, domain, link, title, description, image, self.yearMonth, domain, link)
                 insertedCount += 1
                 try:
                     self.db.executeQuery(insertQuery)

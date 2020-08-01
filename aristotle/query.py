@@ -2,7 +2,13 @@ findCachedLinksByDomain = "SELECT link FROM `link_cache` WHERE domain='%s'"
 
 insertCacheLink = "INSERT INTO `link_cache` VALUES(NULL, '%s', '%s')"
 
-insertLink = "INSERT INTO `links_%s` VALUES(NULL, CURRENT_DATE(), '%s', '%s', '%s', '%s', '%s', '%s', 0, NOW())"
+insertLink = """
+INSERT INTO `links_%s` (id,date,category,domain,link,title,description,image,clicked,timestamp)
+SELECT * FROM (SELECT NULL, CURRENT_DATE(), '%s', '%s', '%s', '%s' as a, '%s' as b, '%s', 0, NOW()) AS tmp
+WHERE NOT EXISTS (
+    SELECT link FROM links_%s WHERE domain='%s' and link = '%s'
+) LIMIT 1;
+"""
 
 truncateCache = "TRUNCATE `link_cache`"
 
@@ -15,7 +21,8 @@ CREATE TABLE IF NOT EXISTS `link_cache` (
   `link` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;"""
 
-createTableIfNotExists = """CREATE TABLE IF NOT EXISTS `links_%s` (
+createTableIfNotExists = """
+CREATE TABLE IF NOT EXISTS `links_%s` (
 `id` int(11) NOT NULL,
   `date` date NOT NULL,
   `category` varchar(32) NOT NULL,
