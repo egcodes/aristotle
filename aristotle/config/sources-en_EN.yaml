@@ -1,55 +1,24 @@
 article:
-  - domain: haber7.com
+  - domain: bbc.com
     active: true
-    link: https://www.haber7.com
+    link: https://www.bbc.com
     filterForLink:
+      mandatoryWords: [".html"]
       permissibleWords: ['-']
       impermissibleWords: []
     tagForMetadata:
-      title: og:title
-      description: og:description
-      image: og:image
       publishDate: span,class,date-item added
       publishDateFormat: "%d.%m.%Y"
 
-  - domain: haberturk.com
+  - domain: theguardian.com
     active: true
-    link: https://www.haberturk.com
+    link: https://www.theguardian.com/international
     filterForLink:
+      mandatoryWords: ["."]
       permissibleWords: ['-']
       impermissibleWords: []
     tagForMetadata:
-      title: og:title
-      description: og:description
-      image: og:image
       publishDate: dateTime
-      publishDateFormat: "%d.%m.%Y"
-
-video-news:
-  - domain: test.com
-    active: true
-    link: https://test.com
-    filterForLink:
-      permissibleWords: ['/article/']
-      impermissibleWords: []
-    tagForMetadata:
-      title: og:title
-      description: og:description
-      image: og:image
-      publishDate: date
-      publishDateFormat: "%d.%m.%Y"
-
-  - domain: test.com
-    active: true
-    link: https://test.com
-    filterForLink:
-      permissibleWords: ['/article/']
-      impermissibleWords: []
-    tagForMetadata:
-      title: og:title
-      description: og:description
-      image: og:image
-      publishDate: date
       publishDateFormat: "%d.%m.%Y"
 
 technology:
@@ -57,12 +26,10 @@ technology:
     active: true
     link: https://mashable.com
     filterForLink:
+      mandatoryWords: ["-"]
       permissibleWords: ['/article/']
       impermissibleWords: []
     tagForMetadata:
-      title: og:title
-      description: og:description
-      image: og:image
       publishDate: datetime
       publishDateFormat: "%d.%m.%Y"
 
@@ -70,11 +37,9 @@ technology:
     active: true
     link: https://test.com
     filterForLink:
+      mandatoryWords: ["-"]
       permissibleWords: ['/article/']
       impermissibleWords: []
     tagForMetadata:
-      title: og:title
-      description: og:description
-      image: og:image
       publishDate: date
       publishDateFormat: "%d.%m.%Y"

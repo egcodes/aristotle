@@ -35,7 +35,6 @@ class Parser:
 
         except Exception as ex:
             self.log.warning("Parser: %s, %s", self.link, ex)
-            self.log.exception(ex)
             self.soup = -1
             self.htmlSource = -1
 
@@ -44,7 +43,9 @@ class Parser:
         for meta in metas:
             if 'name' in meta.attrs:
                 metaName = meta.attrs['name']
-                if metaName in "og:description":
+                if metaName in "title":
+                    self.setTitle(meta.attrs['content'])
+                if metaName in ["description", "og:description"]:
                     self.setDescription(meta.attrs['content'])
 
             elif 'property' in meta.attrs:
@@ -140,20 +141,4 @@ class Parser:
         if self.description:
             self.description = self.description.replace("'", "''")
             self.description = trim_str(self.description, self.props["parser"]["descriptionCharLimit"])
-"""
-import yaml, os
 
-with open(os.path.dirname(os.path.realpath(__file__)) + '/config/sources-tr.yaml') as file:
-    sources = yaml.load(file, Loader=yaml.FullLoader)
-
-with open(os.path.dirname(os.path.realpath(__file__)) + '/config/properties.yaml') as file:
-    props = yaml.load(file, Loader=yaml.FullLoader)
-
-l = Parser("https://www.sozcu.com.tr/2020/dunya/son-dakika-nasa-duyurdu-marsa-gidemeyiz-ama-ona-en-yakin-yer-turkiyede-5963560/"
-           , props, sources)
-l.run()
-print(l.getTitle())
-print(l.getDescription())
-print(l.getImage())
-print(l.getPublishDate())
-"""

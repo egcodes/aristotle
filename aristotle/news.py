@@ -82,7 +82,7 @@ class News:
                 getParser = Parser(link, self.props, self.sources)
                 getParser.run()
                 if getParser.getParsedHtml() == -1:
-                    self.db.executeQuery(query.insertCacheLink % link)
+                    self.db.executeQuery(query.insertCacheLink % (domain, link))
                     continue
 
                 self.db.executeQuery(query.insertCacheLink % (domain, link))
@@ -127,6 +127,12 @@ class News:
                     if domain == source.get("domain"):
                         sourceProps = source
 
+        def isContainMandatoryKeywords():
+            for word in sourceProps["filterForLink"].get("mandatoryWords"):
+                if word not in href:
+                    return False
+            return True
+
         def isAllowed():
             for word in sourceProps["filterForLink"].get("permissibleWords"):
                 if word in href:
@@ -145,14 +151,14 @@ class News:
             except KeyError:
                 continue
 
-            if isAllowed() and not isForbidden():
+            if isContainMandatoryKeywords() and isAllowed() and not isForbidden():
                 linkList.append(href)
 
         return linkList
 
     def fixBrokenLinks(self, linkList, domain, link):
         for index, href in enumerate(linkList):
-            if domain not in href and "." not in href:
+            if domain not in href:
                 linkList[index] = link + href
 
         return linkList
