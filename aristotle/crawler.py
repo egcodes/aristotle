@@ -1,12 +1,12 @@
-from bs4 import BeautifulSoup
 import requests
 import logging
+from bs4 import BeautifulSoup
 
-from aristotle.settings import *
-from aristotle.util import *
+from settings import *
+from util import *
 
 
-class Parser:
+class Crawler:
     def __init__(self, category, domain, link):
         self.log = logging.getLogger(__name__)
 

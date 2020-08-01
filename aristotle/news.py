@@ -1,12 +1,12 @@
 import logging
+import requests
 from datetime import datetime
 from bs4 import BeautifulSoup
-import requests
 
-from aristotle import query
-from aristotle.db import DB
-from aristotle.parser import Parser
-from aristotle.settings import *
+from db import DB
+from crawler import Crawler
+from query import *
+from settings import *
 
 
 class News:
@@ -23,7 +23,7 @@ class News:
     def start(self):
         try:
             if self.present.hour == 0:
-                self.db.executeQuery(query.truncateCache)
+                self.db.executeQuery(truncateCache)
 
             self.log.info("Begin [%s]" % str(self.present)[:19])
             news = {}
@@ -68,23 +68,23 @@ class News:
             self.log.info("Total links: %d", len(linkList))
             self.log.info("Browsing links...")
 
-            cachedLinks = self.db.executeQuery(query.findCachedLinksByDomain % domain)
+            cachedLinks = self.db.executeQuery(findCachedLinksByDomain % domain)
             for link in linkList:
                 if isLinkCached(link):
                     continue
 
-                getParser = Parser(category, domain, link)
-                getParser.run()
-                if getParser.getParsedHtml() == -1:
-                    self.db.executeQuery(query.insertCacheLink % (domain, link))
+                crawler = Crawler(category, domain, link)
+                crawler.run()
+                if crawler.getParsedHtml() == -1:
+                    self.db.executeQuery(insertCacheLink % (domain, link))
                     continue
 
-                self.db.executeQuery(query.insertCacheLink % (domain, link))
+                self.db.executeQuery(insertCacheLink % (domain, link))
 
-                publishDate = getParser.getPublishDate()
+                publishDate = crawler.getPublishDate()
                 presentDate = str(self.present.strftime(domainProps["tagForMetadata"]["publishDateFormat"]))
                 if presentDate in publishDate:
-                    fetchedLinks[link] = (getParser.getTitle(), getParser.getDescription(), getParser.getImage())
+                    fetchedLinks[link] = (crawler.getTitle(), crawler.getDescription(), crawler.getImage())
 
             self.log.info("Filtered links: %d", len(fetchedLinks))
 
@@ -100,7 +100,7 @@ class News:
                 description = info[1]
                 image = info[2]
 
-                insertQuery = query.insertLink % (self.yearMonth, category, domain, link, title, description, image, self.yearMonth, domain, link)
+                insertQuery = insertLink % (self.yearMonth, category, domain, link, title, description, image, self.yearMonth, domain, link)
                 insertedCount += 1
                 try:
                     self.db.executeQuery(insertQuery)
@@ -159,14 +159,14 @@ class News:
 
     def createTablesIfNotExists(self):
         try:
-            self.db.executeQuery(query.checkTableIsExists % ("links_" + self.yearMonth))
+            self.db.executeQuery(checkTableIsExists % ("links_" + self.yearMonth))
         except:
-            self.db.executeQuery(query.createTableIfNotExists % self.yearMonth)
-            self.db.executeQuery(query.addPrimaryKeyToTable % ("links_" + self.yearMonth))
-            self.db.executeQuery(query.addAutoIncrementToTable % ("links_" + self.yearMonth))
+            self.db.executeQuery(createTableIfNotExists % self.yearMonth)
+            self.db.executeQuery(addPrimaryKeyToTable % ("links_" + self.yearMonth))
+            self.db.executeQuery(addAutoIncrementToTable % ("links_" + self.yearMonth))
         try:
-            self.db.executeQuery(query.checkTableIsExists % "link_cache" )
+            self.db.executeQuery(checkTableIsExists % "link_cache" )
         except:
-            self.db.executeQuery(query.createTableIfNotExistsForLinkCache)
-            self.db.executeQuery(query.addPrimaryKeyToTable % "link_cache")
-            self.db.executeQuery(query.addAutoIncrementToTable % "link_cache")
+            self.db.executeQuery(createTableIfNotExistsForLinkCache)
+            self.db.executeQuery(addPrimaryKeyToTable % "link_cache")
+            self.db.executeQuery(addAutoIncrementToTable % "link_cache")
