@@ -10,24 +10,25 @@ from aristotle.parser import Parser
 
 class News:
     def __init__(self, props, sources, categories):
+        self.present = datetime.now()
+        self.yearMonth = str(self.present.strftime('%Y%m'))
+
         self.db = DB(props)
+        self.createTablesIfNotExists()
+
         self.props = props
         self.sources = sources
         self.categories = categories
-        self.yearMonth = ""
         self.log = logging.getLogger(__name__)
 
         self.run()
 
     def run(self):
         try:
-            present = datetime.now()
-            self.yearMonth = str(present.strftime('%Y%m'))
-
-            if present.hour == 0:
+            if self.present.hour == 0:
                 self.db.executeQuery(query.truncateCache)
 
-            self.log.info("Begin [%s]" % str(present)[:19])
+            self.log.info("Begin [%s]" % str(self.present)[:19])
             news = {}
             for category in self.sources:
                 if category not in self.categories:
@@ -37,8 +38,8 @@ class News:
                 for domain in sources:
                     if domain.get("active"):
                         self.log.info("Link: %s",  domain.get("link"))
-                        news.update(self.getNewsLinkFromSource(present, category, domain.get("domain"),  domain.get("link")))
-                        self.insertToDatabase(category, domain.get("domain"), news)
+                        news.update(self.fetchNews(category, domain.get("domain"),  domain.get("link")))
+                        self.insertNews(category, domain.get("domain"), news)
                         news.clear()
 
             self.log.info("End: " + "[" + str(datetime.now())[:19] + "]")
@@ -46,7 +47,7 @@ class News:
         except Exception as ex:
             self.log.warning("run: ", ex)
 
-    def getNewsLinkFromSource(self, present, category, domain, link):
+    def fetchNews(self, category, domain, link):
         def isLinkCached(checkLink):
             for cachedData in cachedLinks:
                 if cachedData[0] == checkLink:
@@ -71,12 +72,7 @@ class News:
             self.log.info("Total links: %d", len(linkList))
             self.log.info("Browsing links...")
 
-            try:
-                cachedLinks = self.db.executeQuery(query.findCachedLinksByDomain % domain)
-            except:
-                self.createTables()
-                cachedLinks = []
-
+            cachedLinks = self.db.executeQuery(query.findCachedLinksByDomain % domain)
             for link in linkList:
                 if isLinkCached(link):
                     continue
@@ -90,7 +86,7 @@ class News:
                 self.db.executeQuery(query.insertCacheLink % (domain, link))
 
                 publishDate = getParser.getPublishDate()
-                presentDate = str(present.strftime(sourceProps["tagForMetadata"]["publishDateFormat"]))
+                presentDate = str(self.present.strftime(sourceProps["tagForMetadata"]["publishDateFormat"]))
                 if presentDate in publishDate:
                     fetchedLinks[link] = (getParser.getTitle(), getParser.getDescription(), getParser.getImage())
 
@@ -98,7 +94,7 @@ class News:
 
         return fetchedLinks
 
-    def insertToDatabase(self, category, domain, newsLinkDict):
+    def insertNews(self, category, domain, newsLinkDict):
         insertedCount = 0
 
         for link in newsLinkDict:
@@ -159,10 +155,16 @@ class News:
 
         return linkList
 
-    def createTables(self):
-        self.db.executeQuery(query.createTableIfNotExistsForLinkCache)
-        self.db.executeQuery(query.addPrimaryKeyToTable % "link_cache")
-        self.db.executeQuery(query.addAutoIncrementToTable % "link_cache")
-        self.db.executeQuery(query.createTableIfNotExists % self.yearMonth)
-        self.db.executeQuery(query.addPrimaryKeyToTable % ("links_" + self.yearMonth))
-        self.db.executeQuery(query.addAutoIncrementToTable % ("links_" + self.yearMonth))
+    def createTablesIfNotExists(self):
+        try:
+            self.db.executeQuery(query.checkTableIsExists % ("links_" + self.yearMonth))
+        except:
+            self.db.executeQuery(query.createTableIfNotExists % self.yearMonth)
+            self.db.executeQuery(query.addPrimaryKeyToTable % ("links_" + self.yearMonth))
+            self.db.executeQuery(query.addAutoIncrementToTable % ("links_" + self.yearMonth))
+        try:
+            self.db.executeQuery(query.checkTableIsExists % "link_cache" )
+        except:
+            self.db.executeQuery(query.createTableIfNotExistsForLinkCache)
+            self.db.executeQuery(query.addPrimaryKeyToTable % "link_cache")
+            self.db.executeQuery(query.addAutoIncrementToTable % "link_cache")
