@@ -7,9 +7,10 @@ from aristotle.util import *
 
 
 class Parser:
-    def __init__(self, domain , link):
+    def __init__(self, category, domain, link):
         self.log = logging.getLogger(__name__)
 
+        self.category = category
         self.domain = domain
         self.link = link
 
@@ -34,7 +35,7 @@ class Parser:
             self.fixStr()
 
         except Exception as ex:
-            self.log.warning("Parser: %s, %s", ex, self.link)
+            self.log.warning("%s, %s", ex, self.link)
             self.soup = -1
             self.htmlSource = -1
 
@@ -69,7 +70,7 @@ class Parser:
 
     def setFromProperties(self):
         if not self.isMetadataComplete():
-            domainProps = getDomainProps(self.domain, "tagForMetadata")
+            domainProps = getDomainProps(self.category, self.domain, "tagForMetadata")
 
             if not self.title:
                 title = self.soup.find(domainProps["title"])
@@ -142,4 +143,3 @@ class Parser:
         if self.description:
             self.description = self.description.replace("'", "''")
             self.description = trim_str(self.description, parserProps["descriptionCharLimit"])
-

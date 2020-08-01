@@ -7,10 +7,8 @@ import argparse
 
 from aristotle.news import News
 
-from . import settings
-
 parser = argparse.ArgumentParser(description = "Usage aristotle")
 parser.add_argument("-c", "--categories", type=str, help="Which categories will be fetch (separate by commas)")
 args = parser.parse_args()
 
-news = News(args.categories)
+News(args.categories).start()

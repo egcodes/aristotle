@@ -13,20 +13,19 @@ def getProps(*propertyList):
     return property
 
 
-def getDomainProps(domain, *propertyList):
-    for category in sources:
-        for domainProp in sources.get(category):
-            if domainProp.get("domain") == domain:
-                if propertyList:
-                    property = ""
-                    for prop in propertyList:
-                        if not property:
-                            property = domainProp.get(prop)
-                            continue
-                        property = property.get(prop)
-                    return property
-                else:
-                    return domainProp
+def getDomainProps(category, domain, *propertyList):
+    for domainProp in sources.get(category):
+        if domainProp.get("domain") == domain:
+            if propertyList:
+                property = ""
+                for prop in propertyList:
+                    if not property:
+                        property = domainProp.get(prop)
+                        continue
+                    property = property.get(prop)
+                return property
+            else:
+                return domainProp
 
 
 with open(r'config/properties.yaml') as file:
@@ -34,7 +33,7 @@ with open(r'config/properties.yaml') as file:
 
 loc = props.get("locale")
 
-with open(r'config/sources-%s.yaml'%getProps("locale")) as file:
+with open(r'config/sources-all.yaml') as file:
     sources = yaml.load(file, Loader=yaml.FullLoader)
 
 locale.setlocale(locale.LC_ALL, loc)

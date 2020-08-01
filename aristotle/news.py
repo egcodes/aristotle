@@ -20,9 +20,7 @@ class News:
         self.categories = categories
         self.log = logging.getLogger(__name__)
 
-        self.run()
-
-    def run(self):
+    def start(self):
         try:
             if self.present.hour == 0:
                 self.db.executeQuery(query.truncateCache)
@@ -58,11 +56,12 @@ class News:
             htmlSource = requests.get(link, headers={'User-Agent': getProps("request", "userAgent")}, timeout=5).text
         except Exception as ex:
             self.log.exception(ex)
+            return {}
 
-        domainProps = getDomainProps(domain)
+        domainProps = getDomainProps(category, domain)
         fetchedLinks = {}
         if htmlSource != -1:
-            linkList = self.getFilteredLinks(htmlSource, domain)
+            linkList = self.getFilteredLinks(htmlSource, category, domain)
             linkList = self.fixBrokenLinks(linkList, domain, link)
 
             linkList = list(set(linkList))
@@ -74,7 +73,7 @@ class News:
                 if isLinkCached(link):
                     continue
 
-                getParser = Parser(domain, link)
+                getParser = Parser(category, domain, link)
                 getParser.run()
                 if getParser.getParsedHtml() == -1:
                     self.db.executeQuery(query.insertCacheLink % (domain, link))
@@ -113,10 +112,10 @@ class News:
 
         self.log.info("Added links: %d", insertedCount)
 
-    def getFilteredLinks(self, htmlSource, domain):
+    def getFilteredLinks(self, htmlSource, category, domain):
         linkList = []
         soup = BeautifulSoup(htmlSource, 'html.parser')
-        filterLinkProps = getDomainProps(domain, "filterForLink")
+        filterLinkProps = getDomainProps(category, domain, "filterForLink")
 
         def isContainMandatoryKeywords():
             if filterLinkProps["mandatoryWords"]:
