@@ -2,8 +2,8 @@ from bs4 import BeautifulSoup
 import requests
 import logging
 
-from aristotle.settings import *
-from aristotle.util import *
+from settings import *
+from util import *
 
 
 class Parser:

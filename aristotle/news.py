@@ -3,10 +3,10 @@ from datetime import datetime
 from bs4 import BeautifulSoup
 import requests
 
-from aristotle import query
-from aristotle.db import DB
-from aristotle.parser import Parser
-from aristotle.settings import *
+import query
+from db import DB
+from parser import Parser
+from settings import *
 
 
 class News:

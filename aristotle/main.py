@@ -5,7 +5,7 @@ __copyright__ = 'Copyright 2013, Erdi Gurbuz'
 
 import argparse
 
-from aristotle.news import News
+from news import News
 
 parser = argparse.ArgumentParser(description = "Usage aristotle")
 parser.add_argument("-c", "--categories", type=str, help="Which categories will be fetch (separate by commas)")
