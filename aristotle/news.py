@@ -7,6 +7,7 @@ from db import DB
 from crawler import Crawler
 from query import *
 from settings import *
+from util import *
 
 
 class News:
@@ -55,7 +56,7 @@ class News:
         try:
             htmlSource = requests.get(link, headers={'User-Agent': getProps("request", "userAgent")}, timeout=5).text
         except Exception as ex:
-            self.log.exception(ex)
+            self.log.warning("Request: %s", ex)
             return {}
 
         domainProps = getDomainProps(category, domain)
@@ -82,8 +83,8 @@ class News:
                 self.db.executeQuery(insertCacheLink % (domain, link))
 
                 publishDate = crawler.getPublishDate()
-                presentDate = str(self.present.strftime(domainProps["tagForMetadata"]["publishDateFormat"]))
-                if presentDate in publishDate:
+                presentDate = non_zero_date(self.present.strftime(domainProps["tagForMetadata"]["publishDateFormat"]))
+                if publishDate and presentDate in publishDate:
                     fetchedLinks[link] = (crawler.getTitle(), crawler.getDescription(), crawler.getImage())
 
             self.log.info("Filtered links: %d", len(fetchedLinks))
@@ -153,7 +154,7 @@ class News:
     def fixBrokenLinks(self, linkList, domain, link):
         for index, href in enumerate(linkList):
             if domain not in href and ":" not in href:
-                linkList[index] = link + href
+                linkList[index] = "https://" + has_www() + domain + href
 
         return linkList
 
