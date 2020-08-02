@@ -1,31 +1,31 @@
 article:
-  - domain: bbc.com
+  - domain: cnn.com
     active: true
-    link: https://www.bbc.com
+    link: https://edition.cnn.com/
     filterForLink:
-      mandatoryWords: [".html"]
-      permissibleWords: ['-']
+      mandatoryWords: ["/politics/"]
+      permissibleWords: []
       impermissibleWords: []
     tagForMetadata:
       title:
       description:
       image:
-      publishDate: span,class,date-item added
-      publishDateFormat: "%d.%m.%Y"
+      publishDate:
+      publishDateFormat: "%Y-%m-%d"
 
   - domain: theguardian.com
     active: true
     link: https://www.theguardian.com/international
     filterForLink:
-      mandatoryWords: ["."]
-      permissibleWords: ['-']
+      mandatoryWords: ["-"]
+      permissibleWords: []
       impermissibleWords: []
     tagForMetadata:
       title:
       description:
       image:
-      publishDate: dateTime
-      publishDateFormat: "%d.%m.%Y"
+      publishDate:
+      publishDateFormat: "%Y-%m-%d"
 
 technology:
   - domain: mashable.com
@@ -40,18 +40,4 @@ technology:
       description:
       image:
       publishDate: datetime
-      publishDateFormat: "%d.%m.%Y"
-
-  - domain: test.com
-    active: true
-    link: https://test.com
-    filterForLink:
-      mandatoryWords: ["-"]
-      permissibleWords: ['/article/']
-      impermissibleWords: []
-    tagForMetadata:
-      title:
-      description:
-      image:
-      publishDate: date
       publishDateFormat: "%d.%m.%Y"
