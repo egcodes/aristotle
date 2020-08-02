@@ -107,15 +107,3 @@ class Crawler:
             self.image = self.image.strip()
         if self.publishDate:
             self.publishDate = self.publishDate.strip()
-
-
-"""
-
-l = Crawler("gundem", "sol.org.tr",
-"https://sol.org.tr/haber/enflasyonun-yok-sayilan-nedeni-firsatcilik-10939"
-            )
-l.run()
-print(l.getTitle())
-print(l.getDescription())
-print(l.getImage())
-print(l.getPublishDate())"""
