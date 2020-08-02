@@ -27,6 +27,414 @@ gundem:
       publishDate: div,class,_392lz
       publishDateFormat: "%d %B %Y"
 
+  - domain: milliyet.com.tr
+    active: true
+    link: https://www.milliyet.com.tr
+    filterForLink:
+      mandatoryWords: ["-"]
+      permissibleWords: ["/gundem/", "/ekonomi/", "/dunya/"]
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: div,class,nd-article__info-block
+      publishDateFormat: "%d.%m.%Y"
+
+  - domain: hurriyet.com.tr
+    active: true
+    link: https://www.hurriyet.com.tr
+    filterForLink:
+      mandatoryWords: ["-"]
+      permissibleWords:
+      impermissibleWords: ['-haberleri', '/hava-durumu/']
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: span,class,rhd-time-box-text hidden-sm-down
+      publishDateFormat: "%d.%m.%Y"
+
+  - domain: haber7.com
+    active: true
+    link: https://www.haber7.com
+    filterForLink:
+      mandatoryWords: ['/haber/',]
+      permissibleWords:
+      impermissibleWords: ['/teknoloji/', 'spor.', '/yazarlar/']
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: span,class,date-item added
+      publishDateFormat: "%d.%m.%Y"
+
+  - domain: odatv.com
+    active: true
+    link: https://www.odatv.com
+    filterForLink:
+      mandatoryWords: ['-']
+      permissibleWords:
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: span,itemprop,datePublished
+      publishDateFormat: "%d.%m.%Y"
+
+  - domain: haberturk.com
+    active: true
+    link: https://www.haberturk.com
+    filterForLink:
+      mandatoryWords: ['-']
+      permissibleWords:
+      impermissibleWords: ['-haberleri', '/yazarlar/', '/fiskos/', '/video/', '/teknoloji/', '/spor/', '/kultur-sanat/', 'spor.', 'magazin.']
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate:
+      publishDateFormat: "%Y-%m-%d"
+
+  - domain: gazetevatan.com
+    active: true
+    link: https://www.gazetevatan.com
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['-gundem', '-dunya', '-siyaset', '-ekonomi', '-finas', '-yasam', '-egitim']
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate:
+      publishDateFormat: "%Y-%m-%d"
+
+  - domain: ntv.com.tr
+    active: true
+    link: https://www.ntv.com.tr
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['/turkiye/', '/dunya/', '/ekonomi/', '/saglik/', '/yasam/', '/egitim/']
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: p,class,news-info-text
+      publishDateFormat: "%d.%m.%Y"
+
+  - domain: cnnturk.com
+    active: true
+    link: https://www.cnnturk.com
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['/ekonomi/', '/turkiye/', '/dunya/', '/yasam/']
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: time,datetime
+      publishDateFormat: "%Y-%m-%d"
+
+  - domain: ensonhaber.com
+    active: true
+    link: https://www.ensonhaber.com
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['/gundem/','/ic-haber/','/yasam/','/3-sayfa/','/dunya/', '/ekonomi/']
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: div,class,c-date
+      publishDateFormat: "%d.%m.%Y"
+
+  - domain: birgun.net
+    active: true
+    link: https://www.birgun.net
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['/haber/',]
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: div,class,category-line
+      publishDateFormat: "%d.%m.%Y"
+
+  - domain: sol.org.tr
+    active: true
+    link: https://sol.org.tr/bugun
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['/haber/',]
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: time,class,datetime
+      publishDateFormat: "%d.%m.%Y"
+
+  - domain: trthaber.com
+    active: true
+    link: https://www.trthaber.com
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['/gundem/', '/turkiye/', '/dunya/', '/ekonomi/', '/egitim/']
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: time,datetime
+      publishDateFormat: "%Y-%m-%d"
+
+  - domain: star.com.tr
+    active: true
+    link: https://www.star.com.tr
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['/guncel/', '/politika/', '/ekonomi/', '/dunya/', '/medya/', '/egitim/']
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: 
+      publishDateFormat: "%Y-%m-%d"
+
+  - domain: internethaber.com
+    active: true
+    link: https://www.internethaber.com
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['.htm',]
+      impermissibleWords: ['gazeteoku.com', 'otomobil.internethaber.com', 'spor.']
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: time,datetime
+      publishDateFormat: "%Y-%m-%d"
+
+  - domain: mynet.com
+    active: true
+    link: https://www.mynet.com
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['/haber/',]
+      impermissibleWords: ['/teknoloji/', 'spor.']
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: time,datetime
+      publishDateFormat: "%Y-%m-%d"
+
+  - domain: cumhuriyet.com.tr
+    active: true
+    link: https://www.cumhuriyet.com.tr
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['/haber/',]
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: 
+      publishDateFormat: "%Y-%m-%d"
+
+  - domain: yenisafak.com
+    active: true
+    link: https://www.yenisafak.com
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['/dunya/', '/gundem/', '/politika/', '/ekonomi/', '/saglik/', '/egitim/']
+      impermissibleWords: ['/yazarlar/', '/spor/', '/teknoloji/']
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: 
+      publishDateFormat: "%Y-%m-%d"
+
+  - domain: haberler.com
+    active: true
+    link: https://www.haberler.com
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['-haberi',]
+      impermissibleWords: ['fotogaleri.', 'futbol', 'Fenerbahce', 'Galatasaray', 'Besiktas', 'Trabzonspor', 'fenerbahce', 'besiktas', 'galatasaray', 'trabzonspor']
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: div,class,hbptDate
+      publishDateFormat: "%d.%m.%Y"
+
+  - domain: diken.com.tr
+    active: true
+    link: https://www.diken.com.tr
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['-',]
+      impermissibleWords: ['/kategori/', 'bu-gazete/', '-ekim-', '-kasim-', '-aralik-', '-ocak-', '-subat-', '-mart-', '-nisan-', '-mayis-', '-haziran-', '-temmuz-', '-agustos-', '-eylul-']
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: time,class,entry-time
+      publishDateFormat: "%d/%m/%Y"
+
+  - domain: tr.sputniknews.com
+    active: true
+    link: https://tr.sputniknews.com
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['-',]
+      impermissibleWords: ['/spor/', '/bilim/']
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: 
+      publishDateFormat: "%Y-%m-%d"
+
+  - domain: bbc.com
+    active: true
+    link: https://www.bbc.com/turkce
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['haberler-',]
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: div,class,date date--v2
+      publishDateFormat: "%d %B %Y"
+
+
+videohaber:
+  - domain: hurriyet.com.tr
+    active: true
+    link: https://www.hurriyet.com.tr/video
+    filterForLink:
+      mandatoryWords: ["-"]
+      permissibleWords: ['/video/',]
+      impermissibleWords: ['/playlist/',]
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: time,datetime
+      publishDateFormat: "%Y-%m-%d"
+
+  - domain: cnnturk.com
+    active: true
+    link: https://www.cnnturk.com/video
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['/video/',]
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: div,class,detail-metadata
+      publishDateFormat: "%d.%m.%Y"
+
+  - domain: videonuz.ensonhaber.com
+    active: true
+    link: https://videonuz.ensonhaber.com
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['/izle/',]
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: span,class,timeInfo
+      publishDateFormat: "%Y-%m-%d"
+
+  - domain: haber7.com
+    active: true
+    link: https://video.haber7.com
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['/video-galeri/',]
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: div,class,description
+      publishDateFormat: "%d.%m.%Y"
+
+  - domain: trthaber.com
+    active: true
+    link: https://www.trthaber.com/video-galerileri.html
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['/videolar/',]
+      impermissibleWords: ['/videolar/ekonomi', '/videolar/kultur-sanat', '/videolar/yasam', '/videolar/spor', '/videolar/gundem', '/videolar/magazin', '/videolar/cevre', '/videolar/dunya', '/videolar/medya', '/videolar/saglik', '/videolar/egitim', '/videolar/turkiye', '/videolar/bilim-teknik']
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: time,datetime
+      publishDateFormat: "%Y-%m-%d"
+
+  - domain: milliyet.com.tr
+    active: true
+    link: https://www.milliyet.com.tr/milliyet-tv
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['-',]
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: time,datetime
+      publishDateFormat: "%Y-%m-%d"
+
+  - domain: ntv.com.tr
+    active: true
+    link: https://www.ntv.com.tr/video
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['/video/',]
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: p,class,news-info-text
+      publishDateFormat: "%d.%m.%Y"
+
+  - domain: haberturk.com
+    active: true
+    link: https://www.haberturk.com/video/haber
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['/haber/',]
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: 
+      publishDateFormat: "%Y-%m-%d"
+
 
 teknoloji:
   - domain: chip.com.tr
@@ -54,5 +462,431 @@ teknoloji:
       title:
       description:
       image:
-      publishDate: span,class,sp-date
+      publishDate:
+      publishDateFormat: "%Y-%m-%d"
+
+  - domain: shiftdelete.net
+    active: true
+    link: https://shiftdelete.net
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['-',]
+      impermissibleWords: ['forum.',]
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: 
+      publishDateFormat: "%Y-%m-%d"
+
+  - domain: ntv.com.tr
+    active: true
+    link: https://www.ntv.com.tr/teknoloji
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['/teknoloji/',]
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: p,class,news-info-text
+      publishDateFormat: "%d.%m.%Y"
+
+  - domain: teknolojioku.com
+    active: true
+    link: https://www.teknolojioku.com
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['-',]
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: time,datetime
+      publishDateFormat: "%Y-%m-%d"
+
+  - domain: mynet.com
+    active: true
+    link: https://www.mynet.com/teknoloji-haberler
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['-',]
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: div,class,post-date col-auto
+      publishDateFormat: "%d.%m.%Y"
+
+  - domain: bigumigu.com
+    active: true
+    link: https://www.bigumigu.com
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['/haber/',]
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: 
+      publishDateFormat: "%Y-%m-%d"
+
+  - domain: webtekno.com
+    active: true
+    link: https://www.webtekno.com
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['.html',]
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: time,datetime
+      publishDateFormat: "%Y-%m-%d"
+
+  - domain: fizikist.com
+    active: true
+    link: https://www.fizikist.com
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['-',]
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: div,class,content_time
+      publishDateFormat: "%d %B %Y"
+
+  - domain: bilimpro.com
+    active: true
+    link: https://bilimpro.com
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['-']
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: 
+      publishDateFormat: "%Y-%m-%d"
+
+  - domain: log.com.tr
+    active: true
+    link: https://www.log.com.tr
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['-',]
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: 
+      publishDateFormat: "%Y-%m-%d"
+
+
+kulturvesanat:
+  - domain: haberturk.com
+    active: true
+    link: https://www.haberturk.com/kultur-sanat
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['-',]
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: 
+      publishDateFormat: "%Y-%m-%d"
+
+  - domain: hurriyet.com.tr
+    active: true
+    link: https://www.hurriyet.com.tr/keyif
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['-',]
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: span,class,rhd-time-box-text hidden-sm-down
+      publishDateFormat: "%d.%m.%Y"
+
+  - domain: cnnturk.com
+    active: true
+    link: https://www.cnnturk.com/kultur-sanat-haberleri
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['/kultur-sanat/',]
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: div,class,detail-metadata
+      publishDateFormat: "%d.%m.%Y"
+
+  - domain: ntv.com.tr
+    active: true
+    link: https://www.ntv.com.tr/sanat
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['-',]
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: p,class,news-info-text
+      publishDateFormat: "%d.%m.%Y"
+
+  - domain: trthaber.com
+    active: true
+    link: https://www.trthaber.com/haber/kultur-sanat/
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['/kultur-sanat/',]
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: time,datetime
+      publishDateFormat: "%Y-%m-%d"
+
+  - domain: sozcu.com.tr
+    active: true
+    link: https://www.sozcu.com.tr/hayatim/kultur-sanat-haberleri/
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['/kultur-sanat-haberleri/',]
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: i,class,news-date
+      publishDateFormat: "%d %B %Y"
+
+
+spor:
+  - domain: fanatik.com.tr
+    active: true
+    link: https://www.fanatik.com.tr
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['-',]
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: span,class,news-detail__info__date__item
+      publishDateFormat: "%d %B %Y"
+
+  - domain: ntvspor.net
+    active: true
+    link: https://www.ntvspor.net
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['-',]
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: 
+      publishDateFormat: "%Y-%m-%d"
+
+  - domain: skor.sozcu.com.tr
+    active: true
+    link: https://skor.sozcu.com.tr
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['-',]
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: time,datetime
+      publishDateFormat: "%Y-%m-%d"
+
+  - domain: sporx.com
+    active: true
+    link: https://www.sporx.com
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['-',]
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: div,id,haberdate
+      publishDateFormat: "%d %B %Y"
+
+  - domain: mackolik.com
+    active: true
+    link: https://www.mackolik.com
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['/haber/',]
+      impermissibleWords: []
+    tagForMetadata:
+      title: title
+      description:
+      image:
+      publishDate: time,datetime
+      publishDateFormat: "%Y-%m-%d"
+
+  - domain: cnnturk.com
+    active: true
+    link: https://www.cnnturk.com/spor
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['/spor/',]
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: time,datetime
+      publishDateFormat: "%Y-%m-%d"
+
+  - domain: fotomac.com.tr
+    active: true
+    link: https://www.fotomac.com.tr
+    filterForLink:
+      mandatoryWords: 
+      permissibleWords: ['-',]
+      impermissibleWords: ['/Yazarlar/',]
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: div,class,infoRow
+      publishDateFormat: "%d.%m.%Y"
+
+
+koseyazilari:
+  - domain: haberturk.com
+    active: true
+    link: https://www.haberturk.com/htyazarlar
+    filterForLink:
+      mandatoryWords: ['/yazarlar/']
+      permissibleWords:
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: 
+      publishDateFormat: "%Y-%m-%d"
+
+  - domain: milliyet.com.tr
+    active: true
+    link: https://www.milliyet.com.tr/yazarlar
+    filterForLink:
+      mandatoryWords: ['/yazarlar/']
+      permissibleWords:
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: div,class,article__date
+      publishDateFormat: "%d %B %Y"
+
+  - domain: haber7.com
+    active: true
+    link: https://www.haber7.com/bugunun-yazarlari
+    filterForLink:
+      mandatoryWords: ['/yazarlar/']
+      permissibleWords:
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: div,class,info
+      publishDateFormat: "%d.%m.%Y"
+
+  - domain: sozcu.com.tr
+    active: true
+    link: https://www.sozcu.com.tr/kategori/yazarlar
+    filterForLink:
+      mandatoryWords: ['/yazarlar/']
+      permissibleWords:
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: span,class,date
+      publishDateFormat: "%d %B %Y"
+
+  - domain: star.com.tr
+    active: true
+    link: https://www.star.com.tr/yazarlar
+    filterForLink:
+      mandatoryWords: ['/yazar/']
+      permissibleWords:
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: 
+      publishDateFormat: "%Y-%m-%d"
+
+  - domain: cumhuriyet.com.tr
+    active: true
+    link: https://www.cumhuriyet.com.tr/yazarlar
+    filterForLink:
+      mandatoryWords: ['/yazarlar/']
+      permissibleWords:
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: 
+      publishDateFormat: "%Y-%m-%d"
+
+  - domain: t24.com.tr
+    active: true
+    link: https://t24.com.tr/son-yazilar
+    filterForLink:
+      mandatoryWords: ['/yazarlar/']
+      permissibleWords:
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: div,class,_392lz
+      publishDateFormat: "%d %B %Y"
+
+  - domain: hurriyet.com.tr
+    active: true
+    link: https://www.hurriyet.com.tr/yazarlar/
+    filterForLink:
+      mandatoryWords: ['/yazarlar/']
+      permissibleWords: []
+      impermissibleWords: []
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: div,class,article-date
       publishDateFormat: "%d %B %Y"
