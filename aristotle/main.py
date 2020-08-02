@@ -4,8 +4,6 @@ __license__ = 'GNU3'
 __copyright__ = 'Copyright 2013, Erdi Gurbuz'
 
 import argparse
-import os
-os.chdir(os.path.dirname(__file__))
 
 from news import News
 
