@@ -1,4 +1,4 @@
-Aristo is a highly customizable tool that collects links from sites.
+Aristotle is a highly customizable tool that collects links from sites.
 
 ![Aristotle](aristotle.png)
 
