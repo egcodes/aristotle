@@ -28,8 +28,7 @@ class Crawler:
         try:
             requestProps = getProps("request")
             r = requests.get(self.link, headers={'User-Agent': requestProps["userAgent"]}, timeout=requestProps["timeout"])
-            r.encoding = requestProps["encoding"]
-            self.htmlSource = r.text
+            self.htmlSource = r.content
 
             self.soup = BeautifulSoup(self.htmlSource, 'html.parser')
             self.setFromProperties()

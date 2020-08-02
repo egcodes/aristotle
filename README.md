@@ -14,7 +14,7 @@ These settings are basically:
 
 1. **database:** Currently only MySQL is supported. The settings of the DB where the links will be stored are entered here. For the `name` property, a database must be created in the DB and its name must be entered in this parameter.
 2. **locale:** According to the language of the sites to be fetched, the feature to be localized must be entered here. For example, in English, en_EN should be entered.
-3. **request:** General features of the request. The `encoding` should be entered according to the language of the site to be fetched.
+3. **request:** General features of the request.
 4. **parser:** In the parsing phase, if desired, title and description strings can be trimmed as much as the parameter given
 
 ```yaml
@@ -29,7 +29,6 @@ locale: en_EN
 request:
   timeout: 3
   userAgent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.97 Safari/537.11
-  encoding: utf-8
 
 parser:
   titleCharLimit: 100
