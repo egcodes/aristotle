@@ -1,11 +1,15 @@
-Aristotle is basically a tool that collects links from sites. With the properties in the config files, it scans all the defined sites and saves the metadata [title, description, imageLink, publishDate] of the site in the database.
+Aristo is a highly customizable tool that collects links from sites.
+![Aristotle](aristotle.png)
+
+With the properties in the config files, it scans all the defined sites and saves the metadata [title, description, imageLink, publishDate] of the site in the database.
 
 This project was essentially developed to feed [Haberbus]: http://www.haberbus.com. Haberbus is a news site that presents news in six categories from sites with Turkish content.
 
 ## Usage
 
 #### config/properties.yaml
-Bu ayarlar temel olarak şunlardır
+
+These settings are basically:
 
 1. **database:** Currently only MySQL is supported. The settings of the DB where the links will be stored are entered here. For the `name` property, a database must be created in the DB and its name must be entered in this parameter.
 2. **locale:** According to the language of the sites to be fetched, the feature to be localized must be entered here. For example, in English, en_EN should be entered.
