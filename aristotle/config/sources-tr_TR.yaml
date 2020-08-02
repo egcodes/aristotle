@@ -699,7 +699,7 @@ spor:
     filterForLink:
       mandatoryWords: 
       permissibleWords: ['-',]
-      impermissibleWords: []
+      impermissibleWords: ['/foto-galeri/']
     tagForMetadata:
       title:
       description:
