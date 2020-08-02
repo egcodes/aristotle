@@ -1,0 +1,4 @@
+mysql-connector-python>=8.0.21
+beautifulsoup4>=4.9.1
+requests>=2.24.0
+PyYAML>=5.3.1
