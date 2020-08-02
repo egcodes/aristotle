@@ -1,10 +1,10 @@
-Aristo is a highly customizable tool that collects links from sites.
+Aristotle is a highly customizable tool that collects links from sites.
 
 ![Aristotle](aristotle.png)
 
 With the properties in the config files, it scans all the defined sites and saves the metadata [title, description, imageLink, publishDate] of the site in the database.
 
-This project was essentially developed to feed [Haberbus]: http://www.haberbus.com. Haberbus is a news site that presents news in six categories from sites with Turkish content.
+This project was essentially developed to feed [Haberbus](http://www.haberbus.com) which is a news site that presents news in six categories from sites with Turkish content.
 
 ## Usage
 
