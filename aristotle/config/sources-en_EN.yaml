@@ -7,6 +7,9 @@ article:
       permissibleWords: ['-']
       impermissibleWords: []
     tagForMetadata:
+      title:
+      description:
+      image:
       publishDate: span,class,date-item added
       publishDateFormat: "%d.%m.%Y"
 
@@ -18,6 +21,9 @@ article:
       permissibleWords: ['-']
       impermissibleWords: []
     tagForMetadata:
+      title:
+      description:
+      image:
       publishDate: dateTime
       publishDateFormat: "%d.%m.%Y"
 
@@ -30,6 +36,9 @@ technology:
       permissibleWords: ['/article/']
       impermissibleWords: []
     tagForMetadata:
+      title:
+      description:
+      image:
       publishDate: datetime
       publishDateFormat: "%d.%m.%Y"
 
@@ -41,5 +50,8 @@ technology:
       permissibleWords: ['/article/']
       impermissibleWords: []
     tagForMetadata:
+      title:
+      description:
+      image:
       publishDate: date
       publishDateFormat: "%d.%m.%Y"

@@ -7,6 +7,9 @@ gundem:
       permissibleWords: ['/gundem/', '/gunun-icinden/', '/dunya/', '/ekonomi/', '/egitim/', '/saglik/']
       impermissibleWords: ['spor_', 'video.', '/yazarlar/', '/kategori/']
     tagForMetadata:
+      title:
+      description:
+      image:
       publishDate: time,datetime
       publishDateFormat: "%Y-%m-%d"
 
@@ -18,6 +21,9 @@ gundem:
       permissibleWords: ['/haber/',]
       impermissibleWords: []
     tagForMetadata:
+      title:
+      description:
+      image:
       publishDate: div,class,_392lz
       publishDateFormat: "%d %B %Y"
 
@@ -31,6 +37,9 @@ teknoloji:
       permissibleWords: ['/haber/', '/makale/', '/blog/', '/inceleme/']
       impermissibleWords: []
     tagForMetadata:
+      title:
+      description:
+      image:
       publishDate: time,content
       publishDateFormat: "%Y-%m-%d"
 
@@ -42,5 +51,8 @@ teknoloji:
       permissibleWords: ['-',]
       impermissibleWords: []
     tagForMetadata:
+      title:
+      description:
+      image:
       publishDate: span,class,sp-date
       publishDateFormat: "%d %B %Y"
