@@ -26,7 +26,8 @@ class News:
             if self.present.hour == 0:
                 self.db.executeQuery(truncateCache)
 
-            self.log.info("Begin [%s]" % str(self.present)[:19])
+            start = datetime.now()
+            self.log.info("Begin [%s]" % str(start)[:19])
             news = {}
             for category in sources:
                 if category not in self.categories:
@@ -34,14 +35,12 @@ class News:
 
                 for domain in sources.get(category):
                     if domain.get("active"):
-                        start = datetime.now()
                         self.log.info("MainPage: %s",  domain.get("link"))
                         news.update(self.fetchNews(category, domain.get("domain"),  domain.get("link")))
                         self.insertNews(category, domain.get("domain"), news)
                         news.clear()
-                        self.log.info("Elapsed: %s" % str(datetime.now() - start)[:10])
 
-            self.log.info("End: " + "[" + str(datetime.now())[:19] + "]")
+            self.log.info("End: [%s] [%s]", str(datetime.now())[:19], str(datetime.now() - start)[:10])
 
         except Exception as ex:
             self.log.warning("run: ", ex)
