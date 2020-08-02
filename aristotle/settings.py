@@ -33,7 +33,7 @@ with open(r'config/properties.yaml') as file:
 
 loc = props.get("locale")
 
-with open(r'config/sources-all.yaml') as file:
+with open(r'config/sources-%s.yaml' % getProps("locale")) as file:
     sources = yaml.load(file, Loader=yaml.FullLoader)
 
 locale.setlocale(locale.LC_ALL, loc)

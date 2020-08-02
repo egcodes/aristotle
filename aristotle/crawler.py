@@ -98,12 +98,16 @@ class Crawler:
         if self.title:
             self.title = self.title.replace("'", "''")
             self.title = self.title.strip()
+            self.title = self.title.replace("\n", " ")
             self.title = trim_str(self.title, parserProps["titleCharLimit"])
         if self.description:
             self.description = self.description.replace("'", "''")
             self.description = self.description.strip()
+            self.description = self.description.replace("\n", " ")
             self.description = trim_str(self.description, parserProps["descriptionCharLimit"])
         if self.image:
-            self.image = self.image.strip()
+            self.image = self.image.replace("\n", " ")
+            self.image = self.image.strip().replace("\n", " ")
         if self.publishDate:
+            self.publishDate = self.publishDate.replace("\n", " ")
             self.publishDate = self.publishDate.strip()

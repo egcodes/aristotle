@@ -36,7 +36,7 @@ def getPublishDate(metas):
     for meta in metas:
         if 'property' in meta.attrs:
             metaProperty = meta.attrs['property']
-            if metaProperty in ["datePublished", "og:article:published_time"]:
+            if metaProperty in ["datePublished", "og:article:published_time", "article:published_time"]:
                 return getMetaText(meta)
 
         elif 'itemprop' in meta.attrs:
@@ -49,4 +49,7 @@ def getMetaText(meta):
     try:
         return meta.attrs["content"]
     except:
-        return meta.attrs["value"]
+        try:
+            return meta.attrs["value"]
+        except:
+            return ""

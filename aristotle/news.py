@@ -35,7 +35,7 @@ class News:
                 for domain in sources.get(category):
                     if domain.get("active"):
                         start = datetime.now()
-                        self.log.info("Link: %s",  domain.get("link"))
+                        self.log.info("MainPage: %s",  domain.get("link"))
                         news.update(self.fetchNews(category, domain.get("domain"),  domain.get("link")))
                         self.insertNews(category, domain.get("domain"), news)
                         news.clear()
@@ -65,19 +65,22 @@ class News:
             linkList = self.getFilteredLinks(htmlSource, category, domain)
             linkList = self.fixBrokenLinks(linkList, domain, link)
 
+            self.log.info("Links count (filtered): %d", len(linkList))
             linkList = list(set(linkList))
-            self.log.info("Total links: %d", len(linkList))
+            self.log.info("Links count (unduplicate): %d", len(linkList))
             self.log.info("Browsing links...")
 
             cachedLinks = self.db.executeQuery(findCachedLinksByDomain % domain)
             for link in linkList:
                 if isLinkCached(link):
+                    self.log.debug("Cached link: %s", link)
                     continue
 
                 crawler = Crawler(category, domain, link)
                 crawler.run()
                 if crawler.getParsedHtml() == -1:
                     self.db.executeQuery(insertCacheLink % (domain, link))
+                    self.log.debug("Link cannot be parsed: %s", link)
                     continue
 
                 self.db.executeQuery(insertCacheLink % (domain, link))
@@ -86,11 +89,14 @@ class News:
                 presentDate = non_zero_date(self.present.strftime(domainProps["tagForMetadata"]["publishDateFormat"]))
                 if publishDate and presentDate in publishDate:
                     fetchedLinks[link] = (crawler.getTitle(), crawler.getDescription(), crawler.getImage())
+                    self.log.debug("News published today: %s", link)
                 else:
                     if not publishDate:
-                        self.log.debug("No-Date: Link: %s, PublishDate: %s", link, publishDate)
+                        self.log.debug("No publishing date: %s", link)
+                    else:
+                        self.log.debug("News not published today: %s <-> %s, %s", publishDate, presentDate, link)
 
-            self.log.info("Filtered links: %d", len(fetchedLinks))
+            self.log.info("Links count (to be stored): %d", len(fetchedLinks))
 
         return fetchedLinks
 
@@ -106,6 +112,7 @@ class News:
 
                 insertQuery = insertLink % (self.yearMonth, category, domain, link, title, description, image, self.yearMonth, domain, link)
                 insertedCount += 1
+                self.log.debug("Links stored: %s", link)
                 try:
                     self.db.executeQuery(insertQuery)
                 except Exception as ex:
@@ -114,7 +121,7 @@ class News:
             except Exception as ex:
                 self.log.exception(ex)
 
-        self.log.info("Added links: %d", insertedCount)
+        self.log.info("Stored links: %d", insertedCount)
 
     def getFilteredLinks(self, htmlSource, category, domain):
         linkList = []
@@ -143,7 +150,9 @@ class News:
                         return True
             return False
 
-        for link in soup.findAll('a'):
+        links = soup.findAll('a')
+        self.log.info("Links count (page): %d", len(links))
+        for link in links:
             try:
                 href = link.attrs['href']
             except KeyError:
@@ -157,7 +166,9 @@ class News:
     def fixBrokenLinks(self, linkList, domain, link):
         for index, href in enumerate(linkList):
             if domain not in href and ":" not in href:
-                linkList[index] = "https://" + has_www(link) + domain + href
+                linkList[index] = "https://" + add_www(link) + domain + add_slash(href) + href
+            elif href.startswith("//"):
+                linkList[index] = "https://" + href[2:]
 
         return linkList
 

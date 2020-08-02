@@ -1,4 +1,4 @@
-def is_ascii(self, s):
+def is_ascii(s):
     return all(ord(c) < 128 for c in s)
 
 
@@ -10,12 +10,17 @@ def non_zero_date(date):
         return date
 
 
-def has_www(link):
+def add_www(link):
     if "www." in link:
         return "www."
     else:
         return ""
 
+def add_slash(href):
+    if href[0] == "/":
+        return ""
+    else:
+        return "/"
 
 def trim_str(val, length):
     index = length
@@ -28,8 +33,8 @@ def trim_str(val, length):
                     break
                 count -= 1
                 index -= 1
-            except:
+            except Exception as e:
                 count -= 1
-                index = length - 10
+                index -= 1
                 continue
     return val

@@ -19,16 +19,17 @@ loggers:
 handlers:
   console:
     class: logging.StreamHandler
-    level: DEBUG
+    level: INFO
     formatter: simple
     stream: ext://sys.stdout
   all:
     class: logging.handlers.TimedRotatingFileHandler
-    level: INFO
+    level: DEBUG
     formatter: simple
     when: W0
     backupCount: 4
     filename: logs/all.log
+    encoding: utf-8
   warn:
     class: logging.handlers.TimedRotatingFileHandler
     level: WARNING
@@ -36,6 +37,7 @@ handlers:
     when: W0
     backupCount: 4
     filename: logs/warn.log
+    encoding: utf-8
 
 root:
   level: DEBUG
