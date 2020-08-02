@@ -6,6 +6,8 @@ def non_zero_date(date):
     date = str(date)
     if date[0] == "0":
         return date[1:]
+    else:
+        return date
 
 
 def has_www(link):

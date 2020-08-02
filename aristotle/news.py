@@ -86,6 +86,9 @@ class News:
                 presentDate = non_zero_date(self.present.strftime(domainProps["tagForMetadata"]["publishDateFormat"]))
                 if publishDate and presentDate in publishDate:
                     fetchedLinks[link] = (crawler.getTitle(), crawler.getDescription(), crawler.getImage())
+                else:
+                    if not publishDate:
+                        self.log.debug("No-Date: Link: %s, PublishDate: %s", link, publishDate)
 
             self.log.info("Filtered links: %d", len(fetchedLinks))
 
@@ -154,7 +157,7 @@ class News:
     def fixBrokenLinks(self, linkList, domain, link):
         for index, href in enumerate(linkList):
             if domain not in href and ":" not in href:
-                linkList[index] = "https://" + has_www() + domain + href
+                linkList[index] = "https://" + has_www(link) + domain + href
 
         return linkList
 
