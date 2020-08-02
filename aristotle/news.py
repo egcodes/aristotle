@@ -53,7 +53,8 @@ class News:
             return False
 
         try:
-            htmlSource = requests.get(link, headers={'User-Agent': getProps("request", "userAgent")}, timeout=5).text
+            htmlSource = requests.get(link, headers={'User-Agent': getProps("request", "userAgent")},
+                                      timeout=getProps("request")["timeout"]).text
         except Exception as ex:
             self.log.warning("Request: %s", ex)
             return {}
