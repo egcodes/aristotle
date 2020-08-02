@@ -1,4 +1,5 @@
 Aristo is a highly customizable tool that collects links from sites.
+
 ![Aristotle](aristotle.png)
 
 With the properties in the config files, it scans all the defined sites and saves the metadata [title, description, imageLink, publishDate] of the site in the database.
