@@ -9,6 +9,7 @@ def getTitle(metas):
             metaProperty = meta.attrs['property']
             if metaProperty in "og:title":
                 return getMetaText(meta)
+    return ""
 
 
 def getDescription(metas):
@@ -22,14 +23,16 @@ def getDescription(metas):
             metaProperty = meta.attrs['property']
             if metaProperty in "og:description":
                 return getMetaText(meta)
+    return ""
 
 
 def getImage(metas):
     for meta in metas:
         if 'property' in meta.attrs:
             metaProperty = meta.attrs['property']
-            if metaProperty in "og:image":
+            if metaProperty in ["og:image", "og:image:url"]:
                 return getMetaText(meta)
+    return ""
 
 
 def getPublishDate(metas):
@@ -43,6 +46,7 @@ def getPublishDate(metas):
             metaItemprop = meta.attrs['itemprop']
             if metaItemprop in "datePublished":
                 return getMetaText(meta)
+    return ""
 
 
 def getMetaText(meta):

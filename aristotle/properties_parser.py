@@ -2,15 +2,27 @@ from util import *
 
 
 def getTitle(domainProps, soup):
-    return soup.find(domainProps["title"]).text
+    title = soup.find(domainProps["title"]).text
+    if title:
+        return title
+    else:
+        return ""
 
 
 def getDescription(domainProps, soup):
-    return soup.find(domainProps["description"]).text
+    description = soup.find(domainProps["description"]).text
+    if description:
+        return description
+    else:
+        return ""
 
 
 def getImage(domainProps, soup):
-    return soup.find(domainProps["image"])
+    image = soup.find(domainProps["image"])
+    if image:
+        return image
+    else:
+        return ""
 
 
 def getPublishDate(domainProps, soup):
