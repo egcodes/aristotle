@@ -2,6 +2,7 @@ import logging
 import requests
 from datetime import datetime
 from bs4 import BeautifulSoup
+from urllib.parse import urlparse
 
 from db import DB
 from crawler import Crawler
@@ -158,6 +159,11 @@ class News:
             except KeyError:
                 continue
 
+            parsed_uri = urlparse(href)
+            if parsed_uri.netloc:
+                if domain not in parsed_uri.netloc:
+                    continue
+
             if isContainMandatoryKeywords() and isAllowed() and not isForbidden():
                 linkList.append(href)
 
@@ -165,7 +171,8 @@ class News:
 
     def fixBrokenLinks(self, linkList, domain, link):
         for index, href in enumerate(linkList):
-            if domain not in href and ":" not in href:
+            parsed_uri = urlparse(href)
+            if not parsed_uri.netloc:
                 linkList[index] = "https://" + add_www(link) + domain + add_slash(href) + href
             elif href.startswith("//"):
                 linkList[index] = "https://" + href[2:]
