@@ -1,11 +1,10 @@
 import logging
 import requests
 from datetime import datetime
-from bs4 import BeautifulSoup
-from urllib.parse import urlparse
 
 from db import DB
 from crawler import Crawler
+from link_parser import *
 from query import *
 from settings import *
 from util import *
@@ -63,8 +62,8 @@ class News:
         domainProps = getDomainProps(category, domain)
         fetchedLinks = {}
         if htmlSource != -1:
-            linkList = self.getFilteredLinks(htmlSource, category, domain)
-            linkList = self.fixBrokenLinks(linkList, domain, link)
+            linkList = get_filtered_links(htmlSource, category, domain)
+            linkList = fix_broken_links(linkList, domain, link)
 
             self.log.info("Links count (filtered): %d", len(linkList))
             linkList = list(set(linkList))
@@ -124,60 +123,7 @@ class News:
 
         self.log.info("Stored links: %d", insertedCount)
 
-    def getFilteredLinks(self, htmlSource, category, domain):
-        linkList = []
-        soup = BeautifulSoup(htmlSource, 'html.parser')
-        filterLinkProps = getDomainProps(category, domain, "filterForLink")
 
-        def isContainMandatoryKeywords():
-            if filterLinkProps["mandatoryWords"]:
-                for word in filterLinkProps["mandatoryWords"]:
-                    if word not in href:
-                        return False
-            return True
-
-        def isAllowed():
-            if filterLinkProps["permissibleWords"]:
-                for word in filterLinkProps["permissibleWords"]:
-                    if word in href:
-                        return True
-                return False
-            return True
-
-        def isForbidden():
-            if filterLinkProps["impermissibleWords"]:
-                for word in filterLinkProps["impermissibleWords"]:
-                    if word in href:
-                        return True
-            return False
-
-        links = soup.findAll('a')
-        self.log.info("Links count (page): %d", len(links))
-        for link in links:
-            try:
-                href = link.attrs['href']
-            except KeyError:
-                continue
-
-            parsed_uri = urlparse(href)
-            if parsed_uri.netloc:
-                if domain not in parsed_uri.netloc:
-                    continue
-
-            if isContainMandatoryKeywords() and isAllowed() and not isForbidden():
-                linkList.append(href)
-
-        return linkList
-
-    def fixBrokenLinks(self, linkList, domain, link):
-        for index, href in enumerate(linkList):
-            parsed_uri = urlparse(href)
-            if not parsed_uri.netloc:
-                linkList[index] = "https://" + add_www(link) + domain + add_slash(href) + href
-            elif href.startswith("//"):
-                linkList[index] = "https://" + href[2:]
-
-        return linkList
 
     def createTablesIfNotExists(self):
         try:
