@@ -52,12 +52,17 @@ class News:
                     return True
             return False
 
-        try:
-            htmlSource = requests.get(link, headers={'User-Agent': getProps("request", "userAgent")},
-                                      timeout=getProps("request")["timeout"]).text
-        except Exception as ex:
-            self.log.warning("Request: %s", ex)
-            return {}
+        attempts = 1
+        while True:
+            try:
+                htmlSource = requests.get(link, headers={'User-Agent': getProps("request", "userAgent")},
+                                          timeout=getProps("request")["timeout"]).text
+                break
+            except Exception as ex:
+                attempts += 1
+                self.log.warning("Request: %s", ex)
+                if attempts > 3:
+                    return {}
 
         domainProps = getDomainProps(category, domain)
         fetchedLinks = {}
