@@ -123,8 +123,6 @@ class News:
 
         self.log.info("Stored links: %d", insertedCount)
 
-
-
     def createTablesIfNotExists(self):
         try:
             self.db.executeQuery(checkTableIsExists % ("links_" + self.yearMonth))
