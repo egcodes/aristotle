@@ -35,7 +35,7 @@ def get_filtered_links(htmlSource, category, domain):
         return False
 
     links = soup.findAll('a')
-    log.info("Links count (page): %d", len(links))
+    linkCount = len(links)
     for link in links:
         try:
             href = link.attrs['href']
@@ -50,7 +50,7 @@ def get_filtered_links(htmlSource, category, domain):
         if is_contain_mandatory_keywords() and is_allowed() and not is_forbidden():
             linkList.append(href)
 
-    return linkList
+    return linkCount, linkList
 
 
 def fix_broken_links(linkList, domain, link):

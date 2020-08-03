@@ -62,9 +62,9 @@ class News:
         domainProps = getDomainProps(category, domain)
         fetchedLinks = {}
         if htmlSource != -1:
-            linkList = get_filtered_links(htmlSource, category, domain)
+            linkCount, linkList = get_filtered_links(htmlSource, category, domain)
+            self.log.info("Links count (page): %d", linkCount)
             linkList = fix_broken_links(linkList, domain, link)
-
             self.log.info("Links count (filtered): %d", len(linkList))
             linkList = list(set(linkList))
             self.log.info("Links count (unduplicate): %d", len(linkList))
