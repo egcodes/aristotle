@@ -37,6 +37,7 @@ class Crawler:
 
         except Exception as ex:
             self.log.warning("%s, %s", ex, self.link)
+            self.log.exception(ex)
             self.soup = -1
             self.htmlSource = -1
 
