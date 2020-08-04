@@ -26,7 +26,7 @@ handlers:
     class: logging.handlers.TimedRotatingFileHandler
     level: DEBUG
     formatter: simple
-    when: D
+    when: midnight
     backupCount: 7
     filename: logs/all.log
     encoding: utf-8
@@ -35,7 +35,7 @@ handlers:
     level: WARNING
     formatter: detail
     when: W0
-    backupCount: 4
+    backupCount: 14
     filename: logs/warn.log
     encoding: utf-8
 

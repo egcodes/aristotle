@@ -2,7 +2,9 @@ import logging
 import requests
 from datetime import datetime
 
-from db import DB
+from sqlalchemy import literal, exists
+
+from connection import Database
 from crawler import Crawler
 from link_parser import *
 from query import *
@@ -15,7 +17,10 @@ class News:
         self.present = datetime.now()
         self.yearMonth = str(self.present.strftime('%Y%m'))
 
-        self.db = DB(getProps("database"))
+        self.db = Database()
+        self.link_cache_table = self.db.getMeta("link_cache")
+        self.links_table = self.db.getMeta("links_%s" % self.yearMonth)
+
         self.createTablesIfNotExists()
 
         self.categories = categories
@@ -75,7 +80,11 @@ class News:
             self.log.info("Links count (unduplicate): %d", len(linkList))
             self.log.info("Browsing links...")
 
-            cachedLinks = self.db.executeQuery(findCachedLinksByDomain % domain)
+            query = self.db.getDB() \
+                .select([self.link_cache_table.columns.link]) \
+                .where(self.link_cache_table.columns.domain == domain)
+            cachedLinks = self.db.getConnection().execute(query).fetchall()
+
             for link in linkList:
                 if isLinkCached(link):
                     self.log.debug("Cached link: %s", link)
@@ -83,12 +92,13 @@ class News:
 
                 crawler = Crawler(category, domain, link)
                 crawler.run()
+
+                query = self.db.getDB().insert(self.link_cache_table).values(id=None, domain=domain, link=link)
+                self.db.getConnection().execute(query)
+
                 if crawler.getParsedHtml() == -1:
-                    self.db.executeQuery(insertCacheLink % (domain, link))
                     self.log.debug("Link cannot be parsed: %s", link)
                     continue
-
-                self.db.executeQuery(insertCacheLink % (domain, link))
 
                 publishDate = crawler.getPublishDate()
                 presentDate = non_zero_date(self.present.strftime(domainProps["tagForMetadata"]["publishDateFormat"]))
@@ -115,13 +125,19 @@ class News:
                 description = info[1]
                 image = info[2]
 
-                insertQuery = insertLink % (self.yearMonth, category, domain, link, title, description, image, self.yearMonth, domain, link)
-                insertedCount += 1
+                query = self.db.getDB()\
+                    .select([literal("NULL"), literal("CURRENT_DATE()"), literal(category),
+                             literal(domain), literal(link), literal(title), literal(description),
+                             literal(image), literal("0"), literal("NOW()")])\
+                    .where(~exists([self.links_table.c.link]).where(self.links_table.c.link == link)
+                )
+
                 self.log.debug("Links stored: %s", link)
                 try:
-                    self.db.executeQuery(insertQuery)
+                    self.links_table.insert().from_select(["link"], query)
+                    insertedCount += 1
                 except Exception as ex:
-                    self.log.warning("SQL Error: %s: %s", insertQuery, ex)
+                    self.log.warning("SQL Error: %s: %s", query, ex)
 
             except Exception as ex:
                 self.log.exception(ex)
