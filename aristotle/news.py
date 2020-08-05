@@ -18,10 +18,9 @@ class News:
         self.yearMonth = str(self.present.strftime('%Y%m'))
 
         self.db = Database()
+        self.createTablesIfNotExists()
         self.link_cache_table = self.db.getMeta("link_cache")
         self.links_table = self.db.getMeta("links_%s" % self.yearMonth)
-
-        self.createTablesIfNotExists()
 
         self.categories = categories
         self.log = logging.getLogger(__name__)
@@ -29,7 +28,7 @@ class News:
     def start(self):
         try:
             if self.present.hour == 0:
-                self.db.executeQuery(truncateCache)
+                self.db.getConnection().execute(truncateCache)
 
             start = datetime.now()
             self.log.info("Begin [%s]" % str(start)[:19])
@@ -40,8 +39,8 @@ class News:
 
                 for domain in sources.get(category):
                     if domain.get("active"):
-                        self.log.info("MainPage: %s",  domain.get("link"))
-                        news.update(self.fetchNews(category, domain.get("domain"),  domain.get("link")))
+                        self.log.info("MainPage: %s", domain.get("link"))
+                        news.update(self.fetchNews(category, domain.get("domain"), domain.get("link")))
                         self.insertNews(category, domain.get("domain"), news)
                         news.clear()
 
@@ -49,6 +48,8 @@ class News:
 
         except Exception as ex:
             self.log.warning("run: ", ex)
+
+        self.db.closeDB()
 
     def fetchNews(self, category, domain, link):
         def isLinkCached(checkLink):
@@ -117,6 +118,7 @@ class News:
 
     def insertNews(self, category, domain, newsLinkDict):
         insertedCount = 0
+        existsCount = 0
 
         for link in newsLinkDict:
             try:
@@ -125,35 +127,37 @@ class News:
                 description = info[1]
                 image = info[2]
 
-                query = self.db.getDB()\
-                    .select([literal("NULL"), literal("CURRENT_DATE()"), literal(category),
+                currentDate = datetime.now()
+                query = self.db.getDB() \
+                    .select([literal(currentDate), literal(category),
                              literal(domain), literal(link), literal(title), literal(description),
-                             literal(image), literal("0"), literal("NOW()")])\
-                    .where(~exists([self.links_table.c.link]).where(self.links_table.c.link == link)
-                )
+                             literal(image), literal("0"), literal(currentDate)]) \
+                    .where(~exists([self.links_table.c.link]).where(self.links_table.c.link == link))
 
                 self.log.debug("Links stored: %s", link)
                 try:
-                    self.links_table.insert().from_select(["link"], query)
-                    insertedCount += 1
+                    ins = self.links_table.insert().from_select(["date", "category", "domain", "link", "title",
+                                                                 "description", "image", "clicked", "timestamp"], query)
+                    result = self.db.getConnection().execute(ins)
+                    if result.rowcount == 1:
+                        insertedCount += 1
+                    else:
+                        existsCount += 1
                 except Exception as ex:
                     self.log.warning("SQL Error: %s: %s", query, ex)
 
             except Exception as ex:
                 self.log.exception(ex)
 
-        self.log.info("Stored links: %d", insertedCount)
+        self.log.info("Links stored/exists: %d/%d", insertedCount, existsCount)
 
     def createTablesIfNotExists(self):
-        try:
-            self.db.executeQuery(checkTableIsExists % ("links_" + self.yearMonth))
-        except:
-            self.db.executeQuery(createTableIfNotExists % self.yearMonth)
-            self.db.executeQuery(addPrimaryKeyToTable % ("links_" + self.yearMonth))
-            self.db.executeQuery(addAutoIncrementToTable % ("links_" + self.yearMonth))
-        try:
-            self.db.executeQuery(checkTableIsExists % "link_cache" )
-        except:
-            self.db.executeQuery(createTableIfNotExistsForLinkCache)
-            self.db.executeQuery(addPrimaryKeyToTable % "link_cache")
-            self.db.executeQuery(addAutoIncrementToTable % "link_cache")
+        if not self.db.getEngine().dialect.has_table(self.db.getEngine(), "links_" + self.yearMonth):
+            self.db.getConnection().execute(createTableIfNotExists % self.yearMonth)
+            self.db.getConnection().execute(addPrimaryKeyToTable % ("links_" + self.yearMonth))
+            self.db.getConnection().execute(addAutoIncrementToTable % ("links_" + self.yearMonth))
+
+        if not self.db.getEngine().dialect.has_table(self.db.getEngine(), "link_cache"):
+            self.db.getConnection().execute(createTableIfNotExistsForLinkCache)
+            self.db.getConnection().execute(addPrimaryKeyToTable % "link_cache")
+            self.db.getConnection().execute(addAutoIncrementToTable % "link_cache")

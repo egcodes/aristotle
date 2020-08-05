@@ -15,6 +15,9 @@ class Database:
     def getDB(self):
         return db
 
+    def getEngine(self):
+        return self.engine
+
     def getTable(self):
         return db.Table
 
@@ -23,3 +26,7 @@ class Database:
 
     def getMeta(self, tableName):
         return db.Table(tableName, self.metadata, autoload=True, autoload_with=self.engine)
+
+    def closeDB(self):
+        self.connection.invalidate()
+        self.engine.dispose()

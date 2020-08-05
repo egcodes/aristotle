@@ -1,18 +1,4 @@
-findCachedLinksByDomain = "SELECT link FROM `link_cache` WHERE domain='%s'"
-
-insertCacheLink = "INSERT INTO `link_cache` VALUES(NULL, '%s', '%s')"
-
-insertLink = """
-INSERT INTO `links_%s` (id,date,category,domain,link,title,description,image,clicked,timestamp)
-SELECT * FROM (SELECT NULL, CURRENT_DATE(), '%s', '%s', '%s', '%s' as a, '%s' as b, '%s', 0, NOW()) AS tmp
-WHERE NOT EXISTS (
-    SELECT link FROM links_%s WHERE domain='%s' and link = '%s'
-) LIMIT 1;
-"""
-
-truncateCache = "TRUNCATE `link_cache`"
-
-checkTableIsExists = "SELECT id FROM `%s` LIMIT 1"
+truncateCache = "TRUNCATE TABLE `link_cache`"
 
 createTableIfNotExistsForLinkCache = """
 CREATE TABLE IF NOT EXISTS `link_cache` (
