@@ -28,15 +28,11 @@ class Database:
     def getEngine(self):
         return self.engine
 
-    def getTable(self):
-        return db.Table
-
     def getConnection(self):
         return self.connection
 
     def getMeta(self):
         return self.metadata
-        # return db.Table(tableName, self.metadata, autoload=True, autoload_with=self.engine)
 
     def closeDB(self):
         self.connection.invalidate()
