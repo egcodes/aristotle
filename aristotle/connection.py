@@ -9,8 +9,8 @@ class Database:
         if Database.__instance__ is None:
             Database.__instance__ = self
             dbProps = getProps("database")
-            self.engine = db.create_engine("mysql+pymysql://%s:%s@%s:%s/%s"
-                                           % (dbProps["userName"], dbProps["password"],
+            self.engine = db.create_engine("%s://%s:%s@%s:%s/%s"
+                                           % (dbProps["dialect"], dbProps["userName"], dbProps["password"],
                                               dbProps["url"], dbProps["port"], dbProps["name"]))
 
             self.connection = self.engine.connect()

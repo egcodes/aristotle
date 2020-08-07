@@ -1,4 +1,5 @@
 database:
+  dialect: mysql+pymysql
   url: localhost
   port: 3306
   name: aristotle
