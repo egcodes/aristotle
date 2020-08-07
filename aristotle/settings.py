@@ -1,3 +1,4 @@
+import os
 import logging.config
 import yaml
 import locale
@@ -38,4 +39,6 @@ with open(r'config/sources-%s.yaml' % getProps("locale")) as file:
 
 locale.setlocale(locale.LC_ALL, loc)
 
+if not os.path.exists('logs'):
+    os.makedirs('logs')
 logging.config.dictConfig(yaml.load(open('config/logging.yaml', 'r'), Loader=yaml.FullLoader))
