@@ -1,13 +1,11 @@
+import os
 import logging
 import requests
-from datetime import datetime
 
-from sqlalchemy import literal, exists
-
+from entity import *
 from connection import Database
 from crawler import Crawler
 from link_parser import *
-from query import *
 from settings import *
 from util import *
 
@@ -15,20 +13,18 @@ from util import *
 class News:
     def __init__(self, categories):
         self.present = datetime.now()
-        self.yearMonth = str(self.present.strftime('%Y%m'))
 
-        self.db = Database()
-        self.createTablesIfNotExists()
-        self.link_cache_table = self.db.getMeta("link_cache")
-        self.links_table = self.db.getMeta("links_%s" % self.yearMonth)
+        self.db = Database().get_instance()
+        self.db.getMeta().create_all(self.db.getEngine())
 
         self.categories = categories
+
         self.log = logging.getLogger(__name__)
 
     def start(self):
         try:
             if self.present.hour == 0:
-                self.db.getConnection().execute(truncateCache)
+                self.db.getConnection().execute("TRUNCATE TABLE %s" % link_cache_table.name)
 
             start = datetime.now()
             self.log.info("Begin [%s]" % str(start)[:19])
@@ -82,8 +78,8 @@ class News:
             self.log.info("Browsing links...")
 
             query = self.db.getDB() \
-                .select([self.link_cache_table.columns.link]) \
-                .where(self.link_cache_table.columns.domain == domain)
+                .select([link_cache_table.columns.link]) \
+                .where(link_cache_table.columns.domain == domain)
             cachedLinks = self.db.getConnection().execute(query).fetchall()
 
             for link in linkList:
@@ -94,7 +90,7 @@ class News:
                 crawler = Crawler(category, domain, link)
                 crawler.run()
 
-                query = self.db.getDB().insert(self.link_cache_table).values(id=None, domain=domain, link=link)
+                query = self.db.getDB().insert(link_cache_table).values(id=None, domain=domain, link=link)
                 self.db.getConnection().execute(query)
 
                 if crawler.getParsedHtml() == -1:
@@ -132,11 +128,11 @@ class News:
                     .select([literal(currentDate), literal(category),
                              literal(domain), literal(link), literal(title), literal(description),
                              literal(image), literal("0"), literal(currentDate)]) \
-                    .where(~exists([self.links_table.c.link]).where(self.links_table.c.link == link))
+                    .where(~exists([link_table.c.link]).where(link_table.c.link == link))
 
                 self.log.debug("Links stored: %s", link)
                 try:
-                    ins = self.links_table.insert().from_select(["date", "category", "domain", "link", "title",
+                    ins = link_table.insert().from_select(["date", "category", "domain", "link", "title",
                                                                  "description", "image", "clicked", "timestamp"], query)
                     result = self.db.getConnection().execute(ins)
                     if result.rowcount == 1:
@@ -150,14 +146,3 @@ class News:
                 self.log.exception(ex)
 
         self.log.info("Links stored/exists: %d/%d", insertedCount, existsCount)
-
-    def createTablesIfNotExists(self):
-        if not self.db.getEngine().dialect.has_table(self.db.getEngine(), "links_" + self.yearMonth):
-            self.db.getConnection().execute(createTableIfNotExists % self.yearMonth)
-            self.db.getConnection().execute(addPrimaryKeyToTable % ("links_" + self.yearMonth))
-            self.db.getConnection().execute(addAutoIncrementToTable % ("links_" + self.yearMonth))
-
-        if not self.db.getEngine().dialect.has_table(self.db.getEngine(), "link_cache"):
-            self.db.getConnection().execute(createTableIfNotExistsForLinkCache)
-            self.db.getConnection().execute(addPrimaryKeyToTable % "link_cache")
-            self.db.getConnection().execute(addAutoIncrementToTable % "link_cache")
