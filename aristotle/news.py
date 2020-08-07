@@ -1,11 +1,10 @@
 import logging
 import requests
-from datetime import datetime
 
-from db import DB
+from entity import *
+from connection import Database
 from crawler import Crawler
 from link_parser import *
-from query import *
 from settings import *
 from util import *
 
@@ -13,18 +12,18 @@ from util import *
 class News:
     def __init__(self, categories):
         self.present = datetime.now()
-        self.yearMonth = str(self.present.strftime('%Y%m'))
 
-        self.db = DB(getProps("database"))
-        self.createTablesIfNotExists()
+        self.db = Database().get_instance()
+        self.db.getMeta().create_all(self.db.getEngine())
 
         self.categories = categories
+
         self.log = logging.getLogger(__name__)
 
     def start(self):
         try:
             if self.present.hour == 0:
-                self.db.executeQuery(truncateCache)
+                self.db.getConnection().execute("TRUNCATE TABLE %s" % link_cache_table.name)
 
             start = datetime.now()
             self.log.info("Begin [%s]" % str(start)[:19])
@@ -35,8 +34,8 @@ class News:
 
                 for domain in sources.get(category):
                     if domain.get("active"):
-                        self.log.info("MainPage: %s",  domain.get("link"))
-                        news.update(self.fetchNews(category, domain.get("domain"),  domain.get("link")))
+                        self.log.info("MainPage: %s", domain.get("link"))
+                        news.update(self.fetchNews(category, domain.get("domain"), domain.get("link")))
                         self.insertNews(category, domain.get("domain"), news)
                         news.clear()
 
@@ -44,6 +43,8 @@ class News:
 
         except Exception as ex:
             self.log.warning("run: ", ex)
+
+        self.db.closeDB()
 
     def fetchNews(self, category, domain, link):
         def isLinkCached(checkLink):
@@ -75,7 +76,11 @@ class News:
             self.log.info("Links count (unduplicate): %d", len(linkList))
             self.log.info("Browsing links...")
 
-            cachedLinks = self.db.executeQuery(findCachedLinksByDomain % domain)
+            query = self.db.getDB() \
+                .select([link_cache_table.columns.link]) \
+                .where(link_cache_table.columns.domain == domain)
+            cachedLinks = self.db.getConnection().execute(query).fetchall()
+
             for link in linkList:
                 if isLinkCached(link):
                     self.log.debug("Cached link: %s", link)
@@ -83,12 +88,13 @@ class News:
 
                 crawler = Crawler(category, domain, link)
                 crawler.run()
+
+                query = self.db.getDB().insert(link_cache_table).values(id=None, domain=domain, link=link)
+                self.db.getConnection().execute(query)
+
                 if crawler.getParsedHtml() == -1:
-                    self.db.executeQuery(insertCacheLink % (domain, link))
                     self.log.debug("Link cannot be parsed: %s", link)
                     continue
-
-                self.db.executeQuery(insertCacheLink % (domain, link))
 
                 publishDate = crawler.getPublishDate()
                 presentDate = non_zero_date(self.present.strftime(domainProps["tagForMetadata"]["publishDateFormat"]))
@@ -107,6 +113,7 @@ class News:
 
     def insertNews(self, category, domain, newsLinkDict):
         insertedCount = 0
+        existsCount = 0
 
         for link in newsLinkDict:
             try:
@@ -115,29 +122,26 @@ class News:
                 description = info[1]
                 image = info[2]
 
-                insertQuery = insertLink % (self.yearMonth, category, domain, link, title, description, image, self.yearMonth, domain, link)
-                insertedCount += 1
+                currentDate = datetime.now()
+                query = self.db.getDB() \
+                    .select([literal(currentDate), literal(category),
+                             literal(domain), literal(link), literal(title), literal(description),
+                             literal(image), literal("0"), literal(currentDate)]) \
+                    .where(~exists([link_table.c.link]).where(link_table.c.link == link))
+
                 self.log.debug("Links stored: %s", link)
                 try:
-                    self.db.executeQuery(insertQuery)
+                    ins = link_table.insert().from_select(["date", "category", "domain", "link", "title",
+                                                                 "description", "image", "clicked", "timestamp"], query)
+                    result = self.db.getConnection().execute(ins)
+                    if result.rowcount == 1:
+                        insertedCount += 1
+                    else:
+                        existsCount += 1
                 except Exception as ex:
-                    self.log.warning("SQL Error: %s: %s", insertQuery, ex)
+                    self.log.warning("SQL Error: %s: %s", query, ex)
 
             except Exception as ex:
                 self.log.exception(ex)
 
-        self.log.info("Stored links: %d", insertedCount)
-
-    def createTablesIfNotExists(self):
-        try:
-            self.db.executeQuery(checkTableIsExists % ("links_" + self.yearMonth))
-        except:
-            self.db.executeQuery(createTableIfNotExists % self.yearMonth)
-            self.db.executeQuery(addPrimaryKeyToTable % ("links_" + self.yearMonth))
-            self.db.executeQuery(addAutoIncrementToTable % ("links_" + self.yearMonth))
-        try:
-            self.db.executeQuery(checkTableIsExists % "link_cache" )
-        except:
-            self.db.executeQuery(createTableIfNotExistsForLinkCache)
-            self.db.executeQuery(addPrimaryKeyToTable % "link_cache")
-            self.db.executeQuery(addAutoIncrementToTable % "link_cache")
+        self.log.info("Links stored/exists: %d/%d", insertedCount, existsCount)

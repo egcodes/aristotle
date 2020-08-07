@@ -1,5 +1,6 @@
 database:
   url: localhost
+  port: 3306
   name: aristotle
   userName: root
   password: root
