@@ -75,7 +75,7 @@ gundem:
     filterForLink:
       mandatoryWords: ['-']
       permissibleWords:
-      impermissibleWords: []
+      impermissibleWords: ['sondakika.php']
     tagForMetadata:
       title:
       description:
@@ -266,7 +266,7 @@ gundem:
       publishDateFormat: "%Y-%m-%d"
 
   - domain: haberler.com
-    active: true
+    active: false
     link: https://www.haberler.com
     filterForLink:
       mandatoryWords: 
