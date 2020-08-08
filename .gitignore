@@ -1,3 +1,4 @@
 .idea
 venv
+aristotle/__pycache__
 aristotle/logs
