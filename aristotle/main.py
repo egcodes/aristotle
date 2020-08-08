@@ -9,7 +9,8 @@ from news import News
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Usage aristotle")
-    parser.add_argument("-c", "--categories", type=str, help="Which categories will be fetch (separate by commas)")
+    parser.add_argument("-c", "--categories", type=str, help="Which categories will be fetch (separate by commas)", required=True)
+    parser.add_argument("-d", "--domains", type=str, help="Which domains will be fetch (separate by commas)")
     args = parser.parse_args()
 
-    News(args.categories).start()
+    News(args.categories, args.domains).start()

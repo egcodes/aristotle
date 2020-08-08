@@ -10,13 +10,14 @@ from util import *
 
 
 class News:
-    def __init__(self, categories):
+    def __init__(self, categories, domains):
         self.present = datetime.now()
 
         self.db = Database().get_instance()
         self.db.getMeta().create_all(self.db.getEngine())
 
         self.categories = categories
+        self.domains = domains
 
         self.log = logging.getLogger(__name__)
 
@@ -33,6 +34,9 @@ class News:
                     continue
 
                 for domain in sources.get(category):
+                    if self.domains and domain.get("domain") not in self.domains:
+                        continue
+
                     if domain.get("active"):
                         self.log.info("MainPage: %s", domain.get("link"))
                         news.update(self.fetchNews(category, domain.get("domain"), domain.get("link")))
