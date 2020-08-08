@@ -16,11 +16,13 @@ def add_www(link):
     else:
         return ""
 
+
 def add_slash(href):
     if href[0] == "/":
         return ""
     else:
         return "/"
+
 
 def trim_str(val, length):
     index = length
@@ -38,3 +40,7 @@ def trim_str(val, length):
                 index -= 1
                 continue
     return val
+
+
+def removeNewlines(var):
+    return var.strip().replace("\n", " ")

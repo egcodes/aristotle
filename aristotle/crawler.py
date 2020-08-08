@@ -96,20 +96,14 @@ class Crawler:
     def fixStr(self):
         parserProps = getProps("parser")
         if self.title:
-            self.title = self.title.replace("'", "''")
-            self.title = self.title.strip()
-            self.title = self.title.replace("\n", " ")
+            self.title = removeNewlines(self.title)
             if parserProps["titleCharLimit"]:
                 self.title = trim_str(self.title, parserProps["titleCharLimit"])
         if self.description:
-            self.description = self.description.replace("'", "''")
-            self.description = self.description.strip()
-            self.description = self.description.replace("\n", " ")
+            self.description = removeNewlines(self.description)
             if parserProps["descriptionCharLimit"]:
                 self.description = trim_str(self.description, parserProps["descriptionCharLimit"])
         if self.image:
-            self.image = self.image.replace("\n", " ")
-            self.image = self.image.strip().replace("\n", " ")
+            self.image = removeNewlines(self.image)
         if self.publishDate:
-            self.publishDate = self.publishDate.replace("\n", " ")
-            self.publishDate = self.publishDate.strip()
+            self.publishDate = removeNewlines(self.publishDate)
