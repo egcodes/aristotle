@@ -81,7 +81,7 @@ Once you have a copy of the source, you can embed it in your Python package, or 
 
 ```
 $ pip3 install -r requirements.txt
-$ python3 setup.py install`
+$ python3 setup.py install
 ```
 ### Requirements
 
