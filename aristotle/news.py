@@ -116,32 +116,24 @@ class News:
         existsCount = 0
 
         for link in newsLinkDict:
+            info = newsLinkDict[link]
+            title = info[0]
+            description = info[1]
+            image = info[2]
+
+            self.log.debug("Links stored: %s", link)
             try:
-                info = newsLinkDict[link]
-                title = info[0]
-                description = info[1]
-                image = info[2]
-
                 currentDate = datetime.now()
-                query = self.db.getDB() \
-                    .select([literal(currentDate), literal(category),
-                             literal(domain), literal(link), literal(title), literal(description),
-                             literal(image), literal("0"), literal(currentDate)]) \
-                    .where(~exists([link_table.c.link]).where(link_table.c.link == link))
-
-                self.log.debug("Links stored: %s", link)
-                try:
-                    ins = link_table.insert().from_select(["date", "category", "domain", "link", "title",
-                                                                 "description", "image", "clicked", "timestamp"], query)
-                    result = self.db.getConnection().execute(ins)
-                    if result.rowcount == 1:
-                        insertedCount += 1
-                    else:
-                        existsCount += 1
-                except Exception as ex:
-                    self.log.warning("SQL Error: %s: %s", query, ex)
-
+                query = self.db.getDB().insert(link_table).values(id=None, date=currentDate, category=category,
+                                                                  domain=domain, link=link, title=title,
+                                                                  description=description, image=image, clicked=0,
+                                                                  timestamp=currentDate)
+                result = self.db.getConnection().execute(query)
+                if result.rowcount == 1:
+                    insertedCount += 1
+                else:
+                    existsCount += 1
             except Exception as ex:
-                self.log.exception(ex)
+                self.log.warning("SQL Error: %s: %s", query, ex)
 
         self.log.info("Links stored/exists: %d/%d", insertedCount, existsCount)
