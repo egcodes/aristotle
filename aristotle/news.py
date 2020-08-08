@@ -61,8 +61,8 @@ class News:
                 break
             except Exception as ex:
                 attempts += 1
-                self.log.warning("Request: %s", ex)
                 if attempts > 3:
+                    self.log.warning("Request: %s", ex)
                     return {}
 
         domainProps = getDomainProps(category, domain)
