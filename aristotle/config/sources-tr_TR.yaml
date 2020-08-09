@@ -47,7 +47,7 @@ gundem:
     filterForLink:
       mandatoryWords: ["-"]
       permissibleWords:
-      impermissibleWords: ['-haberleri', '/hava-durumu/']
+      impermissibleWords: ['-haberleri', '/hava-durumu/', '/sporarena/']
     tagForMetadata:
       title:
       description:
@@ -589,6 +589,20 @@ teknoloji:
       description:
       image:
       publishDate: 
+      publishDateFormat: "%Y-%m-%d"
+
+  - domain: evrimagaci.org
+    active: true
+    link: https://evrimagaci.org
+    filterForLink:
+      mandatoryWords: ['-']
+      permissibleWords:
+      impermissibleWords: ['pazar.', '#']
+    tagForMetadata:
+      title:
+      description:
+      image:
+      publishDate: time,datetime
       publishDateFormat: "%Y-%m-%d"
 
 
