@@ -30,7 +30,7 @@ locale: en_EN
 
 request:
   timeout: 3
-  userAgent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.97 Safari/537.11
+  userAgent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML) Chrome/23.0.1271.97 Safari/537.11
 
 parser:
   titleCharLimit: 100
@@ -81,7 +81,7 @@ Once you have a copy of the source, you can embed it in your Python package, or 
 
 ```
 $ pip3 install -r requirements.txt
-$ python3 setup.py install`
+$ python3 setup.py install
 ```
 ### Requirements
 
