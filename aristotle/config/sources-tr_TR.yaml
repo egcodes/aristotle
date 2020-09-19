@@ -718,8 +718,8 @@ spor:
       title:
       description:
       image:
-      publishDate: 
-      publishDateFormat: "%Y-%m-%d"
+      publishDate: div,class,news-info-text
+      publishDateFormat: "%d.%m.%d"
 
   - domain: skor.sozcu.com.tr
     active: true
@@ -788,7 +788,7 @@ spor:
       title:
       description:
       image:
-      publishDate: div,class,infoRow
+      publishDate: div,class,textInfo font-family-light
       publishDateFormat: "%d.%m.%Y"
 
 
