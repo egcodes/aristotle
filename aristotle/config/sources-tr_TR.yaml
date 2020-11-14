@@ -24,7 +24,7 @@ gundem:
       title:
       description:
       image:
-      publishDate: div,class,_392lz
+      publishDate: div,class,_2HbZO
       publishDateFormat: "%d %B %Y"
 
   - domain: milliyet.com.tr
@@ -75,7 +75,7 @@ gundem:
     filterForLink:
       mandatoryWords: ['-']
       permissibleWords:
-      impermissibleWords: ['sondakika.php']
+      impermissibleWords: ['sondakika/']
     tagForMetadata:
       title:
       description:
@@ -89,7 +89,7 @@ gundem:
     filterForLink:
       mandatoryWords: ['-']
       permissibleWords:
-      impermissibleWords: ['-haberleri', '/yazarlar/', '/fiskos/', '/video/', '/teknoloji/', '/spor/', '/kultur-sanat/', 'spor.', 'magazin.']
+      impermissibleWords: ['-spor', '-haberleri', '/yazarlar/', '/fiskos/', '/video/', '/teknoloji/', '/spor/', '/kultur-sanat/', 'spor.', 'magazin.']
     tagForMetadata:
       title:
       description:
@@ -169,7 +169,7 @@ gundem:
 
   - domain: sol.org.tr
     active: true
-    link: https://sol.org.tr/bugun
+    link: https://sol.org.tr/anasayfa
     filterForLink:
       mandatoryWords: 
       permissibleWords: ['/haber/',]
@@ -467,7 +467,7 @@ teknoloji:
 
   - domain: shiftdelete.net
     active: true
-    link: https://shiftdelete.net
+    link: https://www.shiftdelete.net
     filterForLink:
       mandatoryWords: 
       permissibleWords: ['-',]
